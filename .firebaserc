@@ -1,0 +1,11 @@
+{
+  "projects": {
+    "default": "little-cute-shop"
+  },
+  "targets": {},
+  "etags": {
+    "little-cute-shop": {
+      "extensionInstances": {}
+    }
+  }
+}
