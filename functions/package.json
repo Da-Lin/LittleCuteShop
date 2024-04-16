@@ -13,8 +13,11 @@
   },
   "main": "index.js",
   "dependencies": {
+    "@google-cloud/billing": "^4.4.0",
+    "@google-cloud/compute": "^4.4.0",
     "firebase-admin": "^11.8.0",
-    "firebase-functions": "^4.3.1"
+    "firebase-functions": "^4.3.1",
+    "googleapis": "^134.0.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"
