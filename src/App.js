@@ -1,11 +1,12 @@
-import Login from "./components/authentication/login";
+import Login from "./components/authentication/signin";
 import Register from "./components/authentication/register";
-
-import Header from "./components/home/header";
+import Bar from "./components/appbar/appBar";
 import Home from "./components/home/home";
 
 import { AuthProvider } from "./contexts/authContext";
 import { useRoutes } from "react-router-dom";
+import React from "react";
+import Logout from "components/authentication/logout";
 
 function App() {
   const routesArray = [
@@ -16,6 +17,10 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/logout",
+      element: <Logout />,
     },
     {
       path: "/register",
@@ -29,7 +34,7 @@ function App() {
   let routesElement = useRoutes(routesArray);
   return (
     <AuthProvider>
-      <Header />
+      <Bar />
       <div className="w-full h-screen flex flex-col">{routesElement}</div>
     </AuthProvider>
   );
