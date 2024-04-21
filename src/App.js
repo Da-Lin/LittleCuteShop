@@ -1,5 +1,5 @@
 import Login from "./components/authentication/signin";
-import Register from "./components/authentication/register";
+// import Register from "./components/authentication/register";
 import Bar from "./components/appbar/appBar";
 import Home from "./components/home/home";
 
@@ -22,10 +22,10 @@ function App() {
       path: "/logout",
       element: <Logout />,
     },
-    {
-      path: "/register",
-      element: <Register />,
-    },
+    // {
+    //   path: "/register",
+    //   element: <Register />,
+    // },
     {
       path: "/home",
       element: <Home />,
