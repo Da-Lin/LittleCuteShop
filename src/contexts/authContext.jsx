@@ -2,8 +2,9 @@ import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../firebase/firebase";
 // import { GoogleAuthProvider } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
+import { getUserPrivileges } from "../firebase/firestore/authentication";
 
-const AuthContext = React.createContext();
+const AuthContext = React.createContext(null);
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -11,6 +12,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userPrivileges, setUserPrivileges] = useState(null)
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [isEmailUser, setIsEmailUser] = useState(false);
   const [isGoogleUser, setIsGoogleUser] = useState(false);
@@ -25,6 +27,7 @@ export function AuthProvider({ children }) {
     if (user) {
 
       setCurrentUser({ ...user });
+      setUserPrivileges(await getUserPrivileges(user))
 
       // check if provider is email and password login
       const isEmail = user.providerData.some(
@@ -52,6 +55,7 @@ export function AuthProvider({ children }) {
     isEmailUser,
     isGoogleUser,
     currentUser,
+    userPrivileges,
     setCurrentUser
   };
 

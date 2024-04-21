@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import logo from '../../assets/logo.png';
 import { useAuth } from '../../contexts/authContext'
 import { Box, Container } from '@mui/material';
+import { isAdminUser } from '../../firebase/firestore/authentication';
 
 const Home = () => {
-    const { userLoggedIn, currentUser } = useAuth()
+    const { userLoggedIn, currentUser, userPrivileges } = useAuth()
     return (
-        userLoggedIn ? <div className='text-2xl font-bold pt-14'>Hello {currentUser.displayName ? currentUser.displayName : currentUser.email}, you are now logged in.</div>
+        userLoggedIn ? <div className='text-2xl font-bold pt-14'>
+            Hello {isAdminUser(userPrivileges) && "Admin"} User {currentUser.displayName ? currentUser.displayName : currentUser.email}, you are now logged in.
+        </div>
             :
             <Container component="main" maxWidth="xs">
                 <Box
