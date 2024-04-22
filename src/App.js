@@ -8,12 +8,17 @@ import { useRoutes } from "react-router-dom";
 import React from "react";
 import Logout from "components/authentication/logout";
 import ForgotPassword from "components/authentication/forgotPassword";
+import ManageProduct from "components/product/manageProduct";
 
 function App() {
   const routesArray = [
     {
       path: "*",
       element: <Home />,
+    },
+    {
+      path: "/manageproducts",
+      element: <ManageProduct />,
     },
     {
       path: "/login",

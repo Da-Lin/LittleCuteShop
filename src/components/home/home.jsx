@@ -16,8 +16,8 @@ const Home = () => {
                     component="img"
                     sx={{
                         marginTop: 8,
-                        height: 500,
-                        width: 500,
+                        height: 400,
+                        width: 400,
                         alignItems: 'center'
                     }}
                     alt="The house from the offer."

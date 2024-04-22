@@ -15,14 +15,20 @@ import logo from '../../assets/logo.png';
 import avatar from '../../assets/avatar.jpg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
+import { isAdminUser } from '../../firebase/firestore/authentication';
+import { Link } from '@mui/material';
+import MenuList from './menuList';
 
 function Bar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-    const { userLoggedIn } = useAuth()
+    const { userLoggedIn, userPrivileges } = useAuth()
 
-    const pages = userLoggedIn ? ['Products', 'Pricing', 'Blog'] : [];
+    const menus = userLoggedIn ? isAdminUser(userPrivileges) ? { 'Admin Dashboard': ['Manage Products'] } : { Products: [] } : {};
+    Object.keys(menus).map((menu) => {
+        console.log(menus[menu])
+    })
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
     const navigate = useNavigate();
@@ -35,12 +41,12 @@ function Bar() {
     };
 
     const handleCloseNavMenu = (e) => {
-        navigate(`/${e.target.innerText}`)
+        navigate(`/${e.target.innerText.toLowerCase().replace(/\s/g, '')}`)
         setAnchorElNav(null);
     };
 
     const handleCloseUserMenu = (e) => {
-        navigate(`/${e.target.innerText.toLowerCase()}`)
+        navigate(`/${e.target.innerText.toLowerCase().replace(/\s/g, '')}`)
         setAnchorElUser(null);
     };
 
@@ -57,7 +63,7 @@ function Bar() {
                                 cursor: 'pointer',
                             }
                         }}
-                        alt="The house from the offer."
+                        alt="logo"
                         src={logo}
                         onClick={handleCloseNavMenu}
                     />
@@ -90,23 +96,17 @@ function Bar() {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
-                                </MenuItem>
-                            ))}
+                            {
+                                Object.keys(menus).map((menu) => (
+                                    <MenuItem key={menu} onClick={handleCloseNavMenu}>
+                                        <Typography textAlign="center">{menus[menu]}</Typography>
+                                    </MenuItem>
+                                ))
+                            }
                         </Menu>
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                color="inherit"
-                            >
-                                {page}
-                            </Button>
-                        ))}
+                        <MenuList menus={menus} />
                     </Box>
 
                     {userLoggedIn ?
