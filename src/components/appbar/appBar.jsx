@@ -40,7 +40,7 @@ function Bar() {
     };
 
     const handleCloseUserMenu = (e) => {
-        navigate(`/${e.target.innerText}`)
+        navigate(`/${e.target.innerText.toLowerCase()}`)
         setAnchorElUser(null);
     };
 
