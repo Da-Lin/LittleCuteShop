@@ -4,16 +4,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useAuth } from '../../contexts/authContext';
-import { isAdminUser } from '../../firebase/firestore/authentication';
 import { useNavigate } from 'react-router-dom';
-
-const options = [
-  'Show some love to MUI',
-  'Show all notification content',
-  'Hide sensitive notification content',
-  'Hide all notification content',
-];
 
 export default function MenuList({ menus }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,11 +13,6 @@ export default function MenuList({ menus }) {
   const navigate = useNavigate();
 
   const topMenus = Object.keys(menus)
-  const menuLists = Object.keys(menus).map((menu) => menus[menu])
-
-  const { userLoggedIn, userPrivileges } = useAuth()
-
-  const isAdmin = isAdminUser(userPrivileges)
 
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
@@ -45,7 +31,7 @@ export default function MenuList({ menus }) {
   return (<>
     {
       topMenus.map((topMenu) => (
-        <div>
+        <div key={topMenu}>
           <List
             component="nav"
             aria-label="menus"
