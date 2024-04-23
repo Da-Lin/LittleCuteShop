@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { doSignInWithEmailAndPassword } from '../../firebase/auth'
 import CircularProgress from '@mui/material/CircularProgress';
 import { Alert, Paper } from '@mui/material';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import LogoSide from './logoSide';
 
 const defaultTheme = createTheme();
@@ -80,7 +80,7 @@ export default function Authentication() {
                                     setEmail(e.target.value)
                                     if (!e.target.value) {
                                         setEmailError(false);
-                                    } else if (!e.target.validity.valid) {
+                                    } else if (!validateEmail(e.target.value)) {
                                         setEmailError(true);
                                     } else {
                                         setEmailError(false);
@@ -151,3 +151,11 @@ function Copyright(props) {
         </Typography>
     );
 }
+
+const validateEmail = (email) =>
+    !!email.length &&
+    email
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        );

@@ -53,4 +53,4 @@ export const getUserPrivileges = async (user) => {
     return await userPrivilegeNames(privilegeIds)
 };
 
-export const isAdminUser = (privileges) => privileges && privileges.includes("admin")
+export const isAdmin = (privileges) => privileges && privileges.includes("admin")

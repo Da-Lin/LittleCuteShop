@@ -15,7 +15,7 @@ import logo from '../../assets/logo.png';
 import avatar from '../../assets/avatar.jpg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'contexts/authContext';
-import { isAdminUser } from '../../firebase/firestore/authentication';
+import { isAdmin } from '../../firebase/firestore/authentication';
 import { Link } from '@mui/material';
 import MenuList from './menuList';
 
@@ -25,7 +25,7 @@ function Bar() {
 
     const { userLoggedIn, userPrivileges } = useAuth()
 
-    const menus = userLoggedIn ? isAdminUser(userPrivileges) ? { 'Admin Dashboard': ['Manage Products'] } : { Products: [] } : {};
+    const menus = userLoggedIn ? isAdmin(userPrivileges) ? { 'Admin Dashboard': ['Manage Products'] } : { Products: [] } : {};
     Object.keys(menus).map((menu) => {
         console.log(menus[menu])
     })
