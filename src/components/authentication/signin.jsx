@@ -16,12 +16,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Alert, Paper } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import LogoSide from './logoSide';
+import { setUpNewUser } from '../../firebase/firestore/authentication';
 
 const defaultTheme = createTheme();
 
 export default function Authentication() {
 
     const { userLoggedIn } = useAuth()
+    const navigate = useNavigate();
 
     const [isSigningIn, setIsSigningIn] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -36,8 +38,8 @@ export default function Authentication() {
             await doSignInWithEmailAndPassword(email, password).then((userCredential) => {
                 // Signed in 
                 setIsSigningIn(false)
-                const user = userCredential.user;
-                // ...
+                console.log(userCredential.user.email)
+                setUpNewUser(userCredential.user)
             }).catch((error) => {
                 setIsSigningIn(false)
                 setErrorMessage("Invalid email or password")
