@@ -6,9 +6,9 @@ import Home from "./components/home/home";
 import { AuthProvider } from "./contexts/authContext";
 import { useRoutes } from "react-router-dom";
 import React from "react";
-import Logout from "components/authentication/logout";
-import ForgotPassword from "components/authentication/forgotPassword";
-import ManageProduct from "components/product/manageProduct";
+import Logout from "./components/authentication/logout";
+import ForgotPassword from "./components/authentication/forgotPassword";
+import ManageProduct from "./components/product/manageProduct";
 
 function App() {
   const routesArray = [

@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import logo from '../../assets/logo.png';
 import avatar from '../../assets/avatar.jpg';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from 'contexts/authContext';
+import { useAuth } from '../../contexts/authContext';
 import { isAdmin } from '../../firebase/firestore/authentication';
 import { Link } from '@mui/material';
 import MenuList from './menuList';
