@@ -1,4 +1,4 @@
-import { collection, query, getDocs, where, documentId } from "firebase/firestore";
+import { collection, query, getDocs, where, documentId, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 
 class User {
@@ -37,19 +37,16 @@ const userPrivilegeNames = async (userPrivilegeIds) => {
 
 const userPrivilegeIds = async (userRoleIds) => {
     const userPrivilegeIds = []
-    for(const userRoleId of userRoleIds) {
-        const querySnapshot = await getDocs(collection(db, `roles/${userRoleId}/privileges`))
-        querySnapshot.forEach((doc) => {
-            userPrivilegeIds.push(doc.id)
-        });
+    for (const userRoleId of userRoleIds) {
+        const docSnap = await getDoc(doc(db, "roles", userRoleId));
+        userPrivilegeIds.push(...docSnap.data().privilegeIds)
     }
     return userPrivilegeIds
 };
 
 export const getUserPrivileges = async (user) => {
-    const querySnapshot = await getDocs(collection(db, `users/${user.uid}/roles`));
-    const userRoleIds = querySnapshot.docs.map(doc => doc.id)
-    const privilegeIds = await userPrivilegeIds(userRoleIds)
+    const docSnap = await getDoc(doc(db, "users", user.uid));
+    const privilegeIds = await userPrivilegeIds(docSnap.data().roleIds)
     return await userPrivilegeNames(privilegeIds)
 };
 
