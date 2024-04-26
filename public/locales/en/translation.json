@@ -1,0 +1,21 @@
+{
+    "websiteTitle": "Little Cute Shop",
+    "login": "login",
+    "en": "English",
+    "zh": "Chinese",
+    "email": "Email Address",
+    "password": "Password",
+    "loginPage": {
+        "login": "Log in",
+        "forgotPassword": "Forgot password?",
+        "signup": "Don't have an account? Sign Up",
+        "signedInMessage": "Successfully logged in. Redireting you to home page now..."
+    },
+    "forgotPasswordPage": {
+        "title": "Forgot password?",
+        "content": "Enter your email address below and we'll send you a link to reset your password",
+        "submitButtonText": "Send reset link",
+        "successfulMessage": "Password reset email sent!",
+        "failuerMessage": "Invalid email!"
+    }
+}

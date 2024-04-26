@@ -17,15 +17,17 @@ import { Alert, Paper } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import LogoSide from './logoSide';
 import { setUpNewUser } from '../../firebase/firestore/authentication';
+import { useTranslation } from 'react-i18next';
 
 const defaultTheme = createTheme();
 
 export default function Authentication() {
 
     const { userLoggedIn } = useAuth()
-    const navigate = useNavigate();
+    const { t } = useTranslation()
 
     const [isSigningIn, setIsSigningIn] = useState(false)
+    const [signedInMessage, setsignedInMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState(false)
@@ -38,7 +40,7 @@ export default function Authentication() {
             await doSignInWithEmailAndPassword(email, password).then((userCredential) => {
                 // Signed in 
                 setIsSigningIn(false)
-                console.log(userCredential.user.email)
+                setsignedInMessage(t('loginPage').signedInMessage)
                 setUpNewUser(userCredential.user)
             }).catch((error) => {
                 setIsSigningIn(false)
@@ -72,7 +74,7 @@ export default function Authentication() {
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email Address"
+                                label={t('email')}
                                 name="email"
                                 autoFocus
                                 error={emailError}
@@ -97,7 +99,7 @@ export default function Authentication() {
                                 required
                                 fullWidth
                                 name="password"
-                                label="Password"
+                                label={t('password')}
                                 type="password"
                                 id="password"
                                 onChange={(event) => {
@@ -113,22 +115,23 @@ export default function Authentication() {
                                 disabled={email === '' || password === '' || emailError}
                                 onClick={handleSubmit}
                             >
-                                Sign In
+                                {t('loginPage').login}
                             </Button>
                             <Grid container>
                                 <Grid item xs>
                                     <Link href="/forgotpassword" variant="body2">
-                                        Forgot password?
+                                        {t('loginPage').forgotPassword}
                                     </Link>
                                 </Grid>
                                 <Grid item>
                                     <Link href="https://docs.google.com/forms/d/e/1FAIpQLSc3zH_vV27IdS5ufrBMXsxCzX_3cubVT3vwoqHPFJZWsIVAYA/viewform" variant="body2">
-                                        Don't have an account? Sign Up
+                                        {t('loginPage').signup}
                                     </Link>
                                 </Grid>
                             </Grid>
                             <Grid container justifyContent="center">
                                 {isSigningIn && <CircularProgress />}
+                                {signedInMessage && <Alert>{signedInMessage}</Alert>}
                                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                             </Grid>
                             <Copyright sx={{ mt: 8, mb: 4 }} />
@@ -142,11 +145,13 @@ export default function Authentication() {
 }
 
 function Copyright(props) {
+    const { t } = useTranslation()
+
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://littlecuteshop.com/">
-                Little Cute Shop
+                {t('websiteTitle')}
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -154,7 +159,7 @@ function Copyright(props) {
     );
 }
 
-const validateEmail = (email) =>
+export const validateEmail = (email) =>
     !!email.length &&
     email
         .toLowerCase()

@@ -1,0 +1,21 @@
+{
+    "websiteTitle": "小可爱商店",
+    "login": "登录",
+    "en": "英语",
+    "zh": "中文",
+    "email": "邮箱",
+    "password": "密码",
+    "loginPage": {
+        "login": "登录",
+        "forgotPassword": "忘掉密码了？",
+        "signup": "想要加入我们？欢迎注册！",
+        "signedInMessage": "登录成功。跳转至主页中..."
+    },
+    "forgotPasswordPage": {
+        "title": "忘掉密码了？",
+        "content": "在下面输入你的邮箱，我们会给你发重置密码的链接",
+        "submitButtonText": "发送",
+        "successfulMessage": "重置密码链接已发送！",
+        "failuerMessage": "邮件地址错误！"
+    }
+}

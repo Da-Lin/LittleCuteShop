@@ -13,22 +13,24 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../assets/logo.png';
 import avatar from '../../assets/avatar.jpg';
+import LanguageIcon from '@mui/icons-material/Language';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { isAdmin } from '../../firebase/firestore/authentication';
-import { Link } from '@mui/material';
 import MenuList from './menuList';
+import { useTranslation } from 'react-i18next';
 
 function Bar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElLanguage, setAnchorElLanguage] = React.useState(null);
 
     const { userLoggedIn, userPrivileges } = useAuth()
 
+    const { t, i18n } = useTranslation()
+    const languages = { zh: t("zh"), en: t("en") };
+
     const menus = userLoggedIn ? isAdmin(userPrivileges) ? { 'Admin Dashboard': ['Manage Products'] } : { Products: [] } : {};
-    Object.keys(menus).map((menu) => {
-        console.log(menus[menu])
-    })
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
     const navigate = useNavigate();
@@ -40,13 +42,21 @@ function Bar() {
         setAnchorElUser(event.currentTarget);
     };
 
+    const handleOpenLanguageMenu = (event) => {
+        setAnchorElLanguage(event.currentTarget);
+    };
+    const handleCloseLanguageMenu = (e, lng) => {
+        i18n.changeLanguage(lng)
+        setAnchorElLanguage(null);
+    };
+
     const handleCloseNavMenu = (e) => {
         navigate(`/${e.target.innerText.toLowerCase().replace(/\s/g, '')}`)
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = (e) => {
-        navigate(`/${e.target.innerText.toLowerCase().replace(/\s/g, '')}`)
+    const handleCloseUserMenu = (link) => {
+        navigate(link)
         setAnchorElUser(null);
     };
 
@@ -108,42 +118,74 @@ function Bar() {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         <MenuList menus={menus} />
                     </Box>
-
-                    {userLoggedIn ?
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Edit Profile">
-                                <IconButton size="large"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    color="inherit" onClick={handleOpenUserMenu} >
-                                    <Avatar alt="User Name" src={avatar} />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {settings.map((setting) => (
-                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">{setting}</Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
-                        : <Button color="inherit" onClick={handleCloseUserMenu}>Login</Button>}
+                    <Box >
+                        <Tooltip title="Change Language">
+                            <IconButton size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                color="inherit" onClick={handleOpenLanguageMenu} >
+                                <LanguageIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElLanguage}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElLanguage)}
+                            onClose={handleCloseLanguageMenu}
+                        >
+                            {Object.keys(languages).map((lng) => (
+                                <MenuItem key={lng} onClick={(e) => handleCloseLanguageMenu(e, lng)}>
+                                    <Typography textAlign="center">{languages[lng]}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                        {userLoggedIn ?
+                            <>
+                                <Tooltip title="Edit Profile">
+                                    <IconButton size="large"
+                                        aria-label="account of current user"
+                                        aria-controls="menu-appbar"
+                                        aria-haspopup="true"
+                                        color="inherit" onClick={handleOpenUserMenu} >
+                                        <Avatar alt="User Name" src={avatar} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    {settings.map((setting) => (
+                                        <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
+                                            <Typography textAlign="center">{setting}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </>
+                            : <Button color="inherit" onClick={() => handleCloseUserMenu('login')}>{t("login")}</Button>}
+                    </Box>
                 </Toolbar>
             </Container>
         </AppBar>

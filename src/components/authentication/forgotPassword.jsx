@@ -13,6 +13,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Alert, Paper } from '@mui/material';
 import { Navigate } from 'react-router-dom';
 import LogoSide from './logoSide';
+import { useTranslation } from 'react-i18next';
+import { validateEmail } from './signin';
 
 const defaultTheme = createTheme();
 
@@ -26,6 +28,8 @@ export default function ForgotPassword() {
     const [confrimationMessage, setConfrimationMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
+    const { t } = useTranslation()
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsloading(true)
@@ -33,11 +37,11 @@ export default function ForgotPassword() {
         await doPasswordReset(email).then(() => {
             setIsloading(false)
             setErrorMessage("")
-            setConfrimationMessage("Password reset email sent!")
+            setConfrimationMessage(t('forgotPasswordPage').successfulMessage)
         }).catch((error) => {
             setIsloading(false)
             setConfrimationMessage("")
-            setErrorMessage("Invalid email")
+            setErrorMessage(t('forgotPasswordPage').failuerMessage)
         });
     }
 
@@ -59,18 +63,17 @@ export default function ForgotPassword() {
                             }}
                         >
                             <Typography variant="h3" gutterBottom align="center">
-                                Forgot your password?
+                                {t('forgotPasswordPage').title}
                             </Typography>
                             <Typography variant="body2" align="center">
-                                {"Enter your email address below and we'll " +
-                                    'send you a link to reset your password.'}
+                                {t('forgotPasswordPage').content}
                             </Typography>
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
                                 id="email"
-                                label="Email Address"
+                                label={t('email')}
                                 name="email"
                                 autoFocus
                                 error={emailError}
@@ -79,7 +82,7 @@ export default function ForgotPassword() {
                                     setEmail(e.target.value)
                                     if (!e.target.value) {
                                         setEmailError(false);
-                                    } else if (!e.target.validity.valid) {
+                                    } else if (!validateEmail(e.target.value)) {
                                         setEmailError(true);
                                     } else {
                                         setEmailError(false);
@@ -98,7 +101,7 @@ export default function ForgotPassword() {
                                 disabled={email === '' || emailError}
                                 onClick={handleSubmit}
                             >
-                                Send reset link
+                                {t('forgotPasswordPage').submitButtonText}
                             </Button>
 
                             <Grid container justifyContent="center">
