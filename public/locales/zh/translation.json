@@ -18,5 +18,10 @@
         "submitButtonText": "发送",
         "successfulMessage": "重置密码链接已发送！",
         "failuerMessage": "邮件地址错误！"
+    },
+    "appBar": {
+        "settings": {
+            "logout": "登出"
+        }
     }
 }

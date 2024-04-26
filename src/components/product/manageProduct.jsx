@@ -27,13 +27,14 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material';
+import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
 import { fakeData } from './makeData';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React from 'react';
-import { addProductCategories, deleteProductCategories, getProductCategories, productCategoryExist } from '../../firebase/firestore/product';
+import { addProduct, addProductCategories, deleteProduct, deleteProductCategories, getProductCategories, getProducts, productCategoryExist, productNameExist, productNameExistForUpdate, updateProduct } from '../../firebase/firestore/product';
 
 const Example = () => {
     const [validationErrors, setValidationErrors] = useState({});
@@ -43,13 +44,33 @@ const Example = () => {
     const [manageCategoryErrorMessage, setManageCategoryErrorMessage] = useState('');
     const [removeCategoryOpen, setRemoveCategorOpen] = useState(false);
     const [categories, setCategories] = useState([])
+    const [products, setProducts] = useState([])
+    const [isCreatingProduct, setIsCreatingProduct] = useState(false)
+    const [isUpdatingProduct, setIsUpdatingProduct] = useState(false)
+    const [isDeletingProduct, setIsDeletingProduct] = useState(false)
+    const [isLoadingProducts, setIsLoadingProducts] = useState(false)
+    const [isLoadingProductsError, setIsLoadingProductsError] = useState(false)
 
     useEffect(() => {
+        setIsLoadingProducts(true)
+        setIsLoadingProductsError(false)
         async function getAndSetCategories() {
             setCategories(await getProductCategories())
         }
         getAndSetCategories()
-    }, [manageCategoryMessage, manageCategoryErrorMessage])
+
+        async function getAndSetProducts() {
+            await getProducts().then((ps) => {
+                setIsLoadingProducts(false)
+                setProducts(ps)
+            }).catch((error) => {
+                setIsLoadingProducts(false)
+                setIsLoadingProductsError(true)
+                console.log(error)
+            })
+        }
+        getAndSetProducts()
+    }, [manageCategoryMessage, manageCategoryErrorMessage, isCreatingProduct, isUpdatingProduct, isDeletingProduct])
 
     const handleRemoveCategoryOpen = () => {
         setRemoveCategorOpen(true)
@@ -65,16 +86,16 @@ const Example = () => {
         setManageCategoryErrorMessage('')
         if (!await productCategoryExist(categoryText)) {
             setManageCategoryIsLoading(false)
-            setManageCategoryErrorMessage(`Product category: ${categoryText} does not exist`)
+            setManageCategoryErrorMessage(`产品分类: ${categoryText}不存在`)
             setManageCategoryMessage('')
         } else {
             deleteProductCategories(categoryText).then(() => {
                 setManageCategoryIsLoading(false)
                 setManageCategoryErrorMessage('')
-                setManageCategoryMessage(`Successfully removed product category: ${categoryText}`)
+                setManageCategoryMessage(`成功删除产品分类: ${categoryText}`)
             }).catch((error) => {
                 setManageCategoryIsLoading(false)
-                setManageCategoryErrorMessage(`Failed to remove product category: ${categoryText}`)
+                setManageCategoryErrorMessage(`删除产品分类: ${categoryText}失败了`)
                 setManageCategoryMessage('')
             })
         }
@@ -102,16 +123,16 @@ const Example = () => {
         setManageCategoryErrorMessage('')
         if (await productCategoryExist(categoryText)) {
             setManageCategoryIsLoading(false)
-            setManageCategoryErrorMessage('Product categorya already exists')
+            setManageCategoryErrorMessage('该产品分类已经存在')
             setManageCategoryMessage('')
         } else {
             addProductCategories(categoryText).then(() => {
                 setManageCategoryIsLoading(false)
                 setManageCategoryErrorMessage('')
-                setManageCategoryMessage(`Successfully added product category: ${categoryText}`)
+                setManageCategoryMessage(`成功添加产品分类: ${categoryText}`)
             }).catch((error) => {
                 setManageCategoryIsLoading(false)
-                setManageCategoryErrorMessage(`Failed to add product category: ${categoryText}`)
+                setManageCategoryErrorMessage(`产品分类: ${categoryText}添加失败`)
                 setManageCategoryMessage('')
             })
         }
@@ -121,7 +142,7 @@ const Example = () => {
         () => [
             {
                 accessorKey: 'name',
-                header: 'Name',
+                header: '名称',
                 muiEditTextFieldProps: {
                     required: true,
                     error: !!validationErrors?.name,
@@ -133,103 +154,133 @@ const Example = () => {
                             name: undefined,
                         }),
                     //optionally add validation checking for onBlur or onChange
-                },
+                }
             },
             {
                 accessorKey: 'description',
-                header: 'Description',
+                header: '描述',
                 muiEditTextFieldProps: {
                     required: true,
-                    error: !!validationErrors?.category,
-                    helperText: validationErrors?.category,
+                    error: !!validationErrors?.description,
+                    helperText: validationErrors?.description,
                     //remove any previous validation errors when user focuses on the input
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
-                            category: undefined,
+                            description: undefined,
                         }),
                 },
             },
             {
+                accessorKey: 'price',
+                header: '价格',
+                muiEditTextFieldProps: {
+                    required: true,
+                    error: !!validationErrors?.price,
+                    helperText: validationErrors?.price,
+                    //remove any previous validation errors when user focuses on the input
+                    onFocus: () =>
+                        setValidationErrors({
+                            ...validationErrors,
+                            price: undefined,
+                        }),
+                },
+                Cell: ({ cell, column }) => (
+                    <>
+                        {`$${parseFloat(cell.getValue()).toLocaleString('USD')}`}
+                    </>
+                ),
+            },
+            {
                 accessorKey: 'category',
-                header: 'Category',
+                header: '分类',
                 editVariant: 'select',
                 editSelectOptions: categories,
                 muiEditTextFieldProps: {
                     required: true,
                     select: true,
-                    error: !!validationErrors?.state,
-                    helperText: validationErrors?.state,
+                    error: !!validationErrors?.category,
+                    helperText: validationErrors?.category,
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
                             category: undefined,
                         }),
                 },
-            },
+            }
         ],
-        [validationErrors],
+        [categories, validationErrors],
     );
 
-    //call CREATE hook
-    const { mutateAsync: createUser, isPending: isCreatingUser } =
-        useCreateProduct();
-    //call READ hook
-    const {
-        data: fetchedProducts = [],
-        isError: isLoadingUsersError,
-        isFetching: isFetchingUsers,
-        isLoading: isLoadingUsers,
-    } = useGetUsers();
-    //call UPDATE hook
-    const { mutateAsync: updateUser, isPending: isUpdatingUser } =
-        useUpdateUser();
     //call DELETE hook
     const { mutateAsync: deleteUser, isPending: isDeletingUser } =
         useDeleteUser();
 
     //CREATE action
     const handleCreateProduct = async ({ values, table }) => {
-        const newValidationErrors = validateUser(values);
+        const newValidationErrors = validateProduct(values);
         if (Object.values(newValidationErrors).some((error) => error)) {
             setValidationErrors(newValidationErrors);
             return;
         }
+        setIsCreatingProduct(true)
+        if (await productNameExist(values)) {
+            setValidationErrors({ name: "该产品名称已经存在" })
+            setIsCreatingProduct(false)
+            return;
+        }
         setValidationErrors({});
-        await createUser(values);
+        await addProduct(values).catch((error) => {
+            console.log(error)
+        });
+        setIsCreatingProduct(false)
         table.setCreatingRow(null); //exit creating mode
     };
 
     //UPDATE action
-    const handleSaveUser = async ({ values, table }) => {
-        const newValidationErrors = validateUser(values);
+    const handleSaveProduct = async ({ values, table, row }) => {
+        values["id"] = row.original.id
+
+        const newValidationErrors = validateProduct(values);
         if (Object.values(newValidationErrors).some((error) => error)) {
             setValidationErrors(newValidationErrors);
             return;
         }
+        setIsUpdatingProduct(true)
+        if (await productNameExistForUpdate(values)) {
+            setValidationErrors({ name: "新产品名称已经存在" })
+            setIsUpdatingProduct(false)
+            return;
+        }
         setValidationErrors({});
-        await updateUser(values);
+        await updateProduct(values).catch((error) => {
+            console.log(error)
+        })
+        setIsUpdatingProduct(false)
         table.setEditingRow(null); //exit editing mode
     };
 
     //DELETE action
-    const openDeleteConfirmModal = (row) => {
-        if (window.confirm('Are you sure you want to delete this user?')) {
-            deleteUser(row.original.id);
+    const openDeleteConfirmModal = async (row) => {
+        if (window.confirm(`确定删除产品:${row.original.name}?`)) {
+            setIsDeletingProduct(true)
+            await deleteProduct(row.original.id).catch((error) => {
+                console.log(error)
+            })
+            setIsDeletingProduct(false)
         }
     };
-
     const table = useMaterialReactTable({
         columns,
-        data: fetchedProducts,
+        data: products,
         createDisplayMode: 'modal', //default ('row', and 'custom' are also available)
         editDisplayMode: 'modal', //default ('row', 'cell', 'table', and 'custom' are also available)
         enableEditing: true,
         getRowId: (row) => row.id,
-        muiToolbarAlertBannerProps: isLoadingUsersError
+        muiToolbarAlertBannerProps: isLoadingProductsError
             ? {
                 color: 'error',
-                children: 'Error loading data',
+                children: '读取产品失败',
             }
             : undefined,
         muiTableContainerProps: {
@@ -237,14 +288,16 @@ const Example = () => {
                 minHeight: '500px',
             },
         },
+        localization: MRT_Localization_ZH_HANS,
         onCreatingRowCancel: resetMessage,
         onCreatingRowSave: handleCreateProduct,
         onEditingRowCancel: resetMessage,
-        onEditingRowSave: handleSaveUser,
+        onEditingRowSave: handleSaveProduct,
         //optionally customize modal content
         renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
             <>
-                <DialogTitle>Create New Product</DialogTitle>
+                {console.log(internalEditComponents)}
+                <DialogTitle>添加产品</DialogTitle>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
                 >
@@ -256,7 +309,7 @@ const Example = () => {
                         aria-controls="manage-category"
                         id="managecategory"
                     >
-                        Manage Category
+                        管理分类
                     </AccordionSummary>
                     <AccordionDetails>
                         <TextField
@@ -270,8 +323,8 @@ const Example = () => {
                         />
                     </AccordionDetails>
                     <AccordionActions>
-                        <Button onClick={handleAddProductCategory} disabled={categoryText === ''}>Add</Button>
-                        <Button onClick={handleRemoveCategoryOpen} disabled={categoryText === ''}>Remove</Button>
+                        <Button onClick={handleAddProductCategory} disabled={categoryText === ''}>添加</Button>
+                        <Button onClick={handleRemoveCategoryOpen} disabled={categoryText === ''}>删除</Button>
                         <Dialog
                             open={removeCategoryOpen}
                             onClose={handleRemoveCategoryClose}
@@ -279,17 +332,17 @@ const Example = () => {
                             aria-describedby="alert-dialog-description"
                         >
                             <DialogTitle id="alert-dialog-title">
-                                {"Remove Product Category"}
+                                {"删除产品分类"}
                             </DialogTitle>
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                    {`Are your sure you want to remove product category: ${categoryText}?`}
+                                    {`确定删除产品分类: ${categoryText}?`}
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleRemoveCategoryClose}>Cancel</Button>
+                                <Button onClick={handleRemoveCategoryClose}>取消</Button>
                                 <Button onClick={handleRemoveCategory} autoFocus>
-                                    Yes
+                                    确认
                                 </Button>
                             </DialogActions>
                         </Dialog>
@@ -306,7 +359,8 @@ const Example = () => {
         //optionally customize modal content
         renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
             <>
-                <DialogTitle variant="h3">Edit User</DialogTitle>
+                {console.log(row.id)}
+                <DialogTitle variant="h3">编辑产品</DialogTitle>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
                 >
@@ -319,12 +373,12 @@ const Example = () => {
         ),
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
-                <Tooltip title="Edit">
+                <Tooltip title="编辑">
                     <IconButton onClick={() => table.setEditingRow(row)}>
                         <EditIcon />
                     </IconButton>
                 </Tooltip>
-                <Tooltip title="Delete">
+                <Tooltip title="删除">
                     <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
                         <DeleteIcon />
                     </IconButton>
@@ -344,34 +398,19 @@ const Example = () => {
                     // );
                 }}
             >
-                Create New Product
+                添加产品或管理分类
             </Button>
         ),
         state: {
-            isLoading: isLoadingUsers,
-            isSaving: isCreatingUser || isUpdatingUser || isDeletingUser,
-            showAlertBanner: isLoadingUsersError,
-            showProgressBars: isFetchingUsers,
+            isLoading: isLoadingProducts,
+            isSaving: isCreatingProduct || isUpdatingProduct || isDeletingProduct,
+            showAlertBanner: isLoadingProductsError,
+            showProgressBars: isLoadingProducts,
         },
     });
 
     return <MaterialReactTable table={table} />;
 };
-
-//CREATE hook (post new user to api)
-function useCreateProduct() {
-    return { data: fakeData };
-}
-
-//READ hook (get users from api)
-function useGetUsers() {
-    return { data: fakeData };
-}
-
-//UPDATE hook (put user in api)
-function useUpdateUser() {
-    return Promise.resolve(fakeData);
-}
 
 //DELETE hook (delete user in api)
 function useDeleteUser() {
@@ -387,20 +426,20 @@ const ExampleWithProviders = () => (
 export default ExampleWithProviders;
 
 const validateRequired = (value) => !!value.length;
-const validateEmail = (email) =>
-    !!email.length &&
-    email
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        );
 
-function validateUser(user) {
+function validateProduct(product) {
     return {
-        firstName: !validateRequired(user.firstName)
-            ? 'First Name is Required'
+        name: !validateRequired(product.name)
+            ? '请输入产品名称'
             : '',
-        lastName: !validateRequired(user.lastName) ? 'Last Name is Required' : '',
-        email: !validateEmail(user.email) ? 'Incorrect Email Format' : '',
+        description: !validateRequired(product.description)
+            ? '请输入产品描述'
+            : '',
+        price: !validateRequired(product.price)
+            ? '请输入产品价格'
+            : '',
+        category: !validateRequired(product.category)
+            ? '请输入产品分类'
+            : ''
     };
 }

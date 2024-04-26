@@ -31,7 +31,7 @@ function Bar() {
     const languages = { zh: t("zh"), en: t("en") };
 
     const menus = userLoggedIn ? isAdmin(userPrivileges) ? { 'Admin Dashboard': ['Manage Products'] } : { Products: [] } : {};
-    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+    const settings = {logout: t("appBar").settings.logout};
 
     const navigate = useNavigate();
 
@@ -55,9 +55,15 @@ function Bar() {
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = (link) => {
-        navigate(link)
+    const handleCloseUserMenu = (e, setting) => {
+        if(e.target.innerText) {
+            navigate(`/${setting.toLowerCase().replace(/\s/g, '')}`)
+        }
         setAnchorElUser(null);
+    };
+
+    const handleLoginButtonClicked = (link) => {
+        navigate('login')
     };
 
     return (
@@ -177,14 +183,14 @@ function Bar() {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    {settings.map((setting) => (
-                                        <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
-                                            <Typography textAlign="center">{setting}</Typography>
+                                    {Object.keys(settings).map((setting) => (
+                                        <MenuItem key={setting} onClick={(e) => handleCloseUserMenu(e, setting)}>
+                                            <Typography textAlign="center">{settings[setting]}</Typography>
                                         </MenuItem>
                                     ))}
                                 </Menu>
                             </>
-                            : <Button color="inherit" onClick={() => handleCloseUserMenu('login')}>{t("login")}</Button>}
+                            : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
                     </Box>
                 </Toolbar>
             </Container>

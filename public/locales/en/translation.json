@@ -18,5 +18,10 @@
         "submitButtonText": "Send reset link",
         "successfulMessage": "Password reset email sent!",
         "failuerMessage": "Invalid email!"
+    },
+    "appBar": {
+        "settings": {
+            "logout": "Logout"
+        }
     }
 }
