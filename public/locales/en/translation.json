@@ -9,6 +9,7 @@
         "login": "Log in",
         "forgotPassword": "Forgot password?",
         "signup": "Don't have an account? Sign Up",
+        "signupLink": "https://docs.google.com/forms/d/e/1FAIpQLSc3zH_vV27IdS5ufrBMXsxCzX_3cubVT3vwoqHPFJZWsIVAYA/viewform",
         "signedInMessage": "Successfully logged in. Redireting you to home page now..."
     },
     "forgotPasswordPage": {

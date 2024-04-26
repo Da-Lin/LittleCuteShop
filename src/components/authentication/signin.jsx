@@ -124,7 +124,7 @@ export default function Authentication() {
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="https://docs.google.com/forms/d/e/1FAIpQLSc3zH_vV27IdS5ufrBMXsxCzX_3cubVT3vwoqHPFJZWsIVAYA/viewform" variant="body2">
+                                    <Link href={t('loginPage').signupLink} variant="body2">
                                         {t('loginPage').signup}
                                     </Link>
                                 </Grid>

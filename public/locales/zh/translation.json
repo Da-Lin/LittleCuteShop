@@ -9,6 +9,7 @@
         "login": "登录",
         "forgotPassword": "忘掉密码了？",
         "signup": "想要加入我们？欢迎注册！",
+        "signupLink": "https://docs.google.com/forms/d/e/1FAIpQLSe92dX_xS2tG-Y3VnCAq4suG5TPOtc6kvjDIvCp-qXttz27Sw/viewform",
         "signedInMessage": "登录成功。跳转至主页中..."
     },
     "forgotPasswordPage": {
