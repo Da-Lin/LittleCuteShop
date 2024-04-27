@@ -2,9 +2,11 @@ import { collection, query, getDocs, where, documentId, setDoc, addDoc, doc, get
 import { db } from "../firebase";
 import { desaturate } from "polished";
 import { Description } from "@mui/icons-material";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const productCategoriesRef = collection(db, "productCategories");
 const productsRef = collection(db, "products");
+const storage = getStorage();
 
 export const getProductCategories = async () => {
     const productCategories = []
@@ -12,7 +14,6 @@ export const getProductCategories = async () => {
     querySnapshot.forEach((doc) => {
         productCategories.push(doc.id)
     });
-    console.log(productCategories)
     return productCategories
 }
 
@@ -36,11 +37,24 @@ export const productCategoryExist = async (data) => {
 
 export const addProduct = async (data) => {
     if (!await productNameExist(data)) {
+        const imgPaths = []
+        const imgUrls = []
+        if (data.imgList) {
+            for (const img of data.imgList) {
+                const storageRef = ref(storage, `products/${data.category}/${data.name}/${img.name}`);
+                const res = await uploadBytes(storageRef, img, { contentType: img.type })
+                imgUrls.push(await getDownloadURL(storageRef))
+                imgPaths.push(res.metadata.fullPath)
+            }
+        }
+
         const docRef = await addDoc(productsRef, {
             name: data.name,
             description: data.description,
             price: data.price,
-            category: data.category
+            category: data.category,
+            imgLinks: imgPaths,
+            imgUrls: imgUrls
         });
         return updateDoc(docRef, {
             id: docRef.id

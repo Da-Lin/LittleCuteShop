@@ -19,22 +19,19 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    FormControl,
     IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
     TextField,
     Tooltip,
 } from '@mui/material';
 import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
-import { fakeData } from './makeData';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React from 'react';
 import { addProduct, addProductCategories, deleteProduct, deleteProductCategories, getProductCategories, getProducts, productCategoryExist, productNameExist, productNameExistForUpdate, updateProduct } from '../../firebase/firestore/product';
+import styled from '@emotion/styled';
+import ImageUpload from './imageUpload';
 
 const Example = () => {
     const [validationErrors, setValidationErrors] = useState({});
@@ -50,8 +47,10 @@ const Example = () => {
     const [isDeletingProduct, setIsDeletingProduct] = useState(false)
     const [isLoadingProducts, setIsLoadingProducts] = useState(false)
     const [isLoadingProductsError, setIsLoadingProductsError] = useState(false)
+    const [imgList, setImgList] = useState([])
 
     useEffect(() => {
+        setImgList([])
         setIsLoadingProducts(true)
         setIsLoadingProductsError(false)
         async function getAndSetCategories() {
@@ -102,7 +101,8 @@ const Example = () => {
         setRemoveCategorOpen(false)
     }
 
-    const resetMessage = () => {
+    const resetState = () => {
+        setImgList([])
         setValidationErrors({})
         setRemoveCategorOpen(false)
         setCategoryText('')
@@ -212,10 +212,6 @@ const Example = () => {
         [categories, validationErrors],
     );
 
-    //call DELETE hook
-    const { mutateAsync: deleteUser, isPending: isDeletingUser } =
-        useDeleteUser();
-
     //CREATE action
     const handleCreateProduct = async ({ values, table }) => {
         const newValidationErrors = validateProduct(values);
@@ -230,6 +226,7 @@ const Example = () => {
             return;
         }
         setValidationErrors({});
+        values = { ...values, imgList: imgList }
         await addProduct(values).catch((error) => {
             console.log(error)
         });
@@ -289,27 +286,27 @@ const Example = () => {
             },
         },
         localization: MRT_Localization_ZH_HANS,
-        onCreatingRowCancel: resetMessage,
+        onCreatingRowCancel: resetState,
         onCreatingRowSave: handleCreateProduct,
-        onEditingRowCancel: resetMessage,
+        onEditingRowCancel: resetState,
         onEditingRowSave: handleSaveProduct,
         //optionally customize modal content
         renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
             <>
-                {console.log(internalEditComponents)}
                 <DialogTitle>添加产品</DialogTitle>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
                 >
                     {internalEditComponents} {/* or render custom edit components here */}
                 </DialogContent>
+                <ImageUpload imgList={imgList} setImgList={setImgList} />
                 <Accordion>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="manage-category"
                         id="managecategory"
                     >
-                        管理分类
+                        管理所有产品分类
                     </AccordionSummary>
                     <AccordionDetails>
                         <TextField
@@ -317,7 +314,7 @@ const Example = () => {
                             required
                             fullWidth
                             name="category"
-                            label="Category"
+                            label="分类"
                             id="category"
                             onChange={handleCategorySelectChange}
                         />
@@ -359,7 +356,6 @@ const Example = () => {
         //optionally customize modal content
         renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
             <>
-                {console.log(row.id)}
                 <DialogTitle variant="h3">编辑产品</DialogTitle>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
@@ -411,12 +407,6 @@ const Example = () => {
 
     return <MaterialReactTable table={table} />;
 };
-
-//DELETE hook (delete user in api)
-function useDeleteUser() {
-    return Promise.resolve(fakeData);
-}
-
 
 const ExampleWithProviders = () => (
     //Put this with your other react-query providers near root of your app
