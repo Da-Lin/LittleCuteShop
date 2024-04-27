@@ -6,21 +6,29 @@ import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Alert, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function ImageUpload({ imgList, setImgList }) {
     const [imgNameList, setImgNameList] = useState([])
+    const [imgErrorMessage, setImgErrorMessage] = useState('');
+
+    const validImgType = ['image/jpeg', 'image/png', 'image/svg+xml']
 
     const handleFileUpload = (e) => {
+        setImgErrorMessage('')
         const file = e.target.files[0]
-        console.log(file)
+        if (!validImgType.includes(file.type)) {
+            setImgErrorMessage("图片格式不对，当前仅支持jpeg, png, svg")
+            return;
+        }
         setImgNameList([...imgNameList, file.name])
         setImgList([...imgList, file])
     }
 
     const handleDelete = (index) => {
+        setImgErrorMessage('')
         setImgNameList(imgNameList.filter((id, idx, arr) => idx !== index))
         setImgList(imgList.filter((id, idx, arr) => idx !== index))
     }
@@ -36,11 +44,6 @@ export default function ImageUpload({ imgList, setImgList }) {
         whiteSpace: 'nowrap',
         width: 1,
     });
-
-
-    const Demo = styled('div')(({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
-    }));
 
     return (
         <Accordion>
@@ -80,10 +83,7 @@ export default function ImageUpload({ imgList, setImgList }) {
                     </Button>
                 </Grid>
             </AccordionDetails>
-            <AccordionActions>
-                {/* <Button onClick={handleAddProductCategory} disabled={categoryText === ''}>添加</Button>
-                <Button onClick={handleRemoveCategoryOpen} disabled={categoryText === ''}>删除</Button> */}
-            </AccordionActions>
+            {imgErrorMessage && <Alert severity="error">{imgErrorMessage}</Alert>}
         </Accordion>
     );
 }

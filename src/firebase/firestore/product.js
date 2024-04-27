@@ -53,7 +53,7 @@ export const addProduct = async (data) => {
             description: data.description,
             price: data.price,
             category: data.category,
-            imgLinks: imgPaths,
+            imgPaths: imgPaths,
             imgUrls: imgUrls
         });
         return updateDoc(docRef, {
@@ -86,7 +86,9 @@ export const getProducts = async () => {
             name: product.name,
             description: product.description,
             price: product.price,
-            category: product.category
+            category: product.category,
+            imgPaths: product.imgPaths,
+            imgUrls: product.imgUrls
         })
     });
     return products

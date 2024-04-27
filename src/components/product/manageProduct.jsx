@@ -22,6 +22,7 @@ import {
     IconButton,
     TextField,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
@@ -32,6 +33,7 @@ import React from 'react';
 import { addProduct, addProductCategories, deleteProduct, deleteProductCategories, getProductCategories, getProducts, productCategoryExist, productNameExist, productNameExistForUpdate, updateProduct } from '../../firebase/firestore/product';
 import styled from '@emotion/styled';
 import ImageUpload from './imageUpload';
+import ProdictImageList from './imageList';
 
 const Example = () => {
     const [validationErrors, setValidationErrors] = useState({});
@@ -43,6 +45,7 @@ const Example = () => {
     const [categories, setCategories] = useState([])
     const [products, setProducts] = useState([])
     const [isCreatingProduct, setIsCreatingProduct] = useState(false)
+
     const [isUpdatingProduct, setIsUpdatingProduct] = useState(false)
     const [isDeletingProduct, setIsDeletingProduct] = useState(false)
     const [isLoadingProducts, setIsLoadingProducts] = useState(false)
@@ -220,11 +223,13 @@ const Example = () => {
             return;
         }
         setIsCreatingProduct(true)
+
         if (await productNameExist(values)) {
             setValidationErrors({ name: "该产品名称已经存在" })
             setIsCreatingProduct(false)
             return;
         }
+
         setValidationErrors({});
         values = { ...values, imgList: imgList }
         await addProduct(values).catch((error) => {
@@ -397,6 +402,26 @@ const Example = () => {
                 添加产品或管理分类
             </Button>
         ),
+        enableExpandAll: false, //disable expand all button
+        // muiDetailPanelProps: () => ({
+        //     sx: (theme) => ({
+        //         backgroundColor:
+        //             theme.palette.mode === 'dark'
+        //                 ? 'rgba(255,210,244,0.1)'
+        //                 : 'white',
+        //     }),
+        // }),
+        //custom expand button rotation
+        muiExpandButtonProps: ({ row, table }) => ({
+            onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //only 1 detail panel open at a time
+            sx: {
+                transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
+                transition: 'transform 0.2s',
+            },
+        }),
+        //conditionally render detail panel
+        renderDetailPanel: ({ row }) =>
+            row.original.imgPaths ? <ProdictImageList rowData = {row.original}/> : null,
         state: {
             isLoading: isLoadingProducts,
             isSaving: isCreatingProduct || isUpdatingProduct || isDeletingProduct,
