@@ -2,7 +2,7 @@ import { collection, query, getDocs, where, documentId, setDoc, addDoc, doc, get
 import { db } from "../firebase";
 import { desaturate } from "polished";
 import { Description } from "@mui/icons-material";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const productCategoriesRef = collection(db, "productCategories");
 const productsRef = collection(db, "products");
@@ -63,17 +63,61 @@ export const addProduct = async (data) => {
 }
 
 export const updateProduct = async (data) => {
+    const imgPaths = []
+    const imgUrls = []
+    const imgNamesToDelete = data.imgNamesToDelete
+    const existingImgNames = data.imgPaths.map((imgPath => imgPath.split('/').pop())).filter(imgName => !imgNamesToDelete.includes(imgName))
+
+    data.imgPaths.forEach(imgPath => {
+        const savedImgName = imgPath.split('/').pop()
+        if (existingImgNames.includes(savedImgName)) {
+            imgPaths.push(imgPath)
+        }
+    })
+
+    data.imgUrls.forEach(imgUrl => {
+        for (let existingImgName of existingImgNames) {
+            if (imgUrl.includes(existingImgName)) {
+                imgUrls.push(imgUrl)
+                continue
+            }
+        }
+    })
+
+    if (imgNamesToDelete) {
+        for (const imgName of imgNamesToDelete) {
+            const storageRef = ref(storage, `products/${data.category}/${data.name}/${imgName}`);
+            await deleteObject(storageRef)
+        }
+    }
+
+    if (data.imgList) {
+        for (const img of data.imgList) {
+            const storageRef = ref(storage, `products/${data.category}/${data.name}/${img.name}`);
+            const res = await uploadBytes(storageRef, img, { contentType: img.type })
+            imgUrls.push(await getDownloadURL(storageRef))
+            imgPaths.push(res.metadata.fullPath)
+        }
+    }
+
     const docRef = doc(db, `products`, data.id)
     return updateDoc(docRef, {
         name: data.name,
         description: data.description,
         price: data.price,
-        category: data.category
+        category: data.category,
+        imgPaths: imgPaths,
+        imgUrls: imgUrls
     });
 }
 
-export const deleteProduct = async (id) => {
-    return await deleteDoc(doc(db, `products`, id));
+export const deleteProduct = async (data) => {
+    for (const imgPath of data.imgPaths) {
+        const storageRef = ref(storage, imgPath);
+        await deleteObject(storageRef)
+    }
+
+    return await deleteDoc(doc(db, `products`, data.id));
 }
 
 export const getProducts = async () => {

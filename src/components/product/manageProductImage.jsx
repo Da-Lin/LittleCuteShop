@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -10,11 +10,17 @@ import { Accordion, AccordionDetails, AccordionSummary, Alert, Button } from '@m
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-export default function ImageUpload({ imgList, setImgList }) {
-    const [imgNameList, setImgNameList] = useState([])
+export default function ManageProductImage({ rowData, imgList, setImgList }) {
+    const [imgNameList, setImgNameList] = useState(rowData.imgPaths.map((imgPath => imgPath.split('/').pop())))
+    const [existingImgNames, setExistingImgNames] = useState(rowData.imgPaths.map((imgPath => imgPath.split('/').pop())))
     const [imgErrorMessage, setImgErrorMessage] = useState('');
 
     const validImgType = ['image/jpeg', 'image/png', 'image/svg+xml']
+    const IMG_NAMES_TO_DELETE = "imgNamesToDelete"
+
+    useEffect(() => {
+        rowData[IMG_NAMES_TO_DELETE] = []
+    }, [rowData])
 
     const handleFileUpload = (e) => {
         setImgErrorMessage('')
@@ -32,6 +38,12 @@ export default function ImageUpload({ imgList, setImgList }) {
     }
 
     const handleDelete = (index) => {
+        console.log(imgNameList[index])
+        const imgNameToDelete = imgNameList[index]
+        if (!rowData[IMG_NAMES_TO_DELETE].includes(imgNameToDelete) && existingImgNames.includes(imgNameToDelete)) {
+            setExistingImgNames(existingImgNames.filter(existingImgName => existingImgName !== imgNameToDelete))
+            rowData[IMG_NAMES_TO_DELETE].push(imgNameToDelete)
+        }
         setImgErrorMessage('')
         setImgNameList(imgNameList.filter((id, idx, arr) => idx !== index))
         setImgList(imgList.filter((id, idx, arr) => idx !== index))
@@ -56,7 +68,7 @@ export default function ImageUpload({ imgList, setImgList }) {
                 aria-controls="manage-category"
                 id="managecategory"
             >
-                上传该产品照片
+                修改产品照片
             </AccordionSummary>
             <AccordionDetails>
                 <Grid item >

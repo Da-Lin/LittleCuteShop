@@ -34,6 +34,7 @@ import { addProduct, addProductCategories, deleteProduct, deleteProductCategorie
 import styled from '@emotion/styled';
 import ImageUpload from './imageUpload';
 import ProdictImageList from './imageList';
+import ManageProductImage from './manageProductImage';
 
 const Example = () => {
     const [validationErrors, setValidationErrors] = useState({});
@@ -50,9 +51,14 @@ const Example = () => {
     const [isDeletingProduct, setIsDeletingProduct] = useState(false)
     const [isLoadingProducts, setIsLoadingProducts] = useState(false)
     const [isLoadingProductsError, setIsLoadingProductsError] = useState(false)
+
     const [imgList, setImgList] = useState([])
+    const [existingImgNames, setExistingImgNames] = useState([])
+
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
+        setErrorMessage('')
         setImgList([])
         setIsLoadingProducts(true)
         setIsLoadingProductsError(false)
@@ -105,6 +111,7 @@ const Example = () => {
     }
 
     const resetState = () => {
+        setErrorMessage('')
         setImgList([])
         setValidationErrors({})
         setRemoveCategorOpen(false)
@@ -234,6 +241,7 @@ const Example = () => {
         values = { ...values, imgList: imgList }
         await addProduct(values).catch((error) => {
             console.log(error)
+            setErrorMessage('添加产品失败')
         });
         setIsCreatingProduct(false)
         table.setCreatingRow(null); //exit creating mode
@@ -248,15 +256,19 @@ const Example = () => {
             setValidationErrors(newValidationErrors);
             return;
         }
+
         setIsUpdatingProduct(true)
         if (await productNameExistForUpdate(values)) {
             setValidationErrors({ name: "新产品名称已经存在" })
             setIsUpdatingProduct(false)
             return;
         }
+
         setValidationErrors({});
+        values = { ...values, imgList: imgList, imgPaths: row.original.imgPaths, imgUrls: row.original.imgUrls, imgNamesToDelete: row.original.imgNamesToDelete }
         await updateProduct(values).catch((error) => {
             console.log(error)
+            setErrorMessage('更新产品失败')
         })
         setIsUpdatingProduct(false)
         table.setEditingRow(null); //exit editing mode
@@ -266,8 +278,9 @@ const Example = () => {
     const openDeleteConfirmModal = async (row) => {
         if (window.confirm(`确定删除产品:${row.original.name}?`)) {
             setIsDeletingProduct(true)
-            await deleteProduct(row.original.id).catch((error) => {
+            await deleteProduct(row.original).catch((error) => {
                 console.log(error)
+                setErrorMessage('删除产品失败')
             })
             setIsDeletingProduct(false)
         }
@@ -361,12 +374,13 @@ const Example = () => {
         //optionally customize modal content
         renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
             <>
-                <DialogTitle variant="h3">编辑产品</DialogTitle>
+                <DialogTitle >编辑产品</DialogTitle>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
                 >
                     {internalEditComponents} {/* or render custom edit components here */}
                 </DialogContent>
+                <ManageProductImage rowData={row.original} imgList={imgList} setImgList={setImgList} existingImgNames={existingImgNames} setExistingImgNames={setExistingImgNames} />
                 <DialogActions>
                     <MRT_EditActionButtons variant="text" table={table} row={row} />
                 </DialogActions>
@@ -421,7 +435,7 @@ const Example = () => {
         }),
         //conditionally render detail panel
         renderDetailPanel: ({ row }) =>
-            row.original.imgPaths ? <ProdictImageList rowData = {row.original}/> : null,
+            row.original.imgPaths ? <ProdictImageList rowData={row.original} /> : null,
         state: {
             isLoading: isLoadingProducts,
             isSaving: isCreatingProduct || isUpdatingProduct || isDeletingProduct,
@@ -430,12 +444,19 @@ const Example = () => {
         },
     });
 
-    return <MaterialReactTable table={table} />;
+    return (
+        <>
+            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+            <MaterialReactTable table={table} />
+        </>
+    );
 };
 
 const ExampleWithProviders = () => (
-    //Put this with your other react-query providers near root of your app
-    <Example />
+    <>
+
+        <Example />
+    </>
 );
 
 export default ExampleWithProviders;
