@@ -1,11 +1,9 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '../../contexts/authContext'
 import { useState } from 'react';
 import { doPasswordReset } from '../../firebase/auth'

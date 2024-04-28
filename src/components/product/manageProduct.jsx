@@ -22,7 +22,6 @@ import {
     IconButton,
     TextField,
     Tooltip,
-    Typography,
 } from '@mui/material';
 import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
@@ -31,7 +30,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React from 'react';
 import { addProduct, addProductCategories, deleteProduct, deleteProductCategories, getProductCategories, getProducts, productCategoryExist, productNameExist, productNameExistForUpdate, updateProduct } from '../../firebase/firestore/product';
-import styled from '@emotion/styled';
 import ImageUpload from './imageUpload';
 import ProdictImageList from './imageList';
 import ManageProductImage from './manageProductImage';
@@ -89,6 +87,7 @@ const Example = () => {
             })
         }
         getAndSetProducts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [manageCategoryMessage, manageCategoryErrorMessage, isCreatingProduct, isUpdatingProduct, isDeletingProduct])
 
     const handleRemoveCategoryOpen = () => {

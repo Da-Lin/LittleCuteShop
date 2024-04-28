@@ -40,10 +40,11 @@ export default function MenuList() {
   }
 
   const handleMenuItemClick = (e, index, link) => {
-    console.log(index)
     setSelectedIndex(index);
     setAnchorEl(null);
-    navigate(`/products?category=${link}`)
+    if (link) {
+      navigate(`/products?category=${link}`)
+    }
   };
 
   const handleClose = () => {
@@ -117,9 +118,15 @@ export default function MenuList() {
             MenuListProps={{
               'aria-labelledby': 'lock-button',
               role: 'listbox',
+              onMouseEnter: handleHover,
+              onMouseLeave: handleCloseHover,
+              style: { pointerEvents: "auto" }
             }}
+            anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+            style={{ pointerEvents: "none" }}
           >
-            <MenuItem>
+            <MenuItem
+              onClick={(event) => handleMenuItemClick(event, 0, null)}>
               English menus are not supported yet
             </MenuItem>
           </Menu>

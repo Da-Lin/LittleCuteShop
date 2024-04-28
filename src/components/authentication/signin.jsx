@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '../../contexts/authContext'
 import { useState } from 'react';
 import { doSignInWithEmailAndPassword } from '../../firebase/auth'
