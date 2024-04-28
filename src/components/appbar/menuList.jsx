@@ -4,7 +4,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getProductCategories } from '../../firebase/firestore/product';
 import { useTranslation } from 'react-i18next';
 
@@ -18,12 +18,20 @@ export default function MenuList() {
   const { t, i18n } = useTranslation()
   const isChinese = i18n.language === 'zh'
 
+  const location = useLocation();
+
   useEffect(() => {
     async function getAndSetCategories() {
       setCategories(await getProductCategories())
     }
     getAndSetCategories()
   }, [])
+
+  useEffect(() => {
+    if (location.pathname !== '/products') {
+      setSelectedIndex(null)
+    }
+  }, [location])
 
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
