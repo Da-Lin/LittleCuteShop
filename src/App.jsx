@@ -11,6 +11,17 @@ import ForgotPassword from "./components/authentication/forgotPassword";
 import ManageProduct from "./components/product/manageProduct";
 import Products from "./components/product/products";
 import Product from "./components/product/product";
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+
+const THEME = createTheme({
+  typography: {
+    "fontFamily": `cursive, "kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
+    "fontSize": 15,
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 500
+  }
+});
 
 function App() {
   const routesArray = [
@@ -53,10 +64,12 @@ function App() {
   ];
   let routesElement = useRoutes(routesArray);
   return (
-    <AuthProvider>
-      <Bar />
-      {routesElement}
-    </AuthProvider>
+    <ThemeProvider theme={THEME}>
+      <AuthProvider>
+        <Bar />
+        {routesElement}
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -19,7 +19,6 @@ import LogoSide from './logoSide';
 import { setUpNewUser } from '../../firebase/firestore/authentication';
 import { useTranslation } from 'react-i18next';
 
-const defaultTheme = createTheme();
 
 export default function Authentication() {
 
@@ -51,94 +50,92 @@ export default function Authentication() {
 
     return (<>
         {userLoggedIn ? <Navigate to={'/home'} replace={true} /> :
-            <ThemeProvider theme={defaultTheme}>
-                <Grid container component="main" sx={{ height: '93.5vh' }}>
-                    {userLoggedIn && (<Navigate to={'/home'} replace={true} />)}
-                    <CssBaseline />
-                    <LogoSide />
-                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                        <Box
-                            sx={{
-                                my: 8,
-                                mx: 4,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
+            <Grid container component="main" sx={{ height: '93.5vh' }}>
+                {userLoggedIn && (<Navigate to={'/home'} replace={true} />)}
+                <CssBaseline />
+                <LogoSide />
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    <Box
+                        sx={{
+                            my: 8,
+                            mx: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label={t('email')}
+                            name="email"
+                            autoFocus
+                            error={emailError}
+                            helperText={emailError ? "Please enter a valid email" : ""}
+                            onChange={(e) => {
+                                setErrorMessage('')
+                                setEmail(e.target.value)
+                                if (!e.target.value) {
+                                    setEmailError(false);
+                                } else if (!validateEmail(e.target.value)) {
+                                    setEmailError(true);
+                                } else {
+                                    setEmailError(false);
+                                }
                             }}
+                            inputProps={{
+                                type: "email",
+                            }}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label={t('password')}
+                            type="password"
+                            id="password"
+                            onChange={(event) => {
+                                setPassword(event.target.value)
+                                setErrorMessage('')
+                            }}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={email === '' || password === '' || emailError}
+                            onClick={handleSubmit}
                         >
-                            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                                <LockOutlinedIcon />
-                            </Avatar>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label={t('email')}
-                                name="email"
-                                autoFocus
-                                error={emailError}
-                                helperText={emailError ? "Please enter a valid email" : ""}
-                                onChange={(e) => {
-                                    setErrorMessage('')
-                                    setEmail(e.target.value)
-                                    if (!e.target.value) {
-                                        setEmailError(false);
-                                    } else if (!validateEmail(e.target.value)) {
-                                        setEmailError(true);
-                                    } else {
-                                        setEmailError(false);
-                                    }
-                                }}
-                                inputProps={{
-                                    type: "email",
-                                }}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label={t('password')}
-                                type="password"
-                                id="password"
-                                onChange={(event) => {
-                                    setPassword(event.target.value)
-                                    setErrorMessage('')
-                                }}
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                disabled={email === '' || password === '' || emailError}
-                                onClick={handleSubmit}
-                            >
-                                {t('loginPage').login}
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="/forgotpassword" variant="body2">
-                                        {t('loginPage').forgotPassword}
-                                    </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link href={t('loginPage').signupLink} variant="body2">
-                                        {t('loginPage').signup}
-                                    </Link>
-                                </Grid>
+                            {t('loginPage').login}
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="/forgotpassword" variant="body2">
+                                    {t('loginPage').forgotPassword}
+                                </Link>
                             </Grid>
-                            <Grid container justifyContent="center">
-                                {isSigningIn && <CircularProgress />}
-                                {signedInMessage && <Alert>{signedInMessage}</Alert>}
-                                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            <Grid item>
+                                <Link href={t('loginPage').signupLink} variant="body2">
+                                    {t('loginPage').signup}
+                                </Link>
                             </Grid>
-                            <Copyright sx={{ mt: 8, mb: 4 }} />
-                        </Box>
-                    </Grid>
+                        </Grid>
+                        <Grid container justifyContent="center">
+                            {isSigningIn && <CircularProgress />}
+                            {signedInMessage && <Alert>{signedInMessage}</Alert>}
+                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                        </Grid>
+                        <Copyright sx={{ mt: 8, mb: 4 }} />
+                    </Box>
                 </Grid>
-            </ThemeProvider>
+            </Grid>
         }
     </>
     );

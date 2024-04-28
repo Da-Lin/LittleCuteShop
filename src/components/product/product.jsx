@@ -39,7 +39,7 @@ export default function Product() {
             <Grid item sm={1}>
                 <Grid container direction='column'>
                     {product.imgUrls && product.imgUrls.map((imageUrl, index) => (
-                        <img key={product.name} alt='name' src={imageUrl} height={100} onClick={() => setSelectedImgIndex(index)} style={{ border: index === selectedImgIndex ? 'solid 1px blue' : 'solid 1px #eee', cursor: 'pointer' }} />
+                        <img key={product.imgPaths[index]} alt='name' src={imageUrl} height={100} onClick={() => setSelectedImgIndex(index)} style={{ border: index === selectedImgIndex ? 'solid 1px blue' : 'solid 1px #eee', cursor: 'pointer' }} />
                     ))}
                 </Grid>
             </Grid>

@@ -16,8 +16,6 @@ import LogoSide from './logoSide';
 import { useTranslation } from 'react-i18next';
 import { validateEmail } from './signin';
 
-const defaultTheme = createTheme();
-
 export default function ForgotPassword() {
 
     const { userLoggedIn } = useAuth()
@@ -47,72 +45,69 @@ export default function ForgotPassword() {
 
     return (<>
         {userLoggedIn ? <Navigate to={'/home'} replace={true} /> :
-            <ThemeProvider theme={defaultTheme}>
-                <Grid container component="main" sx={{ height: '93.5vh' }}>
-                    {userLoggedIn && (<Navigate to={'/home'} replace={true} />)}
-                    <CssBaseline />
-                    <LogoSide />
-                    <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                        <Box
-                            sx={{
-                                my: 8,
-                                mx: 4,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
+            <Grid container component="main" sx={{ height: '93.5vh' }}>
+                {userLoggedIn && (<Navigate to={'/home'} replace={true} />)}
+                <LogoSide />
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    <Box
+                        sx={{
+                            my: 8,
+                            mx: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography variant="h3" gutterBottom align="center">
+                            {t('forgotPasswordPage').title}
+                        </Typography>
+                        <Typography variant="body2" align="center">
+                            {t('forgotPasswordPage').content}
+                        </Typography>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label={t('email')}
+                            name="email"
+                            autoFocus
+                            error={emailError}
+                            helperText={emailError ? "Please enter a valid email" : ""}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                if (!e.target.value) {
+                                    setEmailError(false);
+                                } else if (!validateEmail(e.target.value)) {
+                                    setEmailError(true);
+                                } else {
+                                    setEmailError(false);
+                                }
                             }}
+                            inputProps={{
+                                type: "email",
+                            }}
+                        />
+
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={email === '' || emailError}
+                            onClick={handleSubmit}
                         >
-                            <Typography variant="h3" gutterBottom align="center">
-                                {t('forgotPasswordPage').title}
-                            </Typography>
-                            <Typography variant="body2" align="center">
-                                {t('forgotPasswordPage').content}
-                            </Typography>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label={t('email')}
-                                name="email"
-                                autoFocus
-                                error={emailError}
-                                helperText={emailError ? "Please enter a valid email" : ""}
-                                onChange={(e) => {
-                                    setEmail(e.target.value)
-                                    if (!e.target.value) {
-                                        setEmailError(false);
-                                    } else if (!validateEmail(e.target.value)) {
-                                        setEmailError(true);
-                                    } else {
-                                        setEmailError(false);
-                                    }
-                                }}
-                                inputProps={{
-                                    type: "email",
-                                }}
-                            />
+                            {t('forgotPasswordPage').submitButtonText}
+                        </Button>
 
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                disabled={email === '' || emailError}
-                                onClick={handleSubmit}
-                            >
-                                {t('forgotPasswordPage').submitButtonText}
-                            </Button>
-
-                            <Grid container justifyContent="center">
-                                {isloading && <CircularProgress />}
-                                {confrimationMessage && <Alert >{confrimationMessage}</Alert>}
-                                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                            </Grid>
-                        </Box>
-                    </Grid>
+                        <Grid container justifyContent="center">
+                            {isloading && <CircularProgress />}
+                            {confrimationMessage && <Alert >{confrimationMessage}</Alert>}
+                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                        </Grid>
+                    </Box>
                 </Grid>
-            </ThemeProvider>
+            </Grid>
         }
     </>
     );
