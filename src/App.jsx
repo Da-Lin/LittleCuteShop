@@ -9,6 +9,7 @@ import React from "react";
 import Logout from "./components/authentication/logout";
 import ForgotPassword from "./components/authentication/forgotPassword";
 import ManageProduct from "./components/product/manageProduct";
+import Products from "./components/product/products";
 
 function App() {
   const routesArray = [
@@ -19,6 +20,10 @@ function App() {
     {
       path: "/manageproducts",
       element: <ManageProduct />,
+    },
+    {
+      path: "/products",
+      element: <Products />,
     },
     {
       path: "/login",

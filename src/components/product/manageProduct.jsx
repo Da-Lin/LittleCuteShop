@@ -60,14 +60,15 @@ const Example = () => {
     useEffect(() => {
         setErrorMessage('')
         setImgList([])
-        setIsLoadingProducts(true)
-        setIsLoadingProductsError(false)
+        
         async function getAndSetCategories() {
             setCategories(await getProductCategories())
         }
         getAndSetCategories()
 
         async function getAndSetProducts() {
+            setIsLoadingProductsError(false)
+            setIsLoadingProducts(true)
             await getProducts().then((ps) => {
                 setIsLoadingProducts(false)
                 setProducts(ps)

@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { doSignInWithEmailAndPassword } from '../../firebase/auth'
 import CircularProgress from '@mui/material/CircularProgress';
 import { Alert, Paper } from '@mui/material';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import LogoSide from './logoSide';
 import { setUpNewUser } from '../../firebase/firestore/authentication';
 import { useTranslation } from 'react-i18next';

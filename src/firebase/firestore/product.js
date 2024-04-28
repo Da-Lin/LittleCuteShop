@@ -1,7 +1,5 @@
-import { collection, query, getDocs, where, documentId, setDoc, addDoc, doc, getDoc, deleteDoc, collectionGroup, updateDoc } from "firebase/firestore";
+import { collection, query, getDocs, where, setDoc, addDoc, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { desaturate } from "polished";
-import { Description } from "@mui/icons-material";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const productCategoriesRef = collection(db, "productCategories");
@@ -123,6 +121,25 @@ export const deleteProduct = async (data) => {
 export const getProducts = async () => {
     const products = []
     const querySnapshot = await getDocs(productsRef);
+    querySnapshot.forEach((doc) => {
+        const product = doc.data()
+        products.push({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            category: product.category,
+            imgPaths: product.imgPaths,
+            imgUrls: product.imgUrls
+        })
+    });
+    return products
+}
+
+export const getCategoryProducts = async (category) => {
+    const products = []
+    const q = query(productsRef, where("category", "==", category))
+    const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
         const product = doc.data()
         products.push({

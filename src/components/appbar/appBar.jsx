@@ -19,25 +19,26 @@ import { useAuth } from '../../contexts/authContext';
 import { isAdmin } from '../../firebase/firestore/authentication';
 import MenuList from './menuList';
 import { useTranslation } from 'react-i18next';
+import AdminMenuList from './adminMenuList';
 
 function Bar() {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    // const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [anchorElLanguage, setAnchorElLanguage] = React.useState(null);
 
-    const { userLoggedIn, userPrivileges } = useAuth()
+    const { userLoggedIn, isAdminUser } = useAuth()
 
     const { t, i18n } = useTranslation()
     const languages = { zh: t("zh"), en: t("en") };
 
-    const menus = userLoggedIn ? isAdmin(userPrivileges) ? { 'Admin Dashboard': ['Manage Products'] } : { Products: [] } : {};
-    const settings = {logout: t("appBar").settings.logout};
+    const menus = userLoggedIn ? { '小可爱精选': [{ link: 'products', name: '产品展示' }] } : {};
+    const settings = { logout: t("appBar").settings.logout };
 
     const navigate = useNavigate();
 
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
+    // const handleOpenNavMenu = (event) => {
+    //     setAnchorElNav(event.currentTarget);
+    // };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -50,13 +51,17 @@ function Bar() {
         setAnchorElLanguage(null);
     };
 
-    const handleCloseNavMenu = (e) => {
-        navigate(`/${e.target.innerText.toLowerCase().replace(/\s/g, '')}`)
-        setAnchorElNav(null);
-    };
+    // const handleCloseNavMenu = (e, link) => {
+    //     navigate(`/${link.toLowerCase().replace(/\s/g, '')}`)
+    //     setAnchorElNav(null);
+    // };
+
+    // const handleExitNavMenu = (e) => {
+    //     setAnchorElNav(null);
+    // };
 
     const handleCloseUserMenu = (e, setting) => {
-        if(e.target.innerText) {
+        if (e.target.innerText) {
             navigate(`/${setting.toLowerCase().replace(/\s/g, '')}`)
         }
         setAnchorElUser(null);
@@ -81,9 +86,9 @@ function Bar() {
                         }}
                         alt="logo"
                         src={logo}
-                        onClick={handleCloseNavMenu}
+                        onClick={() => navigate('/home')}
                     />
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                    {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -107,21 +112,24 @@ function Bar() {
                                 horizontal: 'left',
                             }}
                             open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
+                            onClose={handleExitNavMenu}
                             sx={{
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
                             {
                                 Object.keys(menus).map((menu) => (
-                                    <MenuItem key={menu} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">{menus[menu]}</Typography>
-                                    </MenuItem>
+                                    menus[menu].map(option => (
+                                        <MenuItem key={option.link} onClick={(e) => handleCloseNavMenu(e, option.link)}>
+                                            <Typography textAlign="center">{option.name}</Typography>
+                                        </MenuItem>
+                                    ))
                                 ))
                             }
                         </Menu>
-                    </Box>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    </Box> */}
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
+                        {isAdminUser && <AdminMenuList />}
                         <MenuList menus={menus} />
                     </Box>
                     <Box >
