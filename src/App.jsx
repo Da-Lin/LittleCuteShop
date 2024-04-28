@@ -10,6 +10,7 @@ import Logout from "./components/authentication/logout";
 import ForgotPassword from "./components/authentication/forgotPassword";
 import ManageProduct from "./components/product/manageProduct";
 import Products from "./components/product/products";
+import Product from "./components/product/product";
 
 function App() {
   const routesArray = [
@@ -24,6 +25,10 @@ function App() {
     {
       path: "/products",
       element: <Products />,
+    },
+    {
+      path: "/product",
+      element: <Product />,
     },
     {
       path: "/login",

@@ -3,12 +3,13 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getCategoryProducts } from '../../firebase/firestore/product';
+import { LinearProgress } from '@mui/material';
 
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: 'relative',
-    height: 300,
+    height: 800,
     [theme.breakpoints.down('sm')]: {
         width: '100% !important', // Overrides inline-style
     },
@@ -76,9 +77,11 @@ export default function Products() {
     const [searchParams] = useSearchParams();
     const category = searchParams.get('category')
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        setIsLoadingProducts(true)
         async function getAndSetProducts() {
-            setIsLoadingProducts(true)
             await getCategoryProducts(category).then((ps) => {
                 setIsLoadingProducts(false)
                 setProducts(ps)
@@ -91,17 +94,18 @@ export default function Products() {
     }, [category])
 
     return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', height: '100%' }}>
-            {console.log(!!products)}
-            {products.length === 0 && <Typography variant="h3" align='center' sx={{ width: '100%' }}>暂时没有该产品，敬请期待！</Typography>}
+        <Box  sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', height: '100%' }}>
+            {isLoadingProducts && <LinearProgress />}
+            {!isLoadingProducts && products.length === 0 && <Typography variant="h3" align='center' sx={{ width: '100%' }}>暂时没有该产品，敬请期待！</Typography>}
             {products.map((product) => (
                 <ImageButton
                     focusRipple
                     key={product.name}
                     style={{
-                        width: '33.3333%',
+                        width: '50%',
                         minHeight: '100'
                     }}
+                    onClick={e => navigate(`/product?id=${product.id}`)}
                 >
                     <ImageSrc style={{ backgroundImage: product.imgUrls ? `url(${product.imgUrls[0]})` : null }} />
                     <ImageBackdrop className="MuiImageBackdrop-root" />

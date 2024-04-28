@@ -60,7 +60,7 @@ const Example = () => {
     useEffect(() => {
         setErrorMessage('')
         setImgList([])
-        
+
         async function getAndSetCategories() {
             setCategories(await getProductCategories())
         }
@@ -171,6 +171,7 @@ const Example = () => {
                 accessorKey: 'description',
                 header: '描述',
                 muiEditTextFieldProps: {
+                    multiline: true,
                     required: true,
                     error: !!validationErrors?.description,
                     helperText: validationErrors?.description,
@@ -186,6 +187,7 @@ const Example = () => {
                 accessorKey: 'price',
                 header: '价格',
                 muiEditTextFieldProps: {
+                    type: 'number',
                     required: true,
                     error: !!validationErrors?.price,
                     helperText: validationErrors?.price,

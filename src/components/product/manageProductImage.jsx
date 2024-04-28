@@ -38,7 +38,6 @@ export default function ManageProductImage({ rowData, imgList, setImgList }) {
     }
 
     const handleDelete = (index) => {
-        console.log(imgNameList[index])
         const imgNameToDelete = imgNameList[index]
         if (!rowData[IMG_NAMES_TO_DELETE].includes(imgNameToDelete) && existingImgNames.includes(imgNameToDelete)) {
             setExistingImgNames(existingImgNames.filter(existingImgName => existingImgName !== imgNameToDelete))
