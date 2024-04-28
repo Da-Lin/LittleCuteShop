@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, LinearProgress, Link, Typography } from '@mui/material';
+import { Button, Divider, Grid, LinearProgress, Typography } from '@mui/material';
 import { getProduct } from '../../firebase/firestore/product';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
@@ -47,7 +47,9 @@ export default function Product() {
                 <Grid item sm={1}>
                     <Grid container direction={{ sm: "row", md: "column" }}>
                         {product.imgUrls && product.imgUrls.map((imageUrl, index) => (
-                            <img key={product.imgPaths[index]} alt='name' src={imageUrl} height='100vw' onClick={() => setSelectedImgIndex(index)} style={{ border: index === selectedImgIndex ? 'solid 1px blue' : 'solid 1px #eee', cursor: 'pointer' }} />
+                            <img key={product.imgPaths[index]} alt='name' src={imageUrl} height='100vw'
+                                onMouseOver={() => setSelectedImgIndex(index)}
+                                onClick={() => setSelectedImgIndex(index)} style={{ border: index === selectedImgIndex ? 'solid 1px blue' : 'solid 1px #eee', cursor: 'pointer' }} />
                         ))}
                     </Grid>
                 </Grid>
