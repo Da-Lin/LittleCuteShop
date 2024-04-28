@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -16,7 +15,6 @@ import avatar from '../../assets/avatar.jpg';
 import LanguageIcon from '@mui/icons-material/Language';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
-import { isAdmin } from '../../firebase/firestore/authentication';
 import MenuList from './menuList';
 import { useTranslation } from 'react-i18next';
 import AdminMenuList from './adminMenuList';
@@ -31,7 +29,6 @@ function Bar() {
     const { t, i18n } = useTranslation()
     const languages = { zh: t("zh"), en: t("en") };
 
-    const menus = userLoggedIn ? { '小可爱精选': [{ link: 'products', name: '产品展示' }] } : {};
     const settings = { logout: t("appBar").settings.logout };
 
     const navigate = useNavigate();
@@ -130,7 +127,7 @@ function Bar() {
                     </Box> */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
                         {isAdminUser && <AdminMenuList />}
-                        <MenuList menus={menus} />
+                        <MenuList />
                     </Box>
                     <Box >
                         <Tooltip title="Change Language">

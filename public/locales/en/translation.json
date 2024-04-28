@@ -22,6 +22,9 @@
     "appBar": {
         "settings": {
             "logout": "Logout"
+        },
+        "menuList": {
+            "featured": "Little Cute Featured"
         }
     }
 }

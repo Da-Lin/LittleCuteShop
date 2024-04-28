@@ -6,11 +6,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { getProductCategories } from '../../firebase/firestore/product';
+import { useTranslation } from 'react-i18next';
 
 export default function MenuList() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [categories, setCategories] = useState([])
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     async function getAndSetCategories() {
@@ -21,8 +24,6 @@ export default function MenuList() {
 
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-
-  // [{ name: '产品展示', link: 'products' }]
 
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,12 +49,12 @@ export default function MenuList() {
           id="lock-button"
           aria-haspopup="listbox"
           aria-controls="lock-menu"
-          aria-label='小可爱精选'
+          aria-label={t('appBar').menuList.featured}
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClickListItem}
         >
           <ListItemText
-            primary='小可爱精选'
+            primary={t('appBar').menuList.featured}
           />
         </ListItemButton>
       </List>

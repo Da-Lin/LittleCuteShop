@@ -1,13 +1,8 @@
-import { Box, Divider, Grid, Typography } from '@mui/material';
+import { Divider, Grid, LinearProgress, Typography } from '@mui/material';
 import { getProduct } from '../../firebase/firestore/product';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-const images = [
-    'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    'https://images.unsplash.com/photo-1551782450-a2132b4ba21d'
-]
 
 export default function Product() {
     const [isLoadingProduct, setIsLoadingProduct] = useState(false)
@@ -34,11 +29,13 @@ export default function Product() {
             }
         }
         getAndSetProducts()
+        setIsLoadingProduct(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
     return (<>{product &&
         < Grid container spacing={1} >
+            {isLoadingProduct && <LinearProgress />}
             <Grid item sm={1}>
                 <Grid container direction='column'>
                     {product.imgUrls && product.imgUrls.map((imageUrl, index) => (

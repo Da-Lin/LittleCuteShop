@@ -35,8 +35,12 @@ import styled from '@emotion/styled';
 import ImageUpload from './imageUpload';
 import ProdictImageList from './imageList';
 import ManageProductImage from './manageProductImage';
+import { useAuth } from '../../contexts/authContext';
+import { useNavigate } from 'react-router-dom';
 
 const Example = () => {
+    const { isAdminUser } = useAuth()
+
     const [validationErrors, setValidationErrors] = useState({});
     const [categoryText, setCategoryText] = useState('');
     const [manageCategoryIsLoading, setManageCategoryIsLoading] = useState(false);
@@ -57,7 +61,13 @@ const Example = () => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!isAdminUser) {
+            navigate('/home')
+        }
+
         setErrorMessage('')
         setImgList([])
 
