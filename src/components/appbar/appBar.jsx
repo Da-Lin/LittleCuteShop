@@ -44,7 +44,9 @@ function Bar() {
         setAnchorElLanguage(event.currentTarget);
     };
     const handleCloseLanguageMenu = (e, lng) => {
-        i18n.changeLanguage(lng)
+        if (lng) {
+            i18n.changeLanguage(lng)
+        }
         setAnchorElLanguage(null);
     };
 
@@ -153,11 +155,11 @@ function Bar() {
                                 horizontal: 'right',
                             }}
                             open={Boolean(anchorElLanguage)}
-                            onClose={handleCloseLanguageMenu}
+                            onClose={e => handleCloseLanguageMenu(e, null)}
                         >
                             {Object.keys(languages).map((lng) => (
                                 <MenuItem key={lng} onClick={(e) => handleCloseLanguageMenu(e, lng)}>
-                                    <Typography textAlign="center">{languages[lng]}</Typography>
+                                    <Typography >{languages[lng]}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
