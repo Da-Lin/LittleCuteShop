@@ -28,7 +28,7 @@ export default function MenuList() {
   }, [])
 
   useEffect(() => {
-    if (location.pathname !== '/products') {
+    if (!location.pathname.includes('/product')) {
       setSelectedIndex(null)
     }
   }, [location])
@@ -97,8 +97,6 @@ export default function MenuList() {
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              'aria-labelledby': 'lock-button',
-              role: 'listbox',
               onMouseEnter: handleHover,
               onMouseLeave: handleCloseHover,
               style: { pointerEvents: "auto" }
@@ -124,13 +122,10 @@ export default function MenuList() {
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              'aria-labelledby': 'lock-button',
-              role: 'listbox',
               onMouseEnter: handleHover,
               onMouseLeave: handleCloseHover,
               style: { pointerEvents: "auto" }
             }}
-            anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
             style={{ pointerEvents: "none" }}
           >
             <MenuItem

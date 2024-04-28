@@ -43,6 +43,7 @@ function Bar() {
     const handleOpenLanguageMenu = (event) => {
         setAnchorElLanguage(event.currentTarget);
     };
+    
     const handleCloseLanguageMenu = (e, lng) => {
         if (lng) {
             i18n.changeLanguage(lng)
