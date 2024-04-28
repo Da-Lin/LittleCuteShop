@@ -20,6 +20,8 @@
         "failuerMessage": "邮件地址错误！"
     },
     "appBar": {
+        "changeLanguage": "更改语言",
+        "editProfile": "用户信息",
         "settings": {
             "logout": "登出"
         },

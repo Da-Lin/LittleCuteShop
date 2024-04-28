@@ -11,7 +11,7 @@ import ForgotPassword from "./components/authentication/forgotPassword";
 import ManageProduct from "./components/product/manageProduct";
 import Products from "./components/product/products";
 import Product from "./components/product/product";
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const THEME = createTheme({
   typography: {

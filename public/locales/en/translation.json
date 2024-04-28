@@ -20,6 +20,8 @@
         "failuerMessage": "Invalid email!"
     },
     "appBar": {
+        "changeLanguage": "Change Language",
+        "editProfile": "Edit Profile",
         "settings": {
             "logout": "Logout"
         },

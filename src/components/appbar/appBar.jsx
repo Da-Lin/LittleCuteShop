@@ -130,7 +130,7 @@ function Bar() {
                         <MenuList />
                     </Box>
                     <Box >
-                        <Tooltip title="Change Language">
+                        <Tooltip title={t('appBar').changeLanguage}>
                             <IconButton size="large"
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
@@ -163,7 +163,7 @@ function Bar() {
                         </Menu>
                         {userLoggedIn ?
                             <>
-                                <Tooltip title="Edit Profile">
+                                <Tooltip title={t('appBar').editProfile}>
                                     <IconButton size="large"
                                         aria-label="account of current user"
                                         aria-controls="menu-appbar"
