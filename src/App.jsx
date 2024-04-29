@@ -28,6 +28,26 @@ const THEME = createTheme({
       md: 900,
       lg: 1200,
       xl: 1636,
+    }
+  },
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#90caf9'
+    },
+    secondary: {
+      main: '#f50057',
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: ({ ownerState }) => ({
+          '&:hover': {
+            backgroundColor: '#54A7F7'
+          },
+        }),
+      },
     },
   }
 });

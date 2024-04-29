@@ -43,7 +43,7 @@ function Bar() {
     const handleOpenLanguageMenu = (event) => {
         setAnchorElLanguage(event.currentTarget);
     };
-    
+
     const handleCloseLanguageMenu = (e, lng) => {
         if (lng) {
             i18n.changeLanguage(lng)
@@ -72,7 +72,7 @@ function Bar() {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" >
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
                     <Box
@@ -129,7 +129,7 @@ function Bar() {
                         </Menu>
                     </Box> */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
-                        {isAdminUser && <AdminMenuList />}
+                        {userLoggedIn && isAdminUser && <AdminMenuList />}
                         <MenuList />
                     </Box>
                     <Box >
