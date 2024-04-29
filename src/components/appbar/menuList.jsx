@@ -28,7 +28,7 @@ export default function MenuList() {
   }, [])
 
   useEffect(() => {
-    if (!location.pathname.includes('/product')) {
+    if (location.pathname !== '/products') {
       setSelectedIndex(null)
     }
   }, [location])

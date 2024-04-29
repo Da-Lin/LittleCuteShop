@@ -16,10 +16,19 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const THEME = createTheme({
   typography: {
     "fontFamily": `cursive, "kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
-    "fontSize": 15,
+    "fontSize": 18,
     "fontWeightLight": 300,
     "fontWeightRegular": 400,
     "fontWeightMedium": 500
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1636,
+    },
   }
 });
 

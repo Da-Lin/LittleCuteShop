@@ -42,7 +42,7 @@ export default function Product() {
 
     return (<>
         {product &&
-            < Grid container spacing={1} direction={{ sm: "column", md: "row" }}>
+            < Grid container direction={{ sm: "column", md: "row" }}>
                 {isLoadingProduct && <LinearProgress />}
                 <Grid item sm={1}>
                     <Grid container direction={{ sm: "row", md: "column" }}>
@@ -56,7 +56,7 @@ export default function Product() {
                 <Grid item md={4} xl={5}>
                     <img alt='name' src={product.imgUrls && product.imgUrls[selectedImgIndex]} width="100%" />
                 </Grid>
-                <Grid item md={4} lg={5} xl={6} sx={{ whiteSpace: "pre-wrap" }}>
+                <Grid item md={6} xl={6} sx={{ whiteSpace: "pre-wrap" }}>
                     <Grid container direction='column' style={{ height: '100%' }}>
                         <Typography variant='h4' gutterBottom>{product.name}</Typography>
                         <Divider />
