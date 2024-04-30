@@ -16,10 +16,14 @@ export default function Contact() {
 
   const emailContent = { subject: subject, email: email, message: content, name: name };
 
-  const sendEmail = (e) => {
-    e.preventDefault();
+  const resetMessage = () => {
     setErrorMessage('')
     setMessage('')
+  }
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    resetMessage()
 
     setIsSendingEmail(true)
     emailjs
@@ -48,7 +52,7 @@ export default function Contact() {
         label="名字"
         onChange={(event) => {
           setName(event.target.value)
-          setErrorMessage('')
+          resetMessage()
         }}
       />
       <TextField
@@ -60,6 +64,7 @@ export default function Contact() {
         error={emailError}
         helperText={emailError ? "邮箱格式不对" : ""}
         onChange={(e) => {
+          resetMessage()
           setErrorMessage('')
           setEmail(e.target.value)
           if (!e.target.value) {
@@ -79,7 +84,7 @@ export default function Contact() {
         label="主题"
         onChange={(event) => {
           setSubject(event.target.value)
-          setErrorMessage('')
+          resetMessage()
         }}
       />
       <TextField
@@ -91,7 +96,7 @@ export default function Contact() {
         sx={{ width: 500 }}
         onChange={(event) => {
           setContent(event.target.value)
-          setErrorMessage('')
+          resetMessage()
         }}
       />
       <Button
