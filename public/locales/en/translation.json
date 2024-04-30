@@ -22,8 +22,9 @@
     "appBar": {
         "changeLanguage": "Change Language",
         "editProfile": "Edit Profile",
-        "settings": {
-            "logout": "Logout"
+        "userProfileMenus": {
+            "logout": "Logout",
+            "userDashboard": "User Dashboard"
         },
         "menuList": {
             "featured": "Little Cute Featured"

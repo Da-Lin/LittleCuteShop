@@ -33,6 +33,8 @@ export default function Authentication() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setErrorMessage('')
+
         if (!isSigningIn) {
             setIsSigningIn(true)
             await doSignInWithEmailAndPassword(email, password).then((userCredential) => {

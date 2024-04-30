@@ -6,22 +6,20 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../assets/logo.png';
-import avatar from '../../assets/avatar.jpg';
 import LanguageIcon from '@mui/icons-material/Language';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import MenuList from './menuList';
 import { useTranslation } from 'react-i18next';
 import AdminMenuList from './adminMenuList';
+import UserProfileMenus from './userProfileMenus';
 
 function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [anchorElLanguage, setAnchorElLanguage] = React.useState(null);
 
     const { userLoggedIn, isAdminUser } = useAuth()
@@ -29,16 +27,11 @@ function Bar() {
     const { t, i18n } = useTranslation()
     const languages = { zh: t("zh"), en: t("en") };
 
-    const settings = { logout: t("appBar").settings.logout };
-
     const navigate = useNavigate();
 
     // const handleOpenNavMenu = (event) => {
     //     setAnchorElNav(event.currentTarget);
     // };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
 
     const handleOpenLanguageMenu = (event) => {
         setAnchorElLanguage(event.currentTarget);
@@ -60,19 +53,12 @@ function Bar() {
     //     setAnchorElNav(null);
     // };
 
-    const handleCloseUserMenu = (e, setting) => {
-        if (e.target.innerText) {
-            navigate(`/${setting.toLowerCase().replace(/\s/g, '')}`)
-        }
-        setAnchorElUser(null);
-    };
-
     const handleLoginButtonClicked = (link) => {
         navigate('login')
     };
 
     return (
-        <AppBar position="static" >
+        <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
                     <Box
@@ -164,40 +150,7 @@ function Bar() {
                                 </MenuItem>
                             ))}
                         </Menu>
-                        {userLoggedIn ?
-                            <>
-                                <Tooltip title={t('appBar').editProfile}>
-                                    <IconButton size="large"
-                                        aria-label="account of current user"
-                                        aria-controls="menu-appbar"
-                                        aria-haspopup="true"
-                                        color="inherit" onClick={handleOpenUserMenu} >
-                                        <Avatar alt="User Name" src={avatar} />
-                                    </IconButton>
-                                </Tooltip>
-                                <Menu
-                                    sx={{ mt: '45px' }}
-                                    id="menu-appbar"
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
-                                    {Object.keys(settings).map((setting) => (
-                                        <MenuItem key={setting} onClick={(e) => handleCloseUserMenu(e, setting)}>
-                                            <Typography textAlign="center">{settings[setting]}</Typography>
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
-                            </>
+                        {userLoggedIn ? <UserProfileMenus />
                             : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
                     </Box>
                 </Toolbar>

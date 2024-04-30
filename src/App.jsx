@@ -12,6 +12,7 @@ import ManageProduct from "./components/product/manageProduct";
 import Products from "./components/product/products";
 import Product from "./components/product/product";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import UserDashboard from "./components/user/userDashboard";
 
 const THEME = createTheme({
   typography: {
@@ -77,6 +78,10 @@ function App() {
     {
       path: "/forgotpassword",
       element: <ForgotPassword />,
+    },
+    {
+      path: "/userdashboard/*",
+      element: <UserDashboard />,
     },
     {
       path: "/logout",

@@ -22,8 +22,9 @@
     "appBar": {
         "changeLanguage": "更改语言",
         "editProfile": "用户信息",
-        "settings": {
-            "logout": "登出"
+        "userProfileMenus": {
+            "logout": "登出",
+            "userDashboard": "用户面板"
         },
         "menuList": {
             "featured": "小可爱精选"
