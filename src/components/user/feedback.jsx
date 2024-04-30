@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
-import { Alert, Button, CircularProgress, Stack, TextField } from '@mui/material';
+import { Alert, Button, CircularProgress, Divider, Stack, TextField, Typography } from '@mui/material';
 import { validateEmail } from '../authentication/signin';
 
 export default function Contact() {
@@ -45,6 +45,10 @@ export default function Contact() {
 
   return (
     <Stack alignItems="center">
+      <Typography m={2}>
+        如果您在使用网站时或者对我们的产品有任何建议或者意见，欢迎提交下方信息给我们。
+      </Typography>
+      <Divider style={{ width: '100%' }} />
       <TextField
         margin="normal"
         required
