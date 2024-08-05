@@ -5,6 +5,7 @@
     "en": "English",
     "zh": "中文",
     "email": "Email Address",
+    "emailError": "Please enter a valid email",
     "password": "Password",
     "loginPage": {
         "login": "Log in",
@@ -40,7 +41,8 @@
         },
         "contractUs": {
             "drawerName": "Contract Us",
-            "title": "Please scan the QR code below to add us on WeChat"
+            "title": "Please scan the QR code below to add us on WeChat",
+            "sendEmail": "You can also send emial to littlecuteshop2024@gmail.com"
         },
         "submitFeedback": {
             "drawerName": "Submit Feedback",

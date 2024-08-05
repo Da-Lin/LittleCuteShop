@@ -9,7 +9,7 @@ const Contact = () => {
         <Grid container justifyContent="center" direction="column"
             alignItems="center">
             <Typography pt={2}>{t('drawer').contractUs.title}</Typography>
-            <Grid item pt={5}
+            <Grid item pt={2}
                 component="img"
                 sx={{
                     height: '50vh',
@@ -20,6 +20,7 @@ const Contact = () => {
                 alt="qr"
                 src={qr}
             />
+            <Typography pt={2}>{t('drawer').contractUs.sendEmail}</Typography>
         </Grid>
     )
 };

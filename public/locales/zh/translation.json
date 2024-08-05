@@ -5,6 +5,7 @@
     "en": "English",
     "zh": "中文",
     "email": "邮箱",
+    "emailError": "邮箱格式不对",
     "password": "密码",
     "loginPage": {
         "login": "登录",
@@ -40,7 +41,8 @@
         },
         "contractUs": {
             "drawerName": "联系我们",
-            "title": "请扫描下方二维码添加客服微信"
+            "title": "请扫描下方二维码添加客服微信",
+            "sendEmail": "或者发送邮箱至littlecuteshop2024@gmail.com"
         },
         "submitFeedback": {
             "drawerName": "提交反馈",

@@ -69,7 +69,7 @@ export default function Contact() {
         type='email'
         label={t('drawer').submitFeedback.email}
         error={emailError}
-        helperText={emailError ? "邮箱格式不对" : ""}
+        helperText={emailError ? t('emailError') : ""}
         onChange={(e) => {
           resetMessage()
           setErrorMessage('')
@@ -114,7 +114,7 @@ export default function Contact() {
         disabled={email === '' || subject === '' || name === '' || content === '' || emailError}
         onClick={sendEmail}
       >
-        提交
+        {t('submit')}
       </Button>
       <Stack container justifyContent="center">
         {isSendingEmail && <CircularProgress />}

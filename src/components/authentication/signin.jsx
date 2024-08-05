@@ -77,7 +77,7 @@ export default function Authentication() {
                             name="email"
                             autoFocus
                             error={emailError}
-                            helperText={emailError ? "Please enter a valid email" : ""}
+                            helperText={emailError ? t('emailError') : ""}
                             onChange={(e) => {
                                 setErrorMessage('')
                                 setEmail(e.target.value)
