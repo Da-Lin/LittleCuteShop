@@ -8,6 +8,7 @@
     "emailError": "Please enter a valid email",
     "password": "Password",
     "product": {
+        "loginMessage":"Please log in to check more details",
         "notify": {
             "message": "Notify us to let us know you want to buy some",
             "successfulMessage": "Successfully notified us! We will contact you through email shortly.",

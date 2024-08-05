@@ -117,7 +117,7 @@ export default function Product() {
                                 </Stack>
                             </> :
                                 <>
-                                    <Button style={{ maxWidth: '200px', justifyContent: "flex-start" }} color="primary" onClick={handleLoginButtonClicked} >登录查看更多详情</Button>
+                                    <Button style={{ maxWidth: '400px', justifyContent: "flex-start" }} color="primary" onClick={handleLoginButtonClicked} >{t('product').loginMessage}</Button>
                                 </>
                             }
                         </Grid>

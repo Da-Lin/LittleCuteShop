@@ -8,6 +8,7 @@
     "emailError": "邮箱格式不对",
     "password": "密码",
     "product": {
+        "loginMessage":"登录查看更多详情",
         "notify": {
             "message": "通知我们你想要购买此产品",
             "successfulMessage": "成功发送通知！我们会很快和你通过邮箱联系。",
