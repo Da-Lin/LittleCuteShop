@@ -1,6 +1,7 @@
 {
     "websiteTitle": "小可爱商店",
     "login": "登录",
+    "submite": "提交",
     "en": "English",
     "zh": "中文",
     "email": "邮箱",
@@ -28,6 +29,28 @@
         },
         "menuList": {
             "featured": "小可爱精选"
+        }
+    },
+    "drawer": {
+        "securityInformation": {
+            "drawerName": "安全信息",
+            "title": "修改密码",
+            "successfulMessage": "修改密码成功",
+            "failuerMessage": "密码必须至少6位，或者请再次登录后尝试"
+        },
+        "contractUs": {
+            "drawerName": "联系我们",
+            "title": "请扫描下方二维码添加客服微信"
+        },
+        "submitFeedback": {
+            "drawerName": "提交反馈",
+            "title": "如果您在使用网站时或者对我们的产品有任何建议或者意见，欢迎提交下方信息给我们。",
+            "name": "名字",
+            "email": "邮箱",
+            "subject": "主题",
+            "content": "内容",
+            "successfulMessage": "邮件发送成功",
+            "failuerMessage": "邮件发送失败"
         }
     }
 }

@@ -1,6 +1,7 @@
 {
     "websiteTitle": "Little Cute Shop",
     "login": "login",
+    "submite": "Submit",
     "en": "English",
     "zh": "中文",
     "email": "Email Address",
@@ -28,6 +29,28 @@
         },
         "menuList": {
             "featured": "Little Cute Featured"
+        }
+    },
+    "drawer": {
+        "securityInformation": {
+            "drawerName": "Security Information",
+            "title": "Change Password",
+            "successfulMessage": "Successfully changed password",
+            "failuerMessage": "Password should be at least 6 characters, or please log out, log in and then try again."
+        },
+        "contractUs": {
+            "drawerName": "Contract Us",
+            "title": "Please scan the QR code below to add us on WeChat"
+        },
+        "submitFeedback": {
+            "drawerName": "Submit Feedback",
+            "title": "Please fill and submit the information below if you have any feedback",
+            "name": "Your Name",
+            "email": "Your Email",
+            "subject": "Subject",
+            "content": "Content",
+            "successfulMessage": "Successfully sent email",
+            "failuerMessage": "Failed to send email"
         }
     }
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { Alert, Button, CircularProgress, Divider, Stack, TextField, Typography } from '@mui/material';
 import { validateEmail } from '../authentication/signin';
+import { useTranslation } from 'react-i18next';
 
 export default function Contact() {
   const [subject, setSubject] = useState('')
@@ -15,6 +16,8 @@ export default function Contact() {
   const [errorMessage, setErrorMessage] = useState('')
 
   const emailContent = { subject: subject, email: email, message: content, name: name };
+
+  const { t } = useTranslation()
 
   const resetMessage = () => {
     setErrorMessage('')
@@ -33,12 +36,12 @@ export default function Contact() {
       .then(
         () => {
           setIsSendingEmail(false)
-          setMessage('发送邮件成功')
+          setMessage(t('drawer').submitFeedback.successfulMessage)
         },
         (error) => {
           setIsSendingEmail(false)
           console.log(error)
-          setErrorMessage('发送邮件失败')
+          setErrorMessage(t('drawer').submitFeedback.failuerMessage)
         },
       );
   };
@@ -46,14 +49,14 @@ export default function Contact() {
   return (
     <Stack alignItems="center">
       <Typography m={2}>
-        如果您在使用网站时或者对我们的产品有任何建议或者意见，欢迎提交下方信息给我们。
+        {t('drawer').submitFeedback.title}
       </Typography>
       <Divider style={{ width: '100%' }} />
       <TextField
         margin="normal"
         required
         size="small"
-        label="名字"
+        label={t('drawer').submitFeedback.name}
         onChange={(event) => {
           setName(event.target.value)
           resetMessage()
@@ -64,7 +67,7 @@ export default function Contact() {
         required
         size="small"
         type='email'
-        label="邮箱"
+        label={t('drawer').submitFeedback.email}
         error={emailError}
         helperText={emailError ? "邮箱格式不对" : ""}
         onChange={(e) => {
@@ -85,7 +88,7 @@ export default function Contact() {
         required
         size="small"
         type='email'
-        label="主题"
+        label={t('drawer').submitFeedback.subject}
         onChange={(event) => {
           setSubject(event.target.value)
           resetMessage()
@@ -94,7 +97,7 @@ export default function Contact() {
       <TextField
         margin="normal"
         required
-        label="内容"
+        label={t('drawer').submitFeedback.content}
         multiline
         rows={4}
         sx={{ width: 500 }}

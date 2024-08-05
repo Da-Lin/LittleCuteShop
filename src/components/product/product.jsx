@@ -68,10 +68,10 @@ export default function Product() {
                             <Typography variant='h4' gutterBottom>{product.name}</Typography>
                             <Divider />
                             {userLoggedIn ? <>
-                                <Typography variant='h5' gutterBottom >产品描述：</Typography>
+                                <Typography variant='h5' gutterBottom >产品描述(description)：</Typography>
                                 <Typography variant='body1' gutterBottom>{product.description}</Typography>
                                 <Divider />
-                                <Typography variant='h5' gutterBottom>价格：{`$${parseFloat(product.price).toLocaleString('USD')}`}</Typography>
+                                <Typography variant='h5' gutterBottom>价格(Price)：{`$${parseFloat(product.price).toLocaleString('USD')}`}</Typography>
                             </> :
                                 <>
                                     <Button style={{ maxWidth: '200px', justifyContent: "flex-start" }} color="primary" onClick={handleLoginButtonClicked} >登录查看更多详情</Button>

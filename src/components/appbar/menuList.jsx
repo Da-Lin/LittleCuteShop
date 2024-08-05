@@ -129,8 +129,10 @@ export default function MenuList() {
             style={{ pointerEvents: "none" }}
           >
             <MenuItem
-              onClick={(event) => handleMenuItemClick(event, 0, null)}>
-              English menus are not supported yet
+              selected={true}
+              onClick={(event) => handleMenuItemClick(event, 0, '点心')}
+            >
+              Pastry
             </MenuItem>
           </Menu>
       }

@@ -4,6 +4,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Box, ListItemButton, Divider } from "@mui/material";
 
 const drawerWidth = 200;
@@ -11,9 +12,11 @@ const drawerWidth = 200;
 const UserDrawer = () => {
     const navigate = useNavigate()
 
+    const { t } = useTranslation()
+
     const primayItemsList = [
         {
-            text: "安全信息",
+            text: t('drawer').securityInformation.drawerName,
             icon: <SecurityIcon />,
             onClick: () => navigate("secuirty")
         }
@@ -21,12 +24,12 @@ const UserDrawer = () => {
 
     const secondaryItemsList = [
         {
-            text: "联系我们",
+            text: t('drawer').contractUs.drawerName,
             icon: <ChatIcon />,
             onClick: () => navigate("contact")
         },
         {
-            text: "提交反馈",
+            text: t('drawer').submitFeedback.drawerName,
             icon: <FeedbackIcon />,
             onClick: () => navigate("about")
         }
