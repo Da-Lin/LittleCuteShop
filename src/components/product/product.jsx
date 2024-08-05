@@ -107,7 +107,8 @@ export default function Product() {
                                 <Typography variant='body1' gutterBottom>{product.description}</Typography>
                                 <Divider />
                                 <Typography variant='h5' gutterBottom>价格(Price)：{`$${parseFloat(product.price).toLocaleString('USD')}`}</Typography>
-                                <Link href="#" onClick={sendEmail} variant="body2">
+                                <Divider />
+                                <Link sx={{ mt: 2 }} href="#" onClick={sendEmail} variant="body2">
                                     {t('product').notify.message}
                                 </Link>
                                 <Stack container justifyContent="center">
