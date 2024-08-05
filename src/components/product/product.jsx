@@ -21,7 +21,7 @@ export default function Product() {
     const [errorMessage, setErrorMessage] = useState('')
 
     const { userLoggedIn, currentUser } = useAuth()
-    const emailContent = { subject: currentUser.email + " notifies", email: currentUser.email, message: "User wants to buy " + product.name, name: currentUser.email };
+    const emailContent = currentUser ? { subject: currentUser.email + " notifies", email: currentUser.email, message: "User wants to buy " + product.name, name: currentUser.email } : {};
 
     const navigate = useNavigate()
 
