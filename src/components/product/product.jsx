@@ -1,9 +1,11 @@
-import { Box, Button, Divider, Grid, LinearProgress, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, LinearProgress, Typography, Link, Stack, Alert, CircularProgress } from '@mui/material';
 import { getProduct } from '../../firebase/firestore/product';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
+import { useTranslation } from 'react-i18next';
+import emailjs from '@emailjs/browser';
 import background from '../../assets/background.jpg';
 
 export default function Product() {
@@ -12,8 +14,14 @@ export default function Product() {
     const [selectedImgIndex, setSelectedImgIndex] = useState(0)
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id')
+    const { t } = useTranslation()
 
-    const { userLoggedIn } = useAuth()
+    const [isSendingEmail, setIsSendingEmail] = useState(false)
+    const [message, setMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+
+    const { userLoggedIn, currentUser } = useAuth()
+    const emailContent = { subject: currentUser.email + " notifies", email: currentUser.email, message: "User wants to buy " + product.name, name: currentUser.email };
 
     const navigate = useNavigate()
 
@@ -36,6 +44,33 @@ export default function Product() {
         setIsLoadingProduct(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
+
+    const resetMessage = () => {
+        setErrorMessage('')
+        setMessage('')
+    }
+
+    const sendEmail = (e) => {
+        e.preventDefault();
+        resetMessage()
+
+        setIsSendingEmail(true)
+        emailjs
+            .send('service_rfnxvbs', 'template_6ppiony', emailContent, {
+                publicKey: 'Lx8hE39ZJTFeQmYqi',
+            })
+            .then(
+                () => {
+                    setIsSendingEmail(false)
+                    setMessage(t('product').notify.successfulMessage)
+                },
+                (error) => {
+                    setIsSendingEmail(false)
+                    console.log(error)
+                    setErrorMessage(t('product').notify.failuerMessage)
+                },
+            );
+    };
 
     const handleLoginButtonClicked = (link) => {
         navigate('/login')
@@ -72,6 +107,14 @@ export default function Product() {
                                 <Typography variant='body1' gutterBottom>{product.description}</Typography>
                                 <Divider />
                                 <Typography variant='h5' gutterBottom>价格(Price)：{`$${parseFloat(product.price).toLocaleString('USD')}`}</Typography>
+                                <Link href="#" onClick={sendEmail} variant="body2">
+                                    {t('product').notify.message}
+                                </Link>
+                                <Stack container justifyContent="center">
+                                    {isSendingEmail && <CircularProgress />}
+                                    {message && <Alert>{message}</Alert>}
+                                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                                </Stack>
                             </> :
                                 <>
                                     <Button style={{ maxWidth: '200px', justifyContent: "flex-start" }} color="primary" onClick={handleLoginButtonClicked} >登录查看更多详情</Button>

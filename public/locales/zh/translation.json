@@ -7,6 +7,13 @@
     "email": "邮箱",
     "emailError": "邮箱格式不对",
     "password": "密码",
+    "product": {
+        "notify": {
+            "message": "通知我们你想要购买此产品",
+            "successfulMessage": "成功发送通知！我们会很快和你通过邮箱联系。",
+            "failuerMessage": "发送通知失败！请直接发邮件至littlecuteshop2024@gmail.com或者联系客服微信(微信号：littlecutebakery)。"
+        }
+    },
     "loginPage": {
         "login": "登录",
         "forgotPassword": "忘掉密码了？",
@@ -36,8 +43,8 @@
         "securityInformation": {
             "drawerName": "安全信息",
             "title": "修改密码",
-            "successfulMessage": "修改密码成功",
-            "failuerMessage": "密码必须至少6位，或者请再次登录后尝试"
+            "successfulMessage": "修改密码成功。",
+            "failuerMessage": "密码必须至少6位，或者请再次登录后尝试。"
         },
         "contractUs": {
             "drawerName": "联系我们",
@@ -51,8 +58,8 @@
             "email": "邮箱",
             "subject": "主题",
             "content": "内容",
-            "successfulMessage": "邮件发送成功",
-            "failuerMessage": "邮件发送失败"
+            "successfulMessage": "邮件发送成功。",
+            "failuerMessage": "邮件发送失败。"
         }
     }
 }
