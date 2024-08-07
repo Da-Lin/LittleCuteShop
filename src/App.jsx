@@ -16,7 +16,7 @@ import UserDashboard from "./components/user/userDashboard";
 
 const THEME = createTheme({
   typography: {
-    "fontFamily": `cursive, "kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
+    "fontFamily": `sans-serif`,
     "fontSize": 18,
     "fontWeightLight": 300,
     "fontWeightRegular": 400,

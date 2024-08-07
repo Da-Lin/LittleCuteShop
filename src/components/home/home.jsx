@@ -19,7 +19,7 @@ const Home = () => {
                             width: 400,
                             alignItems: 'center'
                         }}
-                        alt="The house from the offer."
+                        alt="logo"
                         src={logo}
                     />
                 </Container>
