@@ -37,7 +37,7 @@ import { useAuth } from '../../contexts/authContext';
 import { useNavigate } from 'react-router-dom';
 
 const Example = () => {
-    const { isAdminUser } = useAuth()
+    const { userInfo } = useAuth()
 
     const [validationErrors, setValidationErrors] = useState({});
     const [categoryText, setCategoryText] = useState('');
@@ -62,7 +62,7 @@ const Example = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!isAdminUser) {
+        if (!userInfo.isAdmin) {
             navigate('/home')
         }
 

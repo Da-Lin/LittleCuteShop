@@ -20,6 +20,14 @@ const userPrivilegeIds = async (userRoleIds) => {
     return userPrivilegeIds
 };
 
+export const getUserName = async (user) => {
+    const docSnap = await getDoc(doc(db, "users", user.uid));
+    if (!docSnap.data()) {
+        return ""
+    }
+    return docSnap.data().name
+};
+
 export const getUserPrivileges = async (user) => {
     const docSnap = await getDoc(doc(db, "users", user.uid));
     if (!docSnap.data()) {
@@ -33,6 +41,7 @@ export const setUpNewUser = async (user) => {
     if (!await userExists(user.uid)) {
         await setDoc(doc(collection(db, "users"), user.uid), {
             email: user.email,
+            name: "",
             roleIds: [`${CLINET_ROLE_ID}`]
         })
     }

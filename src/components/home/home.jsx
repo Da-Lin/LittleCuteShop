@@ -5,11 +5,11 @@ import { Box, Container } from '@mui/material';
 import { Navigate } from 'react-router-dom';
 
 const Home = () => {
-    const { userLoggedIn, isAdminUser } = useAuth()
+    const { userLoggedIn, userInfo } = useAuth()
 
     return (<>
         {
-            userLoggedIn && isAdminUser ? <Navigate to={'/manageproducts'} replace={true}></Navigate> :
+            userLoggedIn && userInfo.isAdmin ? <Navigate to={'/manageproducts'} replace={true}></Navigate> :
                 <Container component="main" maxWidth="xs">
                     <Box
                         component="img"

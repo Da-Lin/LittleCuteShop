@@ -22,7 +22,8 @@ function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElLanguage, setAnchorElLanguage] = React.useState(null);
 
-    const { userLoggedIn, isAdminUser } = useAuth()
+    const { userLoggedIn, userInfo } = useAuth()
+    const welcomeText = userLoggedIn ? "Hello " + userInfo.name ? userInfo.name : userInfo.email : ""
 
     const { t, i18n } = useTranslation()
     const languages = { zh: t("zh"), en: t("en") };
@@ -115,7 +116,7 @@ function Bar() {
                         </Menu>
                     </Box> */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
-                        {userLoggedIn && isAdminUser && <AdminMenuList />}
+                        {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
                         <MenuList />
                     </Box>
                     <Box >
@@ -150,6 +151,7 @@ function Bar() {
                                 </MenuItem>
                             ))}
                         </Menu>
+                        {welcomeText}
                         {userLoggedIn ? <UserProfileMenus />
                             : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
                     </Box>

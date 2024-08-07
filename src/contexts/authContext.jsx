@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../firebase/firebase";
 // import { GoogleAuthProvider } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { getUserPrivileges } from "../firebase/firestore/authentication";
+import { getUserName, getUserPrivileges } from "../firebase/firestore/authentication";
 import { isAdmin } from '../firebase/firestore/authentication';
 
 const AuthContext = React.createContext(null);
@@ -13,8 +13,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [userPrivileges, setUserPrivileges] = useState(null)
-  const [isAdminUser, setIsAdminUser] = useState(false)
+  const [userInfo, setUserInfo] = useState({})
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [isEmailUser, setIsEmailUser] = useState(false);
   const [isGoogleUser] = useState(false);
@@ -29,8 +28,9 @@ export function AuthProvider({ children }) {
     if (user) {
 
       setCurrentUser({ ...user });
-      setUserPrivileges(await getUserPrivileges(user))
-      setIsAdminUser(isAdmin(await getUserPrivileges(user)))
+      var userPrivileges = await getUserPrivileges(user)
+      var isAdminUser = isAdmin(userPrivileges)
+      setUserInfo({ privileges: userPrivileges, isAdmin: isAdminUser, name: await (getUserName(user)), email: user.email })
 
       // check if provider is email and password login
       const isEmail = user.providerData.some(
@@ -47,6 +47,7 @@ export function AuthProvider({ children }) {
       setUserLoggedIn(true);
     } else {
       setCurrentUser(null);
+      setUserInfo({})
       setUserLoggedIn(false);
     }
 
@@ -58,8 +59,7 @@ export function AuthProvider({ children }) {
     isEmailUser,
     isGoogleUser,
     currentUser,
-    userPrivileges,
-    isAdminUser,
+    userInfo,
     setCurrentUser
   };
 
