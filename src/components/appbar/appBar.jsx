@@ -118,6 +118,9 @@ function Bar() {
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
                         {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
                         <MenuList />
+                        {userLoggedIn && <MenuItem onClick={() => navigate('orderprocess')}>
+                            订餐流程
+                        </MenuItem>}
                     </Box>
                     <Box >
                         <Tooltip title={t('appBar').changeLanguage}>

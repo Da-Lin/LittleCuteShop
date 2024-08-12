@@ -13,10 +13,11 @@ import Products from "./components/product/products";
 import Product from "./components/product/product";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UserDashboard from "./components/user/userDashboard";
+import OrderProcess from "./components/order/orderProcess";
 
 const THEME = createTheme({
   typography: {
-    "fontFamily": `sans-serif`,
+    "fontFamily": `cursive, "kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
     "fontSize": 18,
     "fontWeightLight": 300,
     "fontWeightRegular": 400,
@@ -70,6 +71,10 @@ function App() {
     {
       path: "/product",
       element: <Product />,
+    },
+    {
+      path: "/orderprocess",
+      element: <OrderProcess />,
     },
     {
       path: "/login",
