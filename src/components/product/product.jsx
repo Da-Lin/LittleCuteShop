@@ -25,10 +25,10 @@ export default function Product() {
 
     const navigate = useNavigate()
 
-    const price = product && parseFloat(product.price).toLocaleString('USD')
-    const discount = 0.34
-    const discountString = discount * 100 + "%"
-    const discountedPrice = Math.ceil(price * (1 - discount)).toLocaleString('USD')
+    // const price = product && parseFloat(product.price).toLocaleString('USD')
+    // const discount = 0.34
+    // const discountString = discount * 100 + "%"
+    // const discountedPrice = Math.ceil(price * (1 - discount)).toLocaleString('USD')
 
     useEffect(() => {
         setIsLoadingProduct(true)
@@ -111,7 +111,7 @@ export default function Product() {
                                 <Typography variant='h5' gutterBottom >产品描述(description)：</Typography>
                                 <Typography variant='body1' gutterBottom>{product.description}</Typography>
                                 <Divider />
-                                <Typography variant='h5' gutterBottom>价格(Price)：{`$${parseFloat(product.price).toLocaleString('USD')}`}</Typography>
+                                <Typography variant='h5' gutterBottom>价格(Price)：{product.price}</Typography>
                                 <Divider />
                                 <Link sx={{ mt: 2 }} href="#" onClick={sendEmail} variant="body2">
                                     {t('product').notify.message}

@@ -196,7 +196,6 @@ const Example = () => {
                 accessorKey: 'price',
                 header: '价格',
                 muiEditTextFieldProps: {
-                    type: 'number',
                     required: true,
                     error: !!validationErrors?.price,
                     helperText: validationErrors?.price,
@@ -206,12 +205,7 @@ const Example = () => {
                             ...validationErrors,
                             price: undefined,
                         }),
-                },
-                Cell: ({ cell, column }) => (
-                    <>
-                        {`$${parseFloat(cell.getValue()).toLocaleString('USD')}`}
-                    </>
-                ),
+                }
             },
             {
                 accessorKey: 'category',
