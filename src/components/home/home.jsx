@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../../assets/logo.png';
+import menu from '../../assets/menu.jpg';
 import { useAuth } from '../../contexts/authContext'
 import { Box, Container } from '@mui/material';
 import { Navigate } from 'react-router-dom';
@@ -15,12 +15,12 @@ const Home = () => {
                         component="img"
                         sx={{
                             marginTop: 8,
-                            height: 400,
+                            height: 700,
                             width: 400,
                             alignItems: 'center'
                         }}
                         alt="logo"
-                        src={logo}
+                        src={menu}
                     />
                 </Container>
         }
