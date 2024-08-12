@@ -111,7 +111,7 @@ export default function Product() {
                                 <Typography variant='h5' gutterBottom >产品描述(description)：</Typography>
                                 <Typography variant='body1' gutterBottom>{product.description}</Typography>
                                 <Divider />
-                                <Typography variant='h5' gutterBottom>价格(Price)：<Typography sx={{ textDecoration: 'line-through' }} display="inline">{`$${price}`}</Typography> <Typography sx={{ color: "red" }} display="inline">{`-${discountString}`}</Typography> {`$${discountedPrice}`} </Typography>
+                                <Typography variant='h5' gutterBottom>价格(Price)：{`$${parseFloat(product.price).toLocaleString('USD')}`}</Typography>
                                 <Divider />
                                 <Link sx={{ mt: 2 }} href="#" onClick={sendEmail} variant="body2">
                                     {t('product').notify.message}
