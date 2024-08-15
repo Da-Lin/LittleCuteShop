@@ -1,17 +1,28 @@
 import { Grid, Typography } from "@mui/material";
 import React from "react";
 import qr from '../../assets/qr.jpg';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 const OrderProcess = () => {
 
+    const { t, i18n } = useTranslation()
+    const isChinese = i18n.language === 'zh'
 
     return (
         <Grid container justifyContent="center" direction="column"
             alignItems="center">
-            <Typography  pt={2} width={500}>订餐方式：联系客服微信或者邮箱</Typography>
-            <Typography pt={2} width={500}>自取地点：4401 Fairfax Dr, Arlington, VA 22203</Typography>
-            <Typography pt={2} width={500}>取餐时间：除周六外每日11am-8pm </Typography>
+            <Typography pt={2} width={1000}>
+                {<Trans
+                    i18nKey={t("appBar").menuList.orderProcess.orderWay}
+                    values={{ link: isChinese ? "此页面" : "this page" }}
+                    components={{ anchor: <Link to={"/userdashboard/contact"} /> }}
+                />}
+            </Typography>
+            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpLocationSatuday}</Typography>
+            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpTimeSatuday}</Typography>
+            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpLocationOtherDays}</Typography>
+            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpTimeOtherDays}</Typography>
         </Grid>
     )
 };

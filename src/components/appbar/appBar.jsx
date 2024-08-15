@@ -119,7 +119,7 @@ function Bar() {
                         {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
                         <MenuList />
                         {userLoggedIn && <MenuItem onClick={() => navigate('orderprocess')}>
-                            订餐流程
+                            {t('appBar').menuList.orderProcess.name}
                         </MenuItem>}
                     </Box>
                     <Box >

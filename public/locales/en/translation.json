@@ -37,7 +37,15 @@
             "userDashboard": "User Dashboard"
         },
         "menuList": {
-            "featured": "Little Cute Featured"
+            "featured": "Little Cute Featured",
+            "orderProcess": {
+                "name": "Order Process",
+                "orderWay": "How to order: check out <anchor>{{link}}</anchor> to contact us",
+                "pickUpLocationSatuday": "Where to pick up on Saturday: Nordstrom Parking lot, 8091 Tysons Corner Center, Tysons, VA 22102",
+                "pickUpTimeSatuday": "When to pick up on Saturday: 2 pm to 3 pm",
+                "pickUpLocationOtherDays": "Where to pick up on other days: Poké It Up, 4401 Fairfax Dr UNIT 103, Arlington, VA 22203",
+                "pickUpTimeOtherDays": "When to pick up on other days: 11 am to 8 pm"
+            }
         }
     },
     "drawer": {
