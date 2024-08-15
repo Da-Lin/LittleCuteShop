@@ -154,7 +154,7 @@ function Bar() {
                                 </MenuItem>
                             ))}
                         </Menu>
-                        {welcomeText}
+                        {userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}
                         {userLoggedIn ? <UserProfileMenus />
                             : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
                     </Box>
