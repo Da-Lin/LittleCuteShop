@@ -83,10 +83,9 @@ export default function Product() {
 
     return (
         <Box sx={{
-            height: '100vh',
             backgroundImage: `url(${background})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: 'cover'
+            backgroundSize: 'cover',
+            height: {lg:'100vh'}
         }}>
             {product &&
                 < Grid container direction={{ sm: "column", md: "row" }} >
@@ -101,7 +100,7 @@ export default function Product() {
                         </Grid>
                     </Grid>
                     <Grid item md={4} xl={5}>
-                        <img alt='name' src={product.imgUrls && product.imgUrls[selectedImgIndex]} width="100%" />
+                        <img alt='name' src={product.imgUrls && product.imgUrls[selectedImgIndex]} width="100%" height="100%" />
                     </Grid>
                     <Grid item md={6} xl={6} sx={{ whiteSpace: "pre-wrap" }}>
                         <Grid container direction='column' style={{ height: '100%' }}>
