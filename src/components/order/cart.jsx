@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 
-const OrderProcess = () => {
+const Cart = () => {
 
     const { t, i18n } = useTranslation()
     const isChinese = i18n.language === 'zh'
@@ -26,4 +26,4 @@ const OrderProcess = () => {
     )
 };
 
-export default OrderProcess;
+export default Cart;

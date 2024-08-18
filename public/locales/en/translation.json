@@ -30,7 +30,8 @@
         "failuerMessage": "Invalid email!"
     },
     "appBar": {
-        "changeLanguage": "Change Language",
+        "changeLanguage": "更改语言",
+        "cart": "Cart",
         "editProfile": "Edit Profile",
         "userProfileMenus": {
             "logout": "Logout",

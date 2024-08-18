@@ -30,7 +30,8 @@
         "failuerMessage": "邮件地址错误！"
     },
     "appBar": {
-        "changeLanguage": "更改语言",
+        "changeLanguage": "Change Language",
+        "cart": "购物车",
         "editProfile": "用户信息",
         "userProfileMenus": {
             "logout": "登出",

@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../assets/logo.png';
 import LanguageIcon from '@mui/icons-material/Language';
-import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import MenuList from './menuList';
@@ -19,13 +19,13 @@ import { useTranslation } from 'react-i18next';
 import AdminMenuList from './adminMenuList';
 import UserProfileMenus from './userProfileMenus';
 import MenuListXS from './menuListXS';
+import { Badge } from '@mui/material';
 
 function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElLanguage, setAnchorElLanguage] = React.useState(null);
 
     const { userLoggedIn, userInfo } = useAuth()
-    const welcomeText = userLoggedIn ? "Hello " + userInfo.name ? userInfo.name : userInfo.email : ""
 
     const { t, i18n } = useTranslation()
     const languages = { zh: t("zh"), en: t("en") };
@@ -56,9 +56,6 @@ function Bar() {
     //     setAnchorElNav(null);
     // };
 
-    const handleLoginButtonClicked = (link) => {
-        navigate('login')
-    };
 
     return (
         <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
@@ -90,9 +87,6 @@ function Bar() {
                     <Box >
                         <Tooltip title={t('appBar').changeLanguage}>
                             <IconButton size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
                                 color="inherit" onClick={handleOpenLanguageMenu} >
                                 <LanguageIcon />
                             </IconButton>
@@ -119,13 +113,24 @@ function Bar() {
                                 </MenuItem>
                             ))}
                         </Menu>
-                        <Typography display="inline" sx={{ display: { xs: 'none', md: 'inline' } }}>{userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}</Typography>
-                        {userLoggedIn ? <UserProfileMenus />
-                            : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
+                        {userLoggedIn ?
+                            <Box display="inline">
+                                <Tooltip title={t('appBar').cart}>
+                                    <IconButton size="large"
+                                        color="inherit" onClick={() => { navigate('cart') }} >
+                                        <Badge badgeContent={2} color="secondary">
+                                            <ShoppingCartIcon />
+                                        </Badge>
+                                    </IconButton>
+                                </Tooltip>
+                                <Typography sx={{ display: { xs: 'none', md: 'inline' } }}>{userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}</Typography>
+                                <UserProfileMenus />
+                            </Box>
+                            : <Button color="inherit" onClick={() => { navigate('login') }}>{t("login")}</Button>}
                     </Box>
                 </Toolbar>
             </Container>
-        </AppBar>
+        </AppBar >
     );
 }
 export default Bar;

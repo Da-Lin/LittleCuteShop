@@ -14,6 +14,7 @@ import Product from "./components/product/product";
 import { createTheme, ThemeProvider, responsiveFontSizes  } from '@mui/material/styles';
 import UserDashboard from "./components/user/userDashboard";
 import OrderProcess from "./components/order/orderProcess";
+import Cart from "./components/order/cart";
 
 const THEME = responsiveFontSizes(createTheme({
   typography: {
@@ -78,6 +79,10 @@ function App() {
     {
       path: "/orderprocess",
       element: <OrderProcess />,
+    },
+    {
+      path: "/cart",
+      element: <Cart />,
     },
     {
       path: "/login",
