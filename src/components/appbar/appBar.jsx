@@ -61,7 +61,7 @@ function Bar() {
     };
 
     return (
-        <AppBar position="relative" sx={{ minWidth: 500, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
                     <Box
