@@ -11,11 +11,11 @@ import ForgotPassword from "./components/authentication/forgotPassword";
 import ManageProduct from "./components/product/manageProduct";
 import Products from "./components/product/products";
 import Product from "./components/product/product";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, responsiveFontSizes  } from '@mui/material/styles';
 import UserDashboard from "./components/user/userDashboard";
 import OrderProcess from "./components/order/orderProcess";
 
-const THEME = createTheme({
+const THEME = responsiveFontSizes(createTheme({
   typography: {
     "fontFamily": `"kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
     "fontSize": 18,
@@ -55,7 +55,7 @@ const THEME = createTheme({
       },
     },
   }
-});
+}));
 
 function App() {
   const routesArray = [

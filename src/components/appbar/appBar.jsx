@@ -59,7 +59,7 @@ function Bar() {
     };
 
     return (
-        <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar position="relative" sx={{ minWidth: 750, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
                     <Box
@@ -154,7 +154,7 @@ function Bar() {
                                 </MenuItem>
                             ))}
                         </Menu>
-                        {userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}
+                        <Typography display="inline" sx={{ display: { xs: 'none', md:'inline' } }}>{userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}</Typography>
                         {userLoggedIn ? <UserProfileMenus />
                             : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
                     </Box>
