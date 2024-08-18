@@ -17,11 +17,14 @@ import OrderProcess from "./components/order/orderProcess";
 
 const THEME = createTheme({
   typography: {
-    "fontFamily": `cursive, "kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
+    "fontFamily": `"kaiti", "Roboto", "Helvetica", "Arial", sans-serif`,
     "fontSize": 18,
     "fontWeightLight": 300,
     "fontWeightRegular": 400,
-    "fontWeightMedium": 500
+    "fontWeightMedium": 500,
+    button: {
+      textTransform: 'none'
+    }
   },
   breakpoints: {
     values: {
