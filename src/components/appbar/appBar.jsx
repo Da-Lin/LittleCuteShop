@@ -11,12 +11,14 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../assets/logo.png';
 import LanguageIcon from '@mui/icons-material/Language';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import MenuList from './menuList';
 import { useTranslation } from 'react-i18next';
 import AdminMenuList from './adminMenuList';
 import UserProfileMenus from './userProfileMenus';
+import MenuListXS from './menuListXS';
 
 function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -59,7 +61,7 @@ function Bar() {
     };
 
     return (
-        <AppBar position="relative" sx={{ minWidth: 750, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar position="relative" sx={{ minWidth: 500, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
                     <Box
@@ -75,47 +77,10 @@ function Bar() {
                         src={logo}
                         onClick={() => navigate('/home')}
                     />
-                    {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleExitNavMenu}
-                            sx={{
-                                display: { xs: 'block', md: 'none' },
-                            }}
-                        >
-                            {
-                                Object.keys(menus).map((menu) => (
-                                    menus[menu].map(option => (
-                                        <MenuItem key={option.link} onClick={(e) => handleCloseNavMenu(e, option.link)}>
-                                            <Typography textAlign="center">{option.name}</Typography>
-                                        </MenuItem>
-                                    ))
-                                ))
-                            }
-                        </Menu>
-                    </Box> */}
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                        <MenuListXS />
+                    </Box>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
                         <MenuList />
                         {userLoggedIn && <MenuItem onClick={() => navigate('orderprocess')}>
@@ -154,7 +119,7 @@ function Bar() {
                                 </MenuItem>
                             ))}
                         </Menu>
-                        <Typography display="inline" sx={{ display: { xs: 'none', md:'inline' } }}>{userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}</Typography>
+                        <Typography display="inline" sx={{ display: { xs: 'none', md: 'inline' } }}>{userLoggedIn ? `Hello, ${userInfo.name ? userInfo.name : userInfo.email}` : ""}</Typography>
                         {userLoggedIn ? <UserProfileMenus />
                             : <Button color="inherit" onClick={handleLoginButtonClicked}>{t("login")}</Button>}
                     </Box>
