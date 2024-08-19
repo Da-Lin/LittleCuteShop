@@ -5,10 +5,10 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { useTranslation } from 'react-i18next';
-import emailjs from '@emailjs/browser';
 import background from '../../assets/background.jpg';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { addToCart } from '../../firebase/firestore/order';
+import { useOrder } from '../../contexts/orderContext';
 
 export default function Product() {
     const [isLoadingProduct, setIsLoadingProduct] = useState(false)
@@ -19,12 +19,12 @@ export default function Product() {
     const id = searchParams.get('id')
     const { t } = useTranslation()
 
-    const [isSendingEmail, setIsSendingEmail] = useState(false)
-    const [message, setMessage] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
+    const { userCart, notify } = useOrder()
+    const [isAddingCart, setIsAddingCart] = useState(false)
+    const [cartMessage, setCartMessage] = useState('')
+    const [cartErrorMessage, setCartErrorMessage] = useState('')
 
-    const { userLoggedIn, userInfo } = useAuth()
-    const emailContent = userInfo ? { subject: userInfo.email + " notifies", email: userInfo.email, message: "User wants to buy " + product.name, name: userInfo.name } : {};
+    const { userLoggedIn} = useAuth()
 
     const navigate = useNavigate()
     const onePrice = (product.priceMap && Object.keys(product.priceMap).length === 1) ? product.priceMap[Object.keys(product.priceMap)[0]] : undefined
@@ -43,6 +43,7 @@ export default function Product() {
                     setProduct(p)
                     setAmount(Object.keys(p.priceMap)[0])
                 })
+                setIsLoadingProduct(false)
                 if (!product) {
                     navigate('/home')
                 }
@@ -51,54 +52,64 @@ export default function Product() {
             }
         }
         getAndSetProducts()
-        setIsLoadingProduct(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
-    const resetMessage = () => {
-        setErrorMessage('')
-        setMessage('')
-    }
+    // const sendEmail = (e) => {
+    //     e.preventDefault();
+    //     resetMessage()
 
-    const sendEmail = (e) => {
-        e.preventDefault();
-        resetMessage()
-
-        setIsSendingEmail(true)
-        emailjs
-            .send('service_rfnxvbs', 'template_6ppiony', emailContent, {
-                publicKey: 'Lx8hE39ZJTFeQmYqi',
-            })
-            .then(
-                () => {
-                    setIsSendingEmail(false)
-                    setMessage(t('product').notify.successfulMessage)
-                },
-                (error) => {
-                    setIsSendingEmail(false)
-                    console.log(error)
-                    setErrorMessage(t('product').notify.failuerMessage)
-                },
-            );
-    };
+    //     setIsSendingEmail(true)
+    //     emailjs
+    //         .send('service_rfnxvbs', 'template_6ppiony', emailContent, {
+    //             publicKey: 'Lx8hE39ZJTFeQmYqi',
+    //         })
+    //         .then(
+    //             () => {
+    //                 setIsSendingEmail(false)
+    //                 setMessage(t('product').notify.successfulMessage)
+    //             },
+    //             (error) => {
+    //                 setIsSendingEmail(false)
+    //                 console.log(error)
+    //                 setErrorMessage(t('product').notify.failuerMessage)
+    //             },
+    //         );
+    // };
 
     const handleLoginButtonClicked = (link) => {
         navigate('/login')
     };
 
     const handleAddToCart = () => {
-        const newItem = {
-            productId: product.id,
-            productName: product.name,
-            imgUrl: product.imgUrls[0],
-            amount: amount,
-            priceMap: product.priceMap,
+        setCartMessage("")
+        setCartErrorMessage('')
+        if (userCart && product.id in userCart) {
+            setCartMessage(t('product').itemAlreadyInCartMessage)
+            return
         }
-        addToCart(newItem).catch((error) => {
-            console.log(error)
-            setErrorMessage('Failed to add to cart')
-        })
+
+        setIsAddingCart(true)
+        if (userCart) {
+            const newItem = {
+                productId: product.id,
+                productName: product.name,
+                imgUrl: product.imgUrls[0],
+                amount: amount,
+                priceMap: product.priceMap,
+            }
+            addToCart(newItem).then((cart) => {
+                setIsAddingCart(false)
+                setCartMessage(t('product').addCartSuccessfullyMessage)
+                notify(cart)
+            }).catch((error) => {
+                setIsAddingCart(false)
+                console.log(error)
+                setCartErrorMessage(t('product').addCartFailedMessage)
+            })
+        }
     }
+
 
     return (
         <Box sx={{
@@ -158,9 +169,9 @@ export default function Product() {
                                     <IconButton size="large" style={{ maxWidth: '50px', justifyContent: "flex-start" }} color="primary" onClick={handleAddToCart}><AddShoppingCartIcon /></IconButton>
                                 </Tooltip>
                                 <Stack container justifyContent="center">
-                                    {isSendingEmail && <CircularProgress />}
-                                    {message && <Alert>{message}</Alert>}
-                                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                                    {isAddingCart && <CircularProgress />}
+                                    {cartMessage && <Alert>{cartMessage}</Alert>}
+                                    {cartErrorMessage && <Alert severity="error">{cartErrorMessage}</Alert>}
                                 </Stack>
                             </> :
                                 <>

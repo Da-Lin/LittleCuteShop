@@ -20,39 +20,23 @@ import AdminMenuList from './adminMenuList';
 import UserProfileMenus from './userProfileMenus';
 import MenuListXS from './menuListXS';
 import { Badge } from '@mui/material';
-import { useEffect } from 'react';
-import { getCart } from '../../firebase/firestore/order';
 import { useState } from 'react';
+import { useOrder } from '../../contexts/orderContext';
+import { useEffect } from 'react';
 
 function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElLanguage, setAnchorElLanguage] = React.useState(null);
+    const [anchorElLanguage, setAnchorElLanguage] = useState(null);
 
     const { userLoggedIn, userInfo } = useAuth()
+    const { userCart, subscibe } = useOrder()
+    const [cart, setCart] = useState(userCart)
+    subscibe(setCart)
 
     const { t, i18n } = useTranslation()
     const languages = { zh: t("zh"), en: t("en") };
 
     const navigate = useNavigate();
-
-    const [userCart, setUserCart] = useState({})
-    const [productIds, setProductIds] = useState([])
-    const [isLoadingCart, setIsLoadingCart] = useState([])
-
-    useEffect(() => {
-        setIsLoadingCart(true)
-        async function getUserCart() {
-            await getCart().then((cart) => {
-                setIsLoadingCart(false)
-                setUserCart(cart)
-                setProductIds(Object.keys(cart).sort())
-            }).catch((error) => {
-                setIsLoadingCart(false)
-                console.log(error)
-            })
-        }
-        getUserCart()
-    }, [productIds.length])
 
     // const handleOpenNavMenu = (event) => {
     //     setAnchorElNav(event.currentTarget);
@@ -143,7 +127,7 @@ function Bar() {
                                 <Tooltip title={t('appBar').cart}>
                                     <IconButton size="large"
                                         color="inherit" onClick={() => { navigate('cart') }} >
-                                        <Badge badgeContent={userCart && Object.keys(userCart).length} color="secondary">
+                                        <Badge badgeContent={cart && Object.keys(cart).length} color="secondary">
                                             <ShoppingCartIcon />
                                         </Badge>
                                     </IconButton>

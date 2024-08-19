@@ -11,10 +11,11 @@ import ForgotPassword from "./components/authentication/forgotPassword";
 import ManageProduct from "./components/product/manageProduct";
 import Products from "./components/product/products";
 import Product from "./components/product/product";
-import { createTheme, ThemeProvider, responsiveFontSizes  } from '@mui/material/styles';
+import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 import UserDashboard from "./components/user/userDashboard";
 import OrderProcess from "./components/order/orderProcess";
 import Cart from "./components/order/cart";
+import { OrderProvider } from "./contexts/orderContext";
 
 const THEME = responsiveFontSizes(createTheme({
   typography: {
@@ -112,10 +113,12 @@ function App() {
   let routesElement = useRoutes(routesArray);
   return (
     <ThemeProvider theme={THEME}>
-      <AuthProvider>
-        <Bar />
-        {routesElement}
-      </AuthProvider>
+      <OrderProvider>
+        <AuthProvider>
+          <Bar />
+          {routesElement}
+        </AuthProvider>
+      </OrderProvider>
     </ThemeProvider>
   );
 }

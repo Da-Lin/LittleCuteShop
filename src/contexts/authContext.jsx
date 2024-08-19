@@ -4,6 +4,7 @@ import { auth } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { getUserName, getUserPrivileges } from "../firebase/firestore/authentication";
 import { isAdmin } from '../firebase/firestore/authentication';
+import { useOrder } from "./orderContext";
 
 const AuthContext = React.createContext(null);
 
@@ -19,6 +20,8 @@ export function AuthProvider({ children }) {
   const [isGoogleUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const { loadCart } = useOrder()
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, initializeUser);
     return unsubscribe;
@@ -31,6 +34,7 @@ export function AuthProvider({ children }) {
       var userPrivileges = await getUserPrivileges(user)
       var isAdminUser = isAdmin(userPrivileges)
       setUserInfo({ privileges: userPrivileges, isAdmin: isAdminUser, name: await (getUserName(user)), email: user.email })
+      loadCart()
 
       // check if provider is email and password login
       const isEmail = user.providerData.some(

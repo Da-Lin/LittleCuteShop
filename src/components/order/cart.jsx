@@ -16,31 +16,15 @@ import { useState } from 'react';
 import { getCategoryProducts } from '../../firebase/firestore/product';
 import { getCart } from '../../firebase/firestore/order';
 import { useAuth } from '../../contexts/authContext';
+import { useMemo, cache } from 'react';
+import { useOrder } from '../../contexts/orderContext';
 
 export default function Cart() {
 
-    const [userCart, setUserCart] = useState({})
-    const [productIds, setProductIds] = useState([])
-    const [isLoadingCart, setIsLoadingCart] = useState([])
-
-    useEffect(() => {
-        setIsLoadingCart(true)
-        async function getUserCart() {
-            await getCart().then((cart) => {
-                setIsLoadingCart(false)
-                setUserCart(cart)
-                setProductIds(Object.keys(cart).sort())
-            }).catch((error) => {
-                setIsLoadingCart(false)
-                console.log(error)
-            })
-        }
-        getUserCart()
-    }, [productIds.length])
+    const { userCart } = useOrder()
 
     return (
         <Grid container justifyContent="center" direction="column" alignItems="center">
-            {isLoadingCart && <LinearProgress />}
             {Object.keys(userCart).map(productId =>
                 <CartProductCard userCart={userCart} productId={productId} />
             )}
