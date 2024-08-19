@@ -49,7 +49,8 @@ export const addProduct = async (data) => {
         const docRef = await addDoc(productsRef, {
             name: data.name,
             description: data.description,
-            price: data.price,
+            price: getPrice(data.priceMap),
+            priceMap: data.priceMap,
             category: data.category,
             imgPaths: imgPaths,
             imgUrls: imgUrls
@@ -102,11 +103,23 @@ export const updateProduct = async (data) => {
     return updateDoc(docRef, {
         name: data.name,
         description: data.description,
-        price: data.price,
+        price: getPrice(data.priceMap),
+        priceMap: data.priceMap,
         category: data.category,
         imgPaths: imgPaths,
         imgUrls: imgUrls
     });
+}
+
+const getPrice = (priceMap) => {
+    let price = ''
+    Object.keys(priceMap).forEach(amount => {
+        if (price) {
+            price += ' '
+        }
+        price += `${amount}-$${priceMap[amount]}`
+    })
+    return price
 }
 
 export const deleteProduct = async (data) => {
@@ -138,7 +151,8 @@ export const getProducts = async () => {
             price: product.price,
             category: product.category,
             imgPaths: product.imgPaths,
-            imgUrls: product.imgUrls
+            imgUrls: product.imgUrls,
+            priceMap: product.priceMap
         })
     });
     return products

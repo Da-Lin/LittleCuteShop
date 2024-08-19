@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, LinearProgress, Typography, Link, Stack, Alert, CircularProgress } from '@mui/material';
+import { Box, Button, Divider, Grid, LinearProgress, Typography, Link, Stack, Alert, CircularProgress, ButtonGroup, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { getProduct } from '../../firebase/firestore/product';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import background from '../../assets/background.jpg';
 export default function Product() {
     const [isLoadingProduct, setIsLoadingProduct] = useState(false)
     const [product, setProduct] = useState({})
+    const [amount, setAmount] = useState(0)
     const [selectedImgIndex, setSelectedImgIndex] = useState(0)
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id')
@@ -24,6 +25,7 @@ export default function Product() {
     const emailContent = userInfo ? { subject: userInfo.email + " notifies", email: userInfo.email, message: "User wants to buy " + product.name, name: userInfo.name } : {};
 
     const navigate = useNavigate()
+    const onePrice = (product.priceMap && Object.keys(product.priceMap).length === 1) ? product.priceMap[Object.keys(product.priceMap)[0]] : undefined
 
     // const price = product && parseFloat(product.price).toLocaleString('USD')
     // const discount = 0.34
@@ -37,6 +39,7 @@ export default function Product() {
                 await getProduct(id).then((p) => {
                     setIsLoadingProduct(false)
                     setProduct(p)
+                    setAmount(Object.keys(p.priceMap)[0])
                 })
                 if (!product) {
                     navigate('/home')
@@ -85,7 +88,7 @@ export default function Product() {
         <Box sx={{
             backgroundImage: `url(${background})`,
             backgroundSize: 'cover',
-            height: {lg:'100vh'}
+            height: { lg: '100vh' }
         }}>
             {product &&
                 < Grid container direction={{ sm: "column", md: "row" }} >
@@ -103,14 +106,37 @@ export default function Product() {
                         <img alt='name' src={product.imgUrls && product.imgUrls[selectedImgIndex]} width="100%" height="100%" />
                     </Grid>
                     <Grid item md={6} xl={6} sx={{ whiteSpace: "pre-wrap" }}>
-                        <Grid container direction='column' style={{ height: '100%' }}>
+                        <Grid container margin={1} direction='column' style={{ height: '100%' }}>
                             <Typography variant='h4' gutterBottom>{product.name}</Typography>
                             <Divider />
                             {userLoggedIn ? <>
                                 <Typography variant='h5' gutterBottom >产品描述(description)：</Typography>
                                 <Typography variant='body1' gutterBottom>{product.description}</Typography>
                                 <Divider />
-                                <Typography variant='h5' gutterBottom>价格(Price)：{product.price}</Typography>
+                                <Typography variant='h5' gutterBottom>价格(Price)：{onePrice ? `$${onePrice}` : amount && `$${product.priceMap[amount]}`}</Typography>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        '& > *': {
+                                            m: 1,
+                                        },
+                                    }}
+                                >
+                                    {!onePrice ?
+                                        <FormControl>
+                                            <RadioGroup row aria-labelledby="radio-buttons-group" name="radio-buttons-group"
+                                                value={amount}
+                                                onChange={(e) => setAmount(e.target.value)}>
+                                                {
+                                                    product.priceMap && Object.keys(product.priceMap).map(count =>
+                                                        <FormControlLabel key={count} value={count} control={<Radio checked={amount === count} />} label={count} />
+                                                    )
+                                                }
+                                            </RadioGroup>
+                                        </FormControl>
+                                        : <></>}
+                                </Box>
                                 <Divider />
                                 <Link sx={{ mt: 2 }} href="#" onClick={sendEmail} variant="body2">
                                     {t('product').notify.message}

@@ -35,6 +35,7 @@ import ProdictImageList from './imageList';
 import ManageProductImage from './manageProductImage';
 import { useAuth } from '../../contexts/authContext';
 import { useNavigate } from 'react-router-dom';
+import ManageProductPrice from './manageProductPrice';
 
 const Example = () => {
     const { userInfo } = useAuth()
@@ -55,6 +56,8 @@ const Example = () => {
     const [isLoadingProductsError, setIsLoadingProductsError] = useState(false)
 
     const [imgList, setImgList] = useState([])
+    const [priceMap, setPriceMap] = useState({})
+    const [priceValidationError, setPriceValidationError] = useState('')
     const [existingImgNames, setExistingImgNames] = useState([])
 
     const [errorMessage, setErrorMessage] = useState('');
@@ -87,7 +90,7 @@ const Example = () => {
             })
         }
         getAndSetProducts()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [manageCategoryMessage, manageCategoryErrorMessage, isCreatingProduct, isUpdatingProduct, isDeletingProduct])
 
     const handleRemoveCategoryOpen = () => {
@@ -193,21 +196,6 @@ const Example = () => {
                 },
             },
             {
-                accessorKey: 'price',
-                header: '价格',
-                muiEditTextFieldProps: {
-                    required: true,
-                    error: !!validationErrors?.price,
-                    helperText: validationErrors?.price,
-                    //remove any previous validation errors when user focuses on the input
-                    onFocus: () =>
-                        setValidationErrors({
-                            ...validationErrors,
-                            price: undefined,
-                        }),
-                }
-            },
-            {
                 accessorKey: 'category',
                 header: '分类',
                 editVariant: 'select',
@@ -223,14 +211,28 @@ const Example = () => {
                             category: undefined,
                         }),
                 },
-            }
+            },
+            {
+                accessorKey: 'price',
+                header: '价格',
+                muiEditTextFieldProps: {
+                    required: true,
+                    disabled: true,
+                    error: !!priceValidationError,
+                    helperText: priceValidationError
+                }
+            },
         ],
-        [categories, validationErrors],
+        [categories, validationErrors, priceValidationError],
     );
 
     //CREATE action
     const handleCreateProduct = async ({ values, table }) => {
         const newValidationErrors = validateProduct(values);
+        if (!!Object.keys(priceMap).length) {
+            setPriceValidationError('请输入产品价格')
+            return
+        }
         if (Object.values(newValidationErrors).some((error) => error)) {
             setValidationErrors(newValidationErrors);
             return;
@@ -244,7 +246,7 @@ const Example = () => {
         }
 
         setValidationErrors({});
-        values = { ...values, imgList: imgList }
+        values = { ...values, imgList: imgList, priceMap: priceMap }
         await addProduct(values).catch((error) => {
             console.log(error)
             setErrorMessage('添加产品失败')
@@ -257,6 +259,10 @@ const Example = () => {
     const handleSaveProduct = async ({ values, table, row }) => {
         values["id"] = row.original.id
 
+        if (Object.keys(priceMap).length === 0) {
+            setPriceValidationError('请输入产品价格')
+            return
+        }
         const newValidationErrors = validateProduct(values);
         if (Object.values(newValidationErrors).some((error) => error)) {
             setValidationErrors(newValidationErrors);
@@ -271,7 +277,7 @@ const Example = () => {
         }
 
         setValidationErrors({});
-        values = { ...values, imgList: imgList, imgPaths: row.original.imgPaths, imgUrls: row.original.imgUrls, imgNamesToDelete: row.original.imgNamesToDelete }
+        values = { ...values, priceMap: priceMap, imgList: imgList, imgPaths: row.original.imgPaths, imgUrls: row.original.imgUrls, imgNamesToDelete: row.original.imgNamesToDelete }
         await updateProduct(values).catch((error) => {
             console.log(error)
             setErrorMessage('更新产品失败')
@@ -321,8 +327,9 @@ const Example = () => {
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
                 >
-                    {internalEditComponents} {/* or render custom edit components here */}
+                    {internalEditComponents}
                 </DialogContent>
+                <ManageProductPrice priceMap={priceMap} setPriceMap={setPriceMap} priceValidationError={priceValidationError} setPriceValidationError={setPriceValidationError} />
                 <ImageUpload imgList={imgList} setImgList={setImgList} />
                 <Accordion>
                     <AccordionSummary
@@ -386,6 +393,7 @@ const Example = () => {
                 >
                     {internalEditComponents} {/* or render custom edit components here */}
                 </DialogContent>
+                <ManageProductPrice rowData={row.original} priceMap={priceMap} setPriceMap={setPriceMap} priceValidationError={priceValidationError} setPriceValidationError={setPriceValidationError} />
                 <ManageProductImage rowData={row.original} imgList={imgList} setImgList={setImgList} existingImgNames={existingImgNames} setExistingImgNames={setExistingImgNames} />
                 <DialogActions>
                     <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -476,9 +484,6 @@ function validateProduct(product) {
             : '',
         description: !validateRequired(product.description)
             ? '请输入产品描述'
-            : '',
-        price: !validateRequired(product.price)
-            ? '请输入产品价格'
             : '',
         category: !validateRequired(product.category)
             ? '请输入产品分类'
