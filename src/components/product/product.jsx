@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, LinearProgress, Typography, Link, Stack, Alert, CircularProgress, ButtonGroup, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Box, Button, Divider, Grid, LinearProgress, Typography, Link, Stack, Alert, CircularProgress, ButtonGroup, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, IconButton, Tooltip } from '@mui/material';
 import { getProduct } from '../../firebase/firestore/product';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
@@ -7,6 +7,8 @@ import { useAuth } from '../../contexts/authContext';
 import { useTranslation } from 'react-i18next';
 import emailjs from '@emailjs/browser';
 import background from '../../assets/background.jpg';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { addToCart } from '../../firebase/firestore/order';
 
 export default function Product() {
     const [isLoadingProduct, setIsLoadingProduct] = useState(false)
@@ -84,6 +86,20 @@ export default function Product() {
         navigate('/login')
     };
 
+    const handleAddToCart = () => {
+        const newItem = {
+            productId: product.id,
+            productName: product.name,
+            imgUrl: product.imgUrls[0],
+            amount: amount,
+            priceMap: product.priceMap,
+        }
+        addToCart(newItem).catch((error) => {
+            console.log(error)
+            setErrorMessage('Failed to add to cart')
+        })
+    }
+
     return (
         <Box sx={{
             backgroundImage: `url(${background})`,
@@ -138,9 +154,9 @@ export default function Product() {
                                         : <></>}
                                 </Box>
                                 <Divider />
-                                <Link sx={{ mt: 2 }} href="#" onClick={sendEmail} variant="body2">
-                                    {t('product').notify.message}
-                                </Link>
+                                <Tooltip title={t('product').addToCart}>
+                                    <IconButton size="large" style={{ maxWidth: '50px', justifyContent: "flex-start" }} color="primary" onClick={handleAddToCart}><AddShoppingCartIcon /></IconButton>
+                                </Tooltip>
                                 <Stack container justifyContent="center">
                                     {isSendingEmail && <CircularProgress />}
                                     {message && <Alert>{message}</Alert>}

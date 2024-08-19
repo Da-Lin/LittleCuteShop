@@ -20,6 +20,9 @@ import AdminMenuList from './adminMenuList';
 import UserProfileMenus from './userProfileMenus';
 import MenuListXS from './menuListXS';
 import { Badge } from '@mui/material';
+import { useEffect } from 'react';
+import { getCart } from '../../firebase/firestore/order';
+import { useState } from 'react';
 
 function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -31,6 +34,23 @@ function Bar() {
     const languages = { zh: t("zh"), en: t("en") };
 
     const navigate = useNavigate();
+
+    const [userCart, setUserCart] = useState([])
+    const [isLoadingCart, setIsLoadingCart] = useState([])
+
+    useEffect(() => {
+        setIsLoadingCart(true)
+        async function getUserCart() {
+            await getCart().then((cart) => {
+                setIsLoadingCart(false)
+                setUserCart(cart)
+            }).catch((error) => {
+                setIsLoadingCart(false)
+                console.log(error)
+            })
+        }
+        getUserCart()
+    }, [userCart])
 
     // const handleOpenNavMenu = (event) => {
     //     setAnchorElNav(event.currentTarget);
@@ -118,7 +138,7 @@ function Bar() {
                                 <Tooltip title={t('appBar').cart}>
                                     <IconButton size="large"
                                         color="inherit" onClick={() => { navigate('cart') }} >
-                                        <Badge badgeContent={2} color="secondary">
+                                        <Badge badgeContent={userCart && Object.keys(userCart).length} color="secondary">
                                             <ShoppingCartIcon />
                                         </Badge>
                                     </IconButton>

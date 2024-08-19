@@ -1,29 +1,44 @@
-import { Grid, Typography } from "@mui/material";
-import React from "react";
-import { Link } from "react-router-dom";
-import { Trans, useTranslation } from "react-i18next";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import logo from '../../assets/logo.png';
+import { Grid } from '@mui/material';
+import CartProductCard from './cartProductCard';
+import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { getCategoryProducts } from '../../firebase/firestore/product';
+import { getCart } from '../../firebase/firestore/order';
+import { useAuth } from '../../contexts/authContext';
 
-const Cart = () => {
+export default function Cart() {
 
-    const { t, i18n } = useTranslation()
-    const isChinese = i18n.language === 'zh'
+    const [userCart, setUserCart] = useState([])
+    const [isLoadingCart, setIsLoadingCart] = useState([])
+
+    useEffect(() => {
+        setIsLoadingCart(true)
+        async function getUserCart() {
+            await getCart().then((cart) => {
+                setIsLoadingCart(false)
+                setUserCart(cart)
+            }).catch((error) => {
+                setIsLoadingCart(false)
+                console.log(error)
+            })
+        }
+        getUserCart()
+    }, [userCart])
 
     return (
-        <Grid container justifyContent="center" direction="column"
-            alignItems="center">
-            <Typography pt={2} width={1000}>
-                {<Trans
-                    i18nKey={t("appBar").menuList.orderProcess.orderWay}
-                    values={{ link: isChinese ? "此页面" : "this page" }}
-                    components={{ anchor: <Link to={"/userdashboard/contact"} /> }}
-                />}
-            </Typography>
-            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpLocationSatuday}</Typography>
-            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpTimeSatuday}</Typography>
-            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpLocationOtherDays}</Typography>
-            <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpTimeOtherDays}</Typography>
+        <Grid container justifyContent="center" direction="column" alignItems="center">
+            <CartProductCard />
         </Grid>
-    )
-};
-
-export default Cart;
+    );
+}

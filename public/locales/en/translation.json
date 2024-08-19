@@ -13,7 +13,8 @@
             "message": "Notify us to let us know you want to buy some",
             "successfulMessage": "Successfully notified us! We will contact you through email shortly.",
             "failuerMessage": "Failed to notify us! Please directly send email to littlecuteshop2024@gmail.com or through WeChat (our WeChat ID is littlecutebakery)."
-        }
+        },
+        "addToCart": "Add to cart"
     },
     "loginPage": {
         "login": "Log in",
