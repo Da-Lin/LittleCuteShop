@@ -20,6 +20,7 @@ export const getCart = async () => {
     const docRef = doc(db, "users", auth.currentUser.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
+        console.log(docSnap.data().cart)
         return docSnap.data().cart
     }
 };

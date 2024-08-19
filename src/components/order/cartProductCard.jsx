@@ -11,9 +11,10 @@ import AddIcon from '@mui/icons-material/Add';
 import logo from '../../assets/logo.png';
 import { useState } from 'react';
 
-export default function CartProductCard() {
+export default function CartProductCard({ userCart, productId }) {
 
-    const [amount, setAmount] = useState(1)
+    const product = userCart[productId]
+    const [amount, setAmount] = useState(product.amount)
 
     const handleMinus = () => {
         if (amount > 1) {
@@ -32,7 +33,7 @@ export default function CartProductCard() {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography variant="h5">
-                        Live From Space
+                        {product.productName}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
                         $2

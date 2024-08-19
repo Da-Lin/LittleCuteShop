@@ -35,7 +35,8 @@ function Bar() {
 
     const navigate = useNavigate();
 
-    const [userCart, setUserCart] = useState([])
+    const [userCart, setUserCart] = useState({})
+    const [productIds, setProductIds] = useState([])
     const [isLoadingCart, setIsLoadingCart] = useState([])
 
     useEffect(() => {
@@ -44,13 +45,14 @@ function Bar() {
             await getCart().then((cart) => {
                 setIsLoadingCart(false)
                 setUserCart(cart)
+                setProductIds(Object.keys(cart).sort())
             }).catch((error) => {
                 setIsLoadingCart(false)
                 console.log(error)
             })
         }
         getUserCart()
-    }, [userCart])
+    }, [productIds.length])
 
     // const handleOpenNavMenu = (event) => {
     //     setAnchorElNav(event.currentTarget);
@@ -96,6 +98,9 @@ function Bar() {
                     />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <MenuListXS />
+                        {userLoggedIn && <MenuItem onClick={() => navigate('orderprocess')}>
+                            {t('appBar').menuList.orderProcess.name}
+                        </MenuItem>}
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}

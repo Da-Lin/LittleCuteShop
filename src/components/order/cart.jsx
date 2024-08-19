@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import logo from '../../assets/logo.png';
-import { Grid } from '@mui/material';
+import { Grid, LinearProgress } from '@mui/material';
 import CartProductCard from './cartProductCard';
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -19,7 +19,8 @@ import { useAuth } from '../../contexts/authContext';
 
 export default function Cart() {
 
-    const [userCart, setUserCart] = useState([])
+    const [userCart, setUserCart] = useState({})
+    const [productIds, setProductIds] = useState([])
     const [isLoadingCart, setIsLoadingCart] = useState([])
 
     useEffect(() => {
@@ -28,17 +29,21 @@ export default function Cart() {
             await getCart().then((cart) => {
                 setIsLoadingCart(false)
                 setUserCart(cart)
+                setProductIds(Object.keys(cart).sort())
             }).catch((error) => {
                 setIsLoadingCart(false)
                 console.log(error)
             })
         }
         getUserCart()
-    }, [userCart])
+    }, [productIds.length])
 
     return (
         <Grid container justifyContent="center" direction="column" alignItems="center">
-            <CartProductCard />
+            {isLoadingCart && <LinearProgress />}
+            {Object.keys(userCart).map(productId =>
+                <CartProductCard userCart={userCart} productId={productId} />
+            )}
         </Grid>
     );
 }
