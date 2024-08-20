@@ -1,4 +1,4 @@
-import { collection, query, getDocs, where, documentId, getDoc, doc, setDoc, getCountFromServer, updateDoc } from "firebase/firestore";
+import {  getDoc, doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 export const addToCart = async (newItem) => {
@@ -25,3 +25,10 @@ export const getCart = async () => {
         }
     }
 };
+
+export const updateCart = async (newCart) => {
+    const docRef = doc(db, `users`, auth.currentUser.uid)
+    return updateDoc(docRef, {
+        cart: newCart
+    })
+}

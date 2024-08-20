@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { getCart } from "../firebase/firestore/order";
-import { useAuth } from "./authContext";
+import { getCart } from "../firebase/firestore/cart";
 
 const OrderContext = React.createContext(null);
 

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, LinearProgress, Typography, Link, Stack, Alert, CircularProgress, ButtonGroup, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, IconButton, Tooltip } from '@mui/material';
+import { Box, Button, Divider, Grid, LinearProgress, Typography, Stack, Alert, CircularProgress, FormControl, RadioGroup, FormControlLabel, Radio, IconButton, Tooltip } from '@mui/material';
 import { getProduct } from '../../firebase/firestore/product';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
@@ -7,7 +7,7 @@ import { useAuth } from '../../contexts/authContext';
 import { useTranslation } from 'react-i18next';
 import background from '../../assets/background.jpg';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { addToCart } from '../../firebase/firestore/order';
+import { addToCart } from '../../firebase/firestore/cart';
 import { useOrder } from '../../contexts/orderContext';
 
 export default function Product() {
@@ -24,7 +24,7 @@ export default function Product() {
     const [cartMessage, setCartMessage] = useState('')
     const [cartErrorMessage, setCartErrorMessage] = useState('')
 
-    const { userLoggedIn} = useAuth()
+    const { userLoggedIn } = useAuth()
 
     const navigate = useNavigate()
     const onePrice = (product.priceMap && Object.keys(product.priceMap).length === 1) ? product.priceMap[Object.keys(product.priceMap)[0]] : undefined

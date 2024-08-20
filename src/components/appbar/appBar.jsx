@@ -22,7 +22,6 @@ import MenuListXS from './menuListXS';
 import { Badge } from '@mui/material';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
-import { useEffect } from 'react';
 
 function Bar() {
     // const [anchorElNav, setAnchorElNav] = React.useState(null);
