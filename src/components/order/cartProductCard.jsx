@@ -13,7 +13,7 @@ import { useOrder } from '../../contexts/orderContext';
 import { updateCart } from '../../firebase/firestore/cart';
 import { useEffect } from 'react';
 
-export default function CartProductCard({ userCart, productId, totalPrice, setTotalPrice }) {
+export default function CartProductCard({ userCart, productId, totalPrice, setTotalPrice, order, setOrder }) {
 
     const product = userCart[productId]
     const [price, setPrice] = useState(0)
@@ -44,7 +44,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
     }
 
     return (
-        <Card sx={{ display: 'flex', mt: 2 }}>
+        <Card sx={{ display: 'flex', mt: 2, width: 600 }}>
             <CardMedia
                 component="img"
                 sx={{ width: 200 }}
@@ -61,7 +61,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         {Object.keys(product.priceMap).map(priceKey =>
-                            <Amount key={priceKey} product={product} priceKey={priceKey} price={price} setPrice={setPrice} totalPrice={totalPrice} setTotalPrice={setTotalPrice} />
+                            <Amount key={priceKey} product={product} priceKey={priceKey} price={price} setPrice={setPrice} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} />
                         )}
                     </Box>
                     <IconButton aria-label="remove" onClick={removeFromCart}>
@@ -74,20 +74,33 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
     );
 }
 
-function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice }) {
+function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice, order, setOrder }) {
     const [amount, setAmount] = useState(product.amount === priceKey ? 1 : 0)
 
     const handleAdd = () => {
         setPrice(Number(price) + Number(product.priceMap[priceKey]))
         setAmount(amount + 1)
-        setTotalPrice(totalPrice + Number(product.priceMap[priceKey]))
+        const newPrice = totalPrice + Number(product.priceMap[priceKey])
+        setTotalPrice(newPrice)
+
+        if (!order['product'][product.productName]) {
+            order['product'][product.productName] = {}
+        }
+        order['product'][product.productName][priceKey] = amount + 1
+        order['totalPrice'] = newPrice
+        setOrder(order)
     }
 
     const handleMinus = () => {
         if (amount >= 1) {
             setPrice(Number(price) - Number(product.priceMap[priceKey]))
             setAmount(amount - 1)
-            setTotalPrice(totalPrice - Number(product.priceMap[priceKey]))
+            const newPrice = totalPrice - Number(product.priceMap[priceKey])
+            setTotalPrice(newPrice)
+
+            order['product'][product.productName][priceKey] = amount - 1
+            order['totalPrice'] = newPrice
+            setOrder(order)
         }
     }
 

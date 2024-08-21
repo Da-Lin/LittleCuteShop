@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from '@mui/material';
 import CartProductCard from './cartProductCard';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
@@ -18,7 +18,11 @@ export default function Cart() {
     const [pickUpDate, setPickUpDate] = useState(dayjs().add(2, 'day'));
     const [pickUpDateError, setPickUpDateError] = useState('');
 
+    const [order, setOrder] = useState({})
+
     const { t } = useTranslation()
+
+    const [openDialog, setOpenDialog] = useState(false);
 
     const pickUpDateErrorMessage = useMemo(() => {
         switch (pickUpDateError) {
@@ -45,24 +49,33 @@ export default function Cart() {
             Object.keys(product.priceMap).forEach(key => {
                 if (product.amount === key) {
                     totalPrice += Number(product.priceMap[key])
+                    order['product'] = {
+                        [product.productName]: {
+                            [key]: 1
+                        }
+                    }
+                    order['totalPrice'] = totalPrice
                     setTotalPrice(totalPrice)
                 }
             })
         })
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart])
 
     const placeOrder = () => {
         if (totalPrice > 0) {
-
+            order['pickUpDate'] = pickUpDate.toDate()
+            console.log(order)
+            setOpenDialog(true)
         }
     }
 
     return (
         < Grid container direction={{ xs: "column", md: "row" }} >
-            <Grid item direction="column" container justifyContent="center" alignItems="center" xs={6} md={6} minWidth={600}>
+            <ConfirmationDialog openDialog={openDialog} setOpenDialog={setOpenDialog} order={order} />
+            <Grid item direction="column" container justifyContent="center" alignItems="center" xs={6} md={6}>
                 {Object.keys(cart).map(productId =>
-                    <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} />
+                    <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} />
                 )}
             </Grid>
             <Grid item container xs={6} md={6} justifyContent={{ xs: "center", md: "start" }} >
@@ -86,3 +99,51 @@ export default function Cart() {
         </Grid >
     );
 }
+
+function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
+
+    const produts = order['product']
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    return (
+        <Dialog
+            open={openDialog}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogTitle id="alert-dialog-title">
+                {"Please confirm the order information below"}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    {produts && Object.keys(produts).map((productName) =>
+                        <OrderInfo productName={productName} amounts={produts[productName]} />
+                    )}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose} autoFocus variant="contained">
+                    Confirm
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
+function OrderInfo({ productName, amounts }) {
+
+    return (
+        <>
+            <Typography color="primary" >{productName}: </Typography>
+            {Object.keys(amounts).map((box) =>
+                <Typography variant="body2" >Box in {box}: {amounts[box]}</Typography>
+            )}
+        </>
+    )
+}
+
