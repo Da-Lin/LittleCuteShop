@@ -16,6 +16,8 @@ import UserDashboard from "./components/user/userDashboard";
 import OrderProcess from "./components/order/orderProcess";
 import Cart from "./components/order/cart";
 import { OrderProvider } from "./contexts/orderContext";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 const THEME = responsiveFontSizes(createTheme({
   typography: {
@@ -113,12 +115,14 @@ function App() {
   let routesElement = useRoutes(routesArray);
   return (
     <ThemeProvider theme={THEME}>
-      <OrderProvider>
-        <AuthProvider>
-          <Bar />
-          {routesElement}
-        </AuthProvider>
-      </OrderProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <OrderProvider>
+          <AuthProvider>
+            <Bar />
+            {routesElement}
+          </AuthProvider>
+        </OrderProvider>
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }

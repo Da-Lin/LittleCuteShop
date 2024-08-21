@@ -7,6 +7,14 @@
     "email": "邮箱",
     "emailError": "邮箱格式不对",
     "password": "密码",
+    "order": {
+        "cart": {
+            "pickUpDateError": "请选择两天后的日期",
+            "totalPrice": "总价格",
+            "pickUpDate": "自取日期",
+            "placeOrder": "下单"
+        }
+    },
     "product": {
         "loginMessage": "登录查看更多详情",
         "notify": {

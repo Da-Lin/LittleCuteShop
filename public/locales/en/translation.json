@@ -7,8 +7,16 @@
     "email": "Email Address",
     "emailError": "Please enter a valid email",
     "password": "Password",
+    "order": {
+        "cart": {
+            "pickUpDateError": "Please select a date that is 2 days from today",
+            "totalPrice": "Total Price",
+            "pickUpDate": "Pick Up Date",
+            "placeOrder": "Place order"
+        }
+    },
     "product": {
-        "loginMessage":"Please log in to check more details",
+        "loginMessage": "Please log in to check more details",
         "notify": {
             "message": "Notify us to let us know you want to buy some",
             "successfulMessage": "Successfully notified us! We will contact you through email shortly.",

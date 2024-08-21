@@ -11,17 +11,21 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
 import { updateCart } from '../../firebase/firestore/cart';
+import { useEffect } from 'react';
 
-export default function CartProductCard({ userCart, productId }) {
+export default function CartProductCard({ userCart, productId, totalPrice, setTotalPrice }) {
 
     const product = userCart[productId]
-    let priceInit = 0
-    Object.keys(product.priceMap).forEach(key => {
-        if (product.amount === key) {
-            priceInit = Number(product.priceMap[key])
-        }
-    });
-    const [price, setPrice] = useState(priceInit)
+    const [price, setPrice] = useState(0)
+
+    useEffect(() => {
+        Object.keys(product.priceMap).forEach(key => {
+            if (product.amount === key) {
+                const initPrice = Number(product.priceMap[key])
+                setPrice(initPrice)
+            }
+        });
+    }, [product])
 
     const { notify } = useOrder()
 
@@ -29,17 +33,21 @@ export default function CartProductCard({ userCart, productId }) {
         const newUserCart = structuredClone(userCart);
         delete newUserCart[productId]
         updateCart(newUserCart)
-            .then(() => notify(newUserCart))
+            .then(() => {
+                totalPrice -= price
+                setTotalPrice(totalPrice)
+                notify(newUserCart)
+            })
             .catch((error) => {
                 console.log(error)
             })
     }
 
     return (
-        <Card sx={{ display: 'flex', mt: 2, width: 700 }}>
+        <Card sx={{ display: 'flex', mt: 2 }}>
             <CardMedia
                 component="img"
-                sx={{ width: 300 }}
+                sx={{ width: 200 }}
                 image={product.imgUrl}
                 alt="Product Image"
             />
@@ -52,9 +60,8 @@ export default function CartProductCard({ userCart, productId }) {
                         ${price}
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-
                         {Object.keys(product.priceMap).map(priceKey =>
-                            <Amount product={product} priceKey={priceKey} price={price} setPrice={setPrice} />
+                            <Amount key={priceKey} product={product} priceKey={priceKey} price={price} setPrice={setPrice} totalPrice={totalPrice} setTotalPrice={setTotalPrice} />
                         )}
                     </Box>
                     <IconButton aria-label="remove" onClick={removeFromCart}>
@@ -67,18 +74,20 @@ export default function CartProductCard({ userCart, productId }) {
     );
 }
 
-function Amount({ product, priceKey, price, setPrice }) {
+function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice }) {
     const [amount, setAmount] = useState(product.amount === priceKey ? 1 : 0)
 
     const handleAdd = () => {
         setPrice(Number(price) + Number(product.priceMap[priceKey]))
         setAmount(amount + 1)
+        setTotalPrice(totalPrice + Number(product.priceMap[priceKey]))
     }
 
     const handleMinus = () => {
         if (amount >= 1) {
             setPrice(Number(price) - Number(product.priceMap[priceKey]))
             setAmount(amount - 1)
+            setTotalPrice(totalPrice - Number(product.priceMap[priceKey]))
         }
     }
 
