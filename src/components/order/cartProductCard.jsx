@@ -37,6 +37,8 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                 totalPrice -= price
                 setTotalPrice(totalPrice)
                 notify(newUserCart)
+                delete order['product'][product.productName]
+                setOrder(order)
             })
             .catch((error) => {
                 console.log(error)

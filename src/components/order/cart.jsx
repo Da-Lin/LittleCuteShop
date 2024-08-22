@@ -49,10 +49,11 @@ export default function Cart() {
             Object.keys(product.priceMap).forEach(key => {
                 if (product.amount === key) {
                     totalPrice += Number(product.priceMap[key])
-                    order['product'] = {
-                        [product.productName]: {
-                            [key]: 1
-                        }
+                    if (!order['product']) {
+                        order['product'] = {}
+                    }
+                    order['product'][product.productName] = {
+                        [key]: 1
                     }
                     order['totalPrice'] = totalPrice
                     setTotalPrice(totalPrice)
@@ -64,7 +65,7 @@ export default function Cart() {
 
     const placeOrder = () => {
         if (totalPrice > 0) {
-            order['pickUpDate'] = pickUpDate.toDate()
+            order['pickUpDate'] = pickUpDate
             console.log(order)
             setOpenDialog(true)
         }
@@ -74,7 +75,7 @@ export default function Cart() {
         < Grid container direction={{ xs: "column", md: "row" }} >
             <ConfirmationDialog openDialog={openDialog} setOpenDialog={setOpenDialog} order={order} />
             <Grid item direction="column" container justifyContent="center" alignItems="center" xs={6} md={6}>
-                {Object.keys(cart).map(productId =>
+                {Object.keys(cart).sort().map(productId =>
                     <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} />
                 )}
             </Grid>
@@ -102,6 +103,7 @@ export default function Cart() {
 
 function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
+    const { t } = useTranslation()
     const produts = order['product']
 
     const handleClose = () => {
@@ -116,20 +118,22 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-title">
-                {"Please confirm the order information below"}
+                {t('order').cart.confirmOrder}
             </DialogTitle>
             <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    {produts && Object.keys(produts).map((productName) =>
-                        <OrderInfo productName={productName} amounts={produts[productName]} />
+                <DialogContentText component='div' id="alert-dialog-description">
+                    {produts && Object.keys(produts).sort().map((productName) =>
+                        <OrderInfo key={productName} productName={productName} amounts={produts[productName]} />
                     )}
+                    <Typography variant="h6" color="primary">{t('order').cart.totalPrice}:</Typography>
+                    <Typography >${order.totalPrice}</Typography>
+                    <Typography variant="h6" color="primary">{t('order').cart.pickUpDate}: </Typography>
+                    <Typography >{order.pickUpDate && order.pickUpDate.format('YYYY-MM-DD')}</Typography>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleClose} autoFocus variant="contained">
-                    Confirm
-                </Button>
+                <Button onClick={handleClose}> {t('cancel')}</Button>
+                <Button onClick={handleClose} autoFocus variant="contained">{t('confirm')}</Button>
             </DialogActions>
         </Dialog>
     )
@@ -139,9 +143,9 @@ function OrderInfo({ productName, amounts }) {
 
     return (
         <>
-            <Typography color="primary" >{productName}: </Typography>
+            <Typography component='span' color="primary" variant="h6">{productName}: </Typography>
             {Object.keys(amounts).map((box) =>
-                <Typography variant="body2" >Box in {box}: {amounts[box]}</Typography>
+                <Typography key={box}>Box in {box}: {amounts[box]}</Typography>
             )}
         </>
     )

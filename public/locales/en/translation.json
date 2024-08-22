@@ -7,12 +7,15 @@
     "email": "Email Address",
     "emailError": "Please enter a valid email",
     "password": "Password",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
     "order": {
         "cart": {
             "pickUpDateError": "Please select a date that is 2 days from today",
             "totalPrice": "Total Price",
             "pickUpDate": "Pick Up Date",
-            "placeOrder": "Place order"
+            "placeOrder": "Place order",
+            "confirmOrder": "Please confirm the order information below"
         }
     },
     "product": {
