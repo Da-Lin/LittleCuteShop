@@ -124,7 +124,7 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
     const BODY_TEXT = isChinese ? `尊敬的${userInfo.name},<br><br>感谢您使用我们网站购买产品！您将会在订单被确认后收到通知。如果您有任何问题可直接回复此邮件<br><br>此致，<br>Little Cute Shop` :
         `Dear ${userInfo.name},<br><br>Thanks for shopping with us! You will be notified once your order is confirmed by us. Feel free to reply to this email if you have any questions.<br><br>Best regards,<br>Little Cute Shop`
 
-    const getEmailContent = (orderId) => {
+    const getBuyerEmailContent = (orderId) => {
         return {
             Source: "littlecuteshop2024@gmail.com",
             Destination: {
@@ -144,12 +144,38 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
         }
     }
 
+    const getSellerEmailContent = (orderId) => {
+        return {
+            Source: "littlecuteshop2024@gmail.com",
+            Destination: {
+                ToAddresses: ["xiaokeairong@gmail.com"]
+            },
+            Message: {
+                Subject: {
+                    Data: `New Order Placed by ${userInfo.name} - Order Number ${orderId}`
+                },
+                Body: {
+                    Html: {
+                        Data: `User email: ${userInfo.email}`
+                    }
+                }
+            }
+        }
+    }
+
     const handleAddOrder = () => {
         setIsAddingOrder(true)
         addOrder(order, userInfo).then((orderId) => {
             setIsAddingOrder(false)
-            ses.sendEmail(getEmailContent(orderId), (error, data) => {
-                console.log(error)
+            ses.sendEmail(getBuyerEmailContent(orderId), (error, data) => {
+                if (error) {
+                    console.log(error)
+                }
+            })
+            ses.sendEmail(getSellerEmailContent(orderId), (error, data) => {
+                if (error) {
+                    console.log(error)
+                }
             })
             deleteCart().then(() => {
                 notify({})
