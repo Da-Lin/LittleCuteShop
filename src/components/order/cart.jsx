@@ -143,7 +143,9 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
         setIsAddingOrder(true)
         addOrder(order, userInfo).then((orderId) => {
             setIsAddingOrder(false)
-            ses.sendEmail(getEmailContent(orderId)).promise().catch((error) => console.log(error))
+            ses.sendEmail(getEmailContent(orderId), (error, data) => {
+                console.log(error)
+            })
             deleteCart().then(() => {
                 notify({})
             }).catch((error) => {
