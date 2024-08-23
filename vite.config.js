@@ -9,6 +9,7 @@ export default defineConfig(() => {
         },
         define: {
             'process.env': {},
+            global: {},
         },
         build: {
             outDir: 'build',

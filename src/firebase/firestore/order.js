@@ -12,7 +12,7 @@ export const addOrder = async (order, userInfo) => {
     order.userName = userInfo.name
     order.userEmail = userInfo.email
     order.status = "waitForConfirmation"
-    return await addDoc(ordersRef, order);
+    return await addDoc(ordersRef, order).then(() => maxOrderId);
 }
 
 export const incrementAndGetMaxOrderId = async () => {

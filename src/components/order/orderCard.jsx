@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Dialog, DialogActions, DialogTitle, Grid, IconButton, LinearProgress, Popover, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, Dialog, DialogActions, DialogTitle, Grid, IconButton, LinearProgress, Popover, Tooltip, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { OrderInfo } from './cart'
 import { useTranslation } from 'react-i18next'

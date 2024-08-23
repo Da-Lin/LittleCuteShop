@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteCart } from '../../firebase/firestore/cart';
 import { isNumber } from '../util/util';
 import { useAuth } from '../../contexts/authContext';
+import { ses } from '../../aws/aws';
 
 export default function Cart() {
     const { userCart, subscibe } = useOrder()
@@ -118,15 +119,36 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
     const { userInfo } = useAuth()
 
+    const BODY_TEXT = `Dear ${userInfo.name},<br><br>Thanks for shopping with us! You will be notified once your order is confirmed by us. Feel free to reply to this email if you have any questions.<br><br>Best regards,<br>Little Cute Shop`
+    const getEmailContent = (orderId) => {
+        return {
+            Source: "littlecuteshop2024@gmail.com",
+            Destination: {
+                ToAddresses: [userInfo.email]
+            },
+            Message: {
+                Subject: {
+                    Data: `Thanks for Placing the Order - Order Number ${orderId}`
+                },
+                Body: {
+                    Html: {
+                        Data: BODY_TEXT
+                    }
+                }
+            }
+        }
+    }
+
     const handleAddOrder = () => {
         setIsAddingOrder(true)
-        addOrder(order, userInfo).then(() => {
+        addOrder(order, userInfo).then((orderId) => {
+            setIsAddingOrder(false)
+            ses.sendEmail(getEmailContent(orderId)).promise().catch((error) => console.log(error))
             deleteCart().then(() => {
                 notify({})
             }).catch((error) => {
                 console.log(error)
             })
-            setIsAddingOrder(false)
             navigate('/orders')
         }).catch((error) => {
             setIsAddingOrder(false)
