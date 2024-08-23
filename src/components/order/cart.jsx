@@ -110,7 +110,9 @@ export default function Cart() {
 
 function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
+    const isChinese = i18n.language === 'zh'
+
     const navigate = useNavigate();
     const { notify } = useOrder()
 
@@ -119,7 +121,9 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
     const { userInfo } = useAuth()
 
-    const BODY_TEXT = `Dear ${userInfo.name},<br><br>Thanks for shopping with us! You will be notified once your order is confirmed by us. Feel free to reply to this email if you have any questions.<br><br>Best regards,<br>Little Cute Shop`
+    const BODY_TEXT = isChinese ? `尊敬的${userInfo.name},<br><br>感谢您使用我们网站购买产品！您将会在订单被确认后收到通知。如果您有任何问题可直接回复此邮件<br><br>此致，<br>Little Cute Shop` :
+        `Dear ${userInfo.name},<br><br>Thanks for shopping with us! You will be notified once your order is confirmed by us. Feel free to reply to this email if you have any questions.<br><br>Best regards,<br>Little Cute Shop`
+
     const getEmailContent = (orderId) => {
         return {
             Source: "littlecuteshop2024@gmail.com",
@@ -128,7 +132,8 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
             },
             Message: {
                 Subject: {
-                    Data: `Thanks for Placing the Order - Order Number ${orderId}`
+                    Data: isChinese ? `感谢下单 - 订单号码：${orderId}` :
+                        `Thanks for Placing the Order - Order Number ${orderId}`
                 },
                 Body: {
                     Html: {
