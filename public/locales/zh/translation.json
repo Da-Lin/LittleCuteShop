@@ -9,14 +9,23 @@
     "password": "密码",
     "cancel": "取消",
     "confirm": "确认",
+    "orders": "订单",
     "order": {
+        "yourOrders": "你的订单",
+        "orderNumber": "订单号码",
+        "orderStatus": "订单状态",
         "cart": {
             "pickUpDateError": "请选择两天后的日期",
             "totalPrice": "总价格",
             "pickUpDate": "自取日期",
             "placeOrder": "下单",
             "confirmOrder": "请确认以下订单信息"
-        }
+        },
+        "cancelOrder": "取消订单",
+        "cancelOrderConfirmation": "确认取消订单？",
+        "waitForConfirmation": "等待订单确认",
+        "confirmed": "已确认",
+        "cancelled": "已取消"
     },
     "product": {
         "loginMessage": "登录查看更多详情",

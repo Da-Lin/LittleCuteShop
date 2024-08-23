@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress, Typography } from '@mui/material';
 import CartProductCard from './cartProductCard';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
@@ -8,6 +8,11 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { addOrder } from '../../firebase/firestore/order';
+import { useNavigate } from 'react-router-dom';
+import { deleteCart } from '../../firebase/firestore/cart';
+import { isNumber } from '../util/util';
+import { useAuth } from '../../contexts/authContext';
 
 export default function Cart() {
     const { userCart, subscibe } = useOrder()
@@ -53,7 +58,8 @@ export default function Cart() {
                         order['product'] = {}
                     }
                     order['product'][product.productName] = {
-                        [key]: 1
+                        [key]: 1,
+                        productId: product.productId
                     }
                     order['totalPrice'] = totalPrice
                     setTotalPrice(totalPrice)
@@ -94,7 +100,7 @@ export default function Cart() {
                         minDate={dayjs().add(2, 'day')}
                         onChange={(newDate) => setPickUpDate(newDate)}
                     />
-                    <Button sx={{ mt: 2 }} disabled={pickUpDateError !== "" || totalPrice <= 0} onClick={placeOrder}>{t('order').cart.placeOrder}</Button>
+                    <Button sx={{ mt: 2 }} disabled={pickUpDateErrorMessage !== "" || totalPrice <= 0} onClick={placeOrder}>{t('order').cart.placeOrder}</Button>
                 </Box>
             </Grid>
         </Grid >
@@ -104,7 +110,29 @@ export default function Cart() {
 function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
     const { t } = useTranslation()
+    const navigate = useNavigate();
+    const { notify } = useOrder()
+
+    const [isAddingOrder, setIsAddingOrder] = useState(false)
     const produts = order['product']
+
+    const { userInfo } = useAuth()
+
+    const handleAddOrder = () => {
+        setIsAddingOrder(true)
+        addOrder(order, userInfo).then(() => {
+            deleteCart().then(() => {
+                notify({})
+            }).catch((error) => {
+                console.log(error)
+            })
+            setIsAddingOrder(false)
+            navigate('/orders')
+        }).catch((error) => {
+            setIsAddingOrder(false)
+            console.log(error)
+        })
+    }
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -117,37 +145,56 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
+            {isAddingOrder && <LinearProgress />}
             <DialogTitle id="alert-dialog-title">
                 {t('order').cart.confirmOrder}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText component='div' id="alert-dialog-description">
                     {produts && Object.keys(produts).sort().map((productName) =>
-                        <OrderInfo key={productName} productName={productName} amounts={produts[productName]} />
+                        <OrderInfo key={productName} productName={productName} products={produts[productName]} />
                     )}
                     <Typography variant="h6" color="primary">{t('order').cart.totalPrice}:</Typography>
                     <Typography >${order.totalPrice}</Typography>
                     <Typography variant="h6" color="primary">{t('order').cart.pickUpDate}: </Typography>
-                    <Typography >{order.pickUpDate && order.pickUpDate.format('YYYY-MM-DD')}</Typography>
+                    <Typography >{order.pickUpDate && order.pickUpDate.format && order.pickUpDate.format('YYYY-MM-DD')}</Typography>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}> {t('cancel')}</Button>
-                <Button onClick={handleClose} autoFocus variant="contained">{t('confirm')}</Button>
+                <Button onClick={handleAddOrder} autoFocus variant="contained">{t('confirm')}</Button>
             </DialogActions>
         </Dialog>
     )
 }
 
-function OrderInfo({ productName, amounts }) {
+export function OrderInfo({ productName, products }) {
+
+    let productId = ""
+    let amounts = []
+    Object.keys(products).forEach((key) => {
+        if (isNumber(key)) {
+            amounts.push(key)
+        } else {
+            productId = products[key]
+        }
+    })
+
+    const navigate = useNavigate();
 
     return (
-        <>
-            <Typography component='span' color="primary" variant="h6">{productName}: </Typography>
-            {Object.keys(amounts).map((box) =>
-                <Typography key={box}>Box in {box}: {amounts[box]}</Typography>
+        <Box>
+            <Typography sx={{
+                '&:hover': {
+                    cursor: 'pointer',
+                    color: "red",
+                    textDecoration: "underline #000000"
+                }
+            }} component='span' color="primary" variant="h6" onClick={() => navigate(`/product?id=${productId}`)}>{productName}: </Typography>
+            {amounts.map((box) =>
+                <Typography key={box}>Box in {box}: {products[box]}</Typography>
             )}
-        </>
+        </Box>
     )
 }
 

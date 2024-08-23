@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import AdminMenuList from './adminMenuList';
 import UserProfileMenus from './userProfileMenus';
 import MenuListXS from './menuListXS';
-import { Badge } from '@mui/material';
+import { Badge, Link } from '@mui/material';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
 
@@ -81,9 +81,6 @@ function Bar() {
                     />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <MenuListXS />
-                        {userLoggedIn && <MenuItem onClick={() => navigate('orderprocess')}>
-                            {t('appBar').menuList.orderProcess.name}
-                        </MenuItem>}
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
@@ -122,7 +119,8 @@ function Bar() {
                             ))}
                         </Menu>
                         {userLoggedIn ?
-                            <Box display="inline">
+                            <Box display="inline" >
+                                <MenuItem sx={{ display: 'inline' }} onClick={() => { navigate('orders') }}>{t('orders')}</MenuItem>
                                 <Tooltip title={t('appBar').cart}>
                                     <IconButton size="large"
                                         color="inherit" onClick={() => { navigate('cart') }} >

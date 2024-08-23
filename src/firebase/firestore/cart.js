@@ -1,4 +1,4 @@
-import {  getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, deleteField } from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 export const addToCart = async (newItem) => {
@@ -12,6 +12,15 @@ export const addToCart = async (newItem) => {
         return updateDoc(docRef, {
             cart: existingCart
         }).then(() => existingCart)
+    }
+};
+
+export const deleteCart = async () => {
+    if (auth.currentUser) {
+        const docRef = doc(db, `users`, auth.currentUser.uid)
+        return await updateDoc(docRef, {
+            cart: deleteField()
+        });
     }
 };
 

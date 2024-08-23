@@ -9,14 +9,23 @@
     "password": "Password",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "orders": "Orders",
     "order": {
+        "yourOrders": "Your Orders",
+        "orderNumber": "Order Number",
+        "orderStatus": "Order Status",
         "cart": {
             "pickUpDateError": "Please select a date that is 2 days from today",
             "totalPrice": "Total Price",
             "pickUpDate": "Pick Up Date",
             "placeOrder": "Place order",
             "confirmOrder": "Please confirm the order information below"
-        }
+        },
+        "cancelOrder": "Cancel Order",
+        "cancelOrderConfirmation": "Are you sure you want to cancel this order?",
+        "waitForConfirmation": "Wait for confirmation",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled"
     },
     "product": {
         "loginMessage": "Please log in to check more details",

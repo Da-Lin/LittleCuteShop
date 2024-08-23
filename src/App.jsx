@@ -18,6 +18,7 @@ import Cart from "./components/order/cart";
 import { OrderProvider } from "./contexts/orderContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Orders from "./components/order/orders";
 
 const THEME = responsiveFontSizes(createTheme({
   typography: {
@@ -82,6 +83,10 @@ function App() {
     {
       path: "/orderprocess",
       element: <OrderProcess />,
+    },
+    {
+      path: "/orders",
+      element: <Orders />,
     },
     {
       path: "/cart",
