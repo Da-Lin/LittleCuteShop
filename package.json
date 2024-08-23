@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.637.0",
     "@emailjs/browser": "^4.3.3",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
