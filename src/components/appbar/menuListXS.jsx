@@ -98,6 +98,7 @@ export default function MenuListXS() {
                 {userLoggedIn && <MenuItem onClick={() => navigate('orderprocess')}>
                     {t('appBar').menuList.orderProcess.name}
                 </MenuItem>}
+                {userLoggedIn && <MenuItem onClick={() => { navigate('orders') }}>{t('orders')}</MenuItem>}
             </Menu>
 
         </div>

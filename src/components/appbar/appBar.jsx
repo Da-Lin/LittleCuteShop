@@ -64,7 +64,7 @@ function Bar() {
 
     return (
         <AppBar position="relative" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-            <Container maxWidth={false}>
+            <Container width={300} maxWidth={false}>
                 <Toolbar disableGutters>
                     <Box
                         component="img"
@@ -73,7 +73,8 @@ function Bar() {
                             width: 50,
                             '&:hover': {
                                 cursor: 'pointer',
-                            }
+                            },
+                            display: { xs: 'none', md: 'flex' }
                         }}
                         alt="logo"
                         src={logo}
@@ -120,7 +121,7 @@ function Bar() {
                         </Menu>
                         {userLoggedIn ?
                             <Box display="inline" >
-                                <MenuItem sx={{ display: 'inline' }} onClick={() => { navigate('orders') }}>{t('orders')}</MenuItem>
+                                <MenuItem sx={{ display: { xs: 'none', md: 'inline' } }} onClick={() => { navigate('orders') }}>{t('orders')}</MenuItem>
                                 <Tooltip title={t('appBar').cart}>
                                     <IconButton size="large"
                                         color="inherit" onClick={() => { navigate('cart') }} >
