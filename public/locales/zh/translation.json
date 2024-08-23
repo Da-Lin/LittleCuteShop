@@ -25,7 +25,9 @@
         "cancelOrderConfirmation": "确认取消订单？",
         "waitForConfirmation": "等待订单确认",
         "confirmed": "已确认",
-        "cancelled": "已取消"
+        "cancelled": "已取消",
+        "waitOrderStatusExplanation": "等待订单确认: 请等待我们确认订单",
+        "confirmedOrderStatusExplanation": "已确认: 你的订单已经确认！请在自取时间自取订单"
     },
     "product": {
         "loginMessage": "登录查看更多详情",
@@ -65,9 +67,9 @@
             "featured": "小可爱精选",
             "orderProcess": {
                 "name": "订餐流程",
-                "orderWay": "订餐方式：请查看<anchor>{{link}}</anchor>联系客服微信或者邮箱",
+                "orderWay": "订餐方式：网上订单或者查看<anchor>{{link}}</anchor>联系客服微信或者邮箱",
                 "pickUpLocationSatuday": "周六自取地点：Nordstrom Parking lot, 8091 Tysons Corner Center, Tysons, VA 22102",
-                "pickUpTimeSatuday": "周六自取时间：下午2-3点",
+                "pickUpTimeSatuday": "周六自取时间：下午3点",
                 "pickUpLocationOtherDays": "其他时间自取地点：Poké It Up, 4401 Fairfax Dr UNIT 103, Arlington, VA 22203",
                 "pickUpTimeOtherDays": "其他时间自取时间：早上11点-下午8点 "
             }
