@@ -55,28 +55,6 @@ export default function Product() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
-    // const sendEmail = (e) => {
-    //     e.preventDefault();
-    //     resetMessage()
-
-    //     setIsSendingEmail(true)
-    //     emailjs
-    //         .send('service_rfnxvbs', 'template_6ppiony', emailContent, {
-    //             publicKey: 'Lx8hE39ZJTFeQmYqi',
-    //         })
-    //         .then(
-    //             () => {
-    //                 setIsSendingEmail(false)
-    //                 setMessage(t('product').notify.successfulMessage)
-    //             },
-    //             (error) => {
-    //                 setIsSendingEmail(false)
-    //                 console.log(error)
-    //                 setErrorMessage(t('product').notify.failuerMessage)
-    //             },
-    //         );
-    // };
-
     const handleLoginButtonClicked = (link) => {
         navigate('/login')
     };

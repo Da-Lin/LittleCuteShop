@@ -1,27 +1,43 @@
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
 import { Alert, Button, CircularProgress, Divider, Stack, TextField, Typography } from '@mui/material';
-import { validateEmail } from '../authentication/signin';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/authContext';
+import { ses } from '../../aws/aws';
 
 export default function Contact() {
   const [subject, setSubject] = useState('')
-  const [email, setEmail] = useState('')
-  const [emailError, setEmailError] = useState(false)
   const [content, setContent] = useState('')
-  const [name, setName] = useState('')
 
   const [isSendingEmail, setIsSendingEmail] = useState(false)
   const [message, setMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const emailContent = { subject: subject, email: email, message: content, name: name };
-
   const { t } = useTranslation()
+
+  const { userInfo } = useAuth()
 
   const resetMessage = () => {
     setErrorMessage('')
     setMessage('')
+  }
+
+  const getEmailContent = () => {
+    return {
+      Source: "littlecuteshop2024@gmail.com",
+      Destination: {
+        ToAddresses: ["xiaokeairong@gmail.com"]
+      },
+      Message: {
+        Subject: {
+          Data: `Feedback submitted by ${userInfo.name}: ${subject}`
+        },
+        Body: {
+          Html: {
+            Data: content
+          }
+        }
+      }
+    }
   }
 
   const sendEmail = (e) => {
@@ -29,21 +45,15 @@ export default function Contact() {
     resetMessage()
 
     setIsSendingEmail(true)
-    emailjs
-      .send('service_rfnxvbs', 'template_6ppiony', emailContent, {
-        publicKey: 'Lx8hE39ZJTFeQmYqi',
-      })
-      .then(
-        () => {
-          setIsSendingEmail(false)
-          setMessage(t('drawer').submitFeedback.successfulMessage)
-        },
-        (error) => {
-          setIsSendingEmail(false)
-          console.log(error)
-          setErrorMessage(t('drawer').submitFeedback.failuerMessage)
-        },
-      );
+    ses.sendEmail(getEmailContent())
+      .then(() => {
+        setIsSendingEmail(false)
+        setMessage(t('drawer').submitFeedback.successfulMessage)
+      }).catch((error) => {
+        setIsSendingEmail(false)
+        console.log(error)
+        setErrorMessage(t('drawer').submitFeedback.failuerMessage)
+      });
   };
 
   return (
@@ -52,37 +62,6 @@ export default function Contact() {
         {t('drawer').submitFeedback.title}
       </Typography>
       <Divider style={{ width: '100%' }} />
-      <TextField
-        margin="normal"
-        required
-        size="small"
-        label={t('drawer').submitFeedback.name}
-        onChange={(event) => {
-          setName(event.target.value)
-          resetMessage()
-        }}
-      />
-      <TextField
-        margin="normal"
-        required
-        size="small"
-        type='email'
-        label={t('drawer').submitFeedback.email}
-        error={emailError}
-        helperText={emailError ? t('emailError') : ""}
-        onChange={(e) => {
-          resetMessage()
-          setErrorMessage('')
-          setEmail(e.target.value)
-          if (!e.target.value) {
-            setEmailError(false);
-          } else if (!validateEmail(e.target.value)) {
-            setEmailError(true);
-          } else {
-            setEmailError(false);
-          }
-        }}
-      />
       <TextField
         margin="normal"
         required
@@ -111,7 +90,7 @@ export default function Contact() {
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
-        disabled={email === '' || subject === '' || name === '' || content === '' || emailError}
+        disabled={subject === '' || content === ''}
         onClick={sendEmail}
       >
         {t('submit')}
