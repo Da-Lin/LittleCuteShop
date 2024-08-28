@@ -226,6 +226,8 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
 export function OrderInfo({ productName, products }) {
 
+    const { t } = useTranslation()
+
     let productId = ""
     let amounts = []
     let flavors = {}
@@ -255,7 +257,7 @@ export function OrderInfo({ productName, products }) {
             )}
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 {flavors && Object.keys(flavors).map(flavor =>
-                    <Typography key={flavor} mr={1}>{flavor}: {flavors[flavor]}</Typography>
+                    <Typography key={flavor} mr={1}>{t(flavor)}: {flavors[flavor]}</Typography>
                 )}
             </Box>
         </Box>

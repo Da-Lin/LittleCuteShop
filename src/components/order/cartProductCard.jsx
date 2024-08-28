@@ -128,7 +128,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                                 key={flavor}
                                 error={flavorCountErrorMessage !== ''}
                                 id="outlined-number"
-                                label={flavor}
+                                label={t(flavor)}
                                 type="number"
                                 value={flavorCounts[index]}
                                 InputProps={{

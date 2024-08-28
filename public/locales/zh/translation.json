@@ -98,5 +98,8 @@
             "successfulMessage": "邮件发送成功。",
             "failuerMessage": "邮件发送失败。"
         }
-    }
+    },
+    "Chocolate": "巧克力",
+    "Custard": "奶黄",
+    "Matcha": "抹茶"
 }

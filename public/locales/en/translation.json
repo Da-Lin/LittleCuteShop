@@ -98,5 +98,8 @@
             "successfulMessage": "Successfully sent email.",
             "failuerMessage": "Failed to send email."
         }
-    }
+    },
+    "Chocolate": "Chocolate",
+    "Custard": "Custard",
+    "Matcha": "Matcha"
 }
