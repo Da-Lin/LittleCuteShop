@@ -127,7 +127,7 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
     const getBuyerEmailContent = (orderId) => {
         return {
-            Source: "littlecuteshop2024@gmail.com",
+            Source: "Little Cute Shop <littlecuteshop2024@gmail.com>",
             Destination: {
                 ToAddresses: [userInfo.email]
             },
@@ -147,7 +147,7 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
     const getSellerEmailContent = (orderId) => {
         return {
-            Source: "littlecuteshop2024@gmail.com",
+            Source: "Little Cute Shop <littlecuteshop2024@gmail.com>",
             Destination: {
                 ToAddresses: ["xiaokeairong@gmail.com"]
             },
