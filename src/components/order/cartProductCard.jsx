@@ -59,7 +59,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
 
         const updatedFlavorCounts = flavorCounts.map((flavorCount, i) => {
             if (i === index) {
-                if (e.target.value === '' || Number(e.target.value) < 0) {
+                if (Number(e.target.value) < 0) {
                     order['product'][product.productName]['flavors'][flavor] = 0
                     return 0
                 } else {

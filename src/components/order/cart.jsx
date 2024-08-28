@@ -257,7 +257,7 @@ export function OrderInfo({ productName, products }) {
             )}
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 {flavors && Object.keys(flavors).map(flavor =>
-                    <Typography key={flavor} mr={1}>{t(flavor)}: {flavors[flavor]}</Typography>
+                    flavors[flavor] && Number(flavors[flavor]) !== 0 && <Typography key={flavor} mr={1}>{t(flavor)}: {flavors[flavor]}</Typography>
                 )}
             </Box>
         </Box>
