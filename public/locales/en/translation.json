@@ -15,6 +15,7 @@
         "orderNumber": "Order Number",
         "orderStatus": "Order Status",
         "cart": {
+            "flavorCountMismatchError": "Flavor count does not match total count",
             "pickUpDateError": "Please select a date that is 2 days from today",
             "totalPrice": "Total Price",
             "pickUpDate": "Pick Up Date",

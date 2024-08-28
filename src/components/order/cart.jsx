@@ -23,6 +23,7 @@ export default function Cart() {
 
     const [pickUpDate, setPickUpDate] = useState(dayjs().add(2, 'day'));
     const [pickUpDateError, setPickUpDateError] = useState('');
+    const [flavorCountErrorMessage, setFlavorCountErrorMessage] = useState("")
 
     const [order, setOrder] = useState({})
 
@@ -63,6 +64,7 @@ export default function Cart() {
                         productId: product.productId
                     }
                     order['totalPrice'] = totalPrice
+                    setOrder(structuredClone(order))
                     setTotalPrice(totalPrice)
                 }
             })
@@ -83,7 +85,7 @@ export default function Cart() {
             <ConfirmationDialog openDialog={openDialog} setOpenDialog={setOpenDialog} order={order} />
             <Grid item direction="column" container justifyContent="center" alignItems="center" xs={6} md={6}>
                 {Object.keys(cart).sort().map(productId =>
-                    <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} />
+                    <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} flavorCountErrorMessage={flavorCountErrorMessage} setFlavorCountErrorMessage={setFlavorCountErrorMessage} />
                 )}
             </Grid>
             <Grid item container xs={6} md={6} justifyContent={{ xs: "center", md: "start" }} >
@@ -101,7 +103,7 @@ export default function Cart() {
                         minDate={dayjs().add(2, 'day')}
                         onChange={(newDate) => setPickUpDate(newDate)}
                     />
-                    <Button sx={{ mt: 2 }} disabled={pickUpDateErrorMessage !== "" || totalPrice <= 0} onClick={placeOrder}>{t('order').cart.placeOrder}</Button>
+                    <Button sx={{ mt: 2 }} disabled={flavorCountErrorMessage !== '' || pickUpDateErrorMessage !== "" || totalPrice <= 0} onClick={placeOrder}>{t('order').cart.placeOrder}</Button>
                 </Box>
             </Grid>
         </Grid >

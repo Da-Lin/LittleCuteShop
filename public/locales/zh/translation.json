@@ -15,6 +15,7 @@
         "orderNumber": "订单号码",
         "orderStatus": "订单状态",
         "cart": {
+            "flavorCountMismatchError": "口味总数和产品总数不匹配",
             "pickUpDateError": "请选择两天后的日期",
             "totalPrice": "总价格",
             "pickUpDate": "自取日期",

@@ -75,6 +75,7 @@ export default function Product() {
                 imgUrl: product.imgUrls[0],
                 amount: amount,
                 priceMap: product.priceMap,
+                flavors: product.flavors ? product.flavors : []
             }
             addToCart(newItem).then((cart) => {
                 setIsAddingCart(false)
