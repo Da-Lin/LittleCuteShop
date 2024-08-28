@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress, TextField, Typography } from '@mui/material';
 import CartProductCard from './cartProductCard';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
@@ -23,7 +23,7 @@ export default function Cart() {
 
     const [pickUpDate, setPickUpDate] = useState(dayjs().add(2, 'day'));
     const [pickUpDateError, setPickUpDateError] = useState('');
-    const [flavorCountErrorMessage, setFlavorCountErrorMessage] = useState("")
+    const [hasError, setHasError] = useState(false)
 
     const [order, setOrder] = useState({})
 
@@ -75,7 +75,6 @@ export default function Cart() {
     const placeOrder = () => {
         if (totalPrice > 0) {
             order['pickUpDate'] = pickUpDate
-            console.log(order)
             setOpenDialog(true)
         }
     }
@@ -85,7 +84,7 @@ export default function Cart() {
             <ConfirmationDialog openDialog={openDialog} setOpenDialog={setOpenDialog} order={order} />
             <Grid item direction="column" container justifyContent="center" alignItems="center" xs={6} md={6}>
                 {Object.keys(cart).sort().map(productId =>
-                    <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} flavorCountErrorMessage={flavorCountErrorMessage} setFlavorCountErrorMessage={setFlavorCountErrorMessage} />
+                    <CartProductCard userCart={userCart} productId={productId} key={productId} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} setHasError={setHasError} />
                 )}
             </Grid>
             <Grid item container xs={6} md={6} justifyContent={{ xs: "center", md: "start" }} >
@@ -103,7 +102,7 @@ export default function Cart() {
                         minDate={dayjs().add(2, 'day')}
                         onChange={(newDate) => setPickUpDate(newDate)}
                     />
-                    <Button sx={{ mt: 2 }} disabled={flavorCountErrorMessage !== '' || pickUpDateErrorMessage !== "" || totalPrice <= 0} onClick={placeOrder}>{t('order').cart.placeOrder}</Button>
+                    <Button sx={{ mt: 2 }} disabled={hasError || pickUpDateErrorMessage !== "" || totalPrice <= 0} onClick={placeOrder}>{t('order').cart.placeOrder}</Button>
                 </Box>
             </Grid>
         </Grid >
@@ -229,11 +228,14 @@ export function OrderInfo({ productName, products }) {
 
     let productId = ""
     let amounts = []
+    let flavors = {}
     Object.keys(products).forEach((key) => {
         if (isNumber(key)) {
             amounts.push(key)
-        } else {
+        } else if (key === 'productId') {
             productId = products[key]
+        } else if (key === 'flavors') {
+            flavors = products[key]
         }
     })
 
@@ -251,6 +253,11 @@ export function OrderInfo({ productName, products }) {
             {amounts.map((box) =>
                 <Typography key={box}>Box in {box}: {products[box]}</Typography>
             )}
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                {flavors && Object.keys(flavors).map(flavor =>
+                    <Typography key={flavor} mr={1}>{flavor}: {flavors[flavor]}</Typography>
+                )}
+            </Box>
         </Box>
     )
 }

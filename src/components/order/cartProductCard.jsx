@@ -16,11 +16,12 @@ import { Alert, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { isNumber } from '../util/util';
 
-export default function CartProductCard({ userCart, productId, totalPrice, setTotalPrice, order, setOrder, flavorCountErrorMessage, setFlavorCountErrorMessage }) {
+export default function CartProductCard({ userCart, productId, totalPrice, setTotalPrice, order, setOrder, setHasError }) {
 
     const product = userCart[productId]
     const [price, setPrice] = useState(0)
     const [flavorCounts, setFlavorCounts] = useState(product.flavors.map(_ => 1));
+    const [flavorCountErrorMessage, setFlavorCountErrorMessage] = useState("")
 
     useEffect(() => {
         Object.keys(product.priceMap).forEach(key => {
@@ -30,42 +31,56 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
             }
         })
 
-        let totalAmount = 0
-        order['product'] && Object.keys(order['product'][product.productName]).forEach(key => {
-            const amount = order['product'][product.productName][key]
-            if (isNumber(key) && amount !== 0) {
-                totalAmount += key * amount
+        if (order['product']) {
+            let totalAmount = 0
+            order['product'] && Object.keys(order['product'][product.productName]).forEach(key => {
+                const amount = order['product'][product.productName][key]
+                if (isNumber(key) && amount !== 0) {
+                    totalAmount += key * amount
+                }
+            })
+            const eachFlavorCount = totalAmount / product.flavors.length
+            setFlavorCounts(product.flavors.map(_ => eachFlavorCount))
+            if (!order['product'][product.productName]) {
+                order['product'][product.productName] = {}
             }
-        })
-        const eachFlavorCount = totalAmount / product.flavors.length
-        setFlavorCounts(product.flavors.map(_ => eachFlavorCount))
+            const initialFlavorCounts = {}
+            product.flavors.forEach(flavor => {
+                initialFlavorCounts[flavor] = eachFlavorCount
+            })
+            order['product'][product.productName]['flavors'] = initialFlavorCounts
+        }
     }, [order, product])
 
     const { notify } = useOrder()
     const { t } = useTranslation()
 
-    const handleFlavorCountChange = (index, e) => {
+    const handleFlavorCountChange = (flavor, index, e) => {
 
         const updatedFlavorCounts = flavorCounts.map((flavorCount, i) => {
             if (i === index) {
                 if (e.target.value === '' || Number(e.target.value) < 0) {
+                    order['product'][product.productName]['flavors'][flavor] = 0
                     return 0
                 } else {
+                    order['product'][product.productName]['flavors'][flavor] = e.target.value
                     return e.target.value
                 }
             } else {
                 return flavorCount
             }
         })
-        setFlavorCounts(updatedFlavorCounts);
+        setFlavorCounts(updatedFlavorCounts)
         validateTotalAmount(updatedFlavorCounts)
     };
 
     const validateTotalAmount = (updatedFlavorCounts) => {
         if (isTotalAmountInvalid(updatedFlavorCounts, product, order)) {
             setFlavorCountErrorMessage(t('order.cart.flavorCountMismatchError'))
+            setHasError(true)
         } else {
             setFlavorCountErrorMessage('')
+            setHasError(false)
         }
     }
 
@@ -78,7 +93,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                 setTotalPrice(totalPrice)
                 notify(newUserCart)
                 delete order['product'][product.productName]
-                setOrder(order)
+                setOrder(structuredClone(order))
             })
             .catch((error) => {
                 console.log(error)
@@ -103,7 +118,8 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         {Object.keys(product.priceMap).map(priceKey =>
-                            <Amount key={priceKey} product={product} priceKey={priceKey} price={price} setPrice={setPrice} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder} flavorCounts={flavorCounts} setFlavorCountErrorMessage={setFlavorCountErrorMessage} />
+                            <Amount key={priceKey} product={product} priceKey={priceKey} price={price} setPrice={setPrice} totalPrice={totalPrice} setTotalPrice={setTotalPrice} order={order} setOrder={setOrder}
+                                flavorCounts={flavorCounts} setFlavorCountErrorMessage={setFlavorCountErrorMessage} setHasError={setHasError} />
                         )}
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -118,7 +134,8 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                                 InputProps={{
                                     inputProps: { min: 0 }
                                 }}
-                                onChange={(e) => handleFlavorCountChange(index, e)}
+                                onChange={(e) => handleFlavorCountChange(flavor, index, e)}
+                                sx={{ width: 100 }}
                             />
                         )}
                     </Box>
@@ -133,7 +150,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
     );
 }
 
-function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice, order, setOrder, flavorCounts, setFlavorCountErrorMessage }) {
+function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice, order, setOrder, flavorCounts, setFlavorCountErrorMessage, setHasError }) {
 
     const { t } = useTranslation()
 
@@ -142,8 +159,10 @@ function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice,
     const validateTotalAmount = () => {
         if (isTotalAmountInvalid(flavorCounts, product, order)) {
             setFlavorCountErrorMessage(t('order.cart.flavorCountMismatchError'))
+            setHasError(true)
         } else {
             setFlavorCountErrorMessage('')
+            setHasError(false)
         }
     }
 
@@ -193,6 +212,10 @@ function Amount({ product, priceKey, price, setPrice, totalPrice, setTotalPrice,
 }
 
 const isTotalAmountInvalid = (updatedFlavorCounts, product, order) => {
+    if (!product.flavors || product.flavors.length === 0) {
+        return false
+    }
+
     let totalAmount = 0
     Object.keys(product.priceMap).forEach(key => {
         const amount = order['product'][product.productName][key]
