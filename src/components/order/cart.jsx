@@ -8,12 +8,12 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { addOrder } from '../../firebase/firestore/order';
 import { useNavigate } from 'react-router-dom';
-import { deleteCart } from '../../firebase/firestore/cart';
 import { isNumber } from '../util/util';
 import { useAuth } from '../../contexts/authContext';
-import { ses } from '../../aws/aws';
+import { addOrder } from '../../firebase/firestore/order';
+import { deleteCart } from '../../firebase/firestore/cart';
+import { AWS_API_TOKEN } from '../../aws/aws';
 
 export default function Cart() {
     const { userCart, subscibe } = useOrder()
@@ -122,61 +122,22 @@ function ConfirmationDialog({ openDialog, setOpenDialog, order }) {
 
     const { userInfo } = useAuth()
 
-    const BODY_TEXT = isChinese ? `尊敬的${userInfo.name},<br><br>感谢您使用我们网站购买产品！您将会在订单被确认后收到通知。如果您有任何问题可直接回复此邮件<br><br>此致，<br>Little Cute Shop` :
-        `Dear ${userInfo.name},<br><br>Thanks for shopping with us! You will be notified once your order is confirmed by us. Feel free to reply to this email if you have any questions.<br><br>Best regards,<br>Little Cute Shop`
-
-    const getBuyerEmailContent = (orderId) => {
-        return {
-            Source: "Little Cute Shop <littlecuteshop2024@gmail.com>",
-            Destination: {
-                ToAddresses: [userInfo.email]
-            },
-            Message: {
-                Subject: {
-                    Data: isChinese ? `感谢下单 - 订单号码：${orderId}` :
-                        `Thanks for Placing the Order - Order Number ${orderId}`
-                },
-                Body: {
-                    Html: {
-                        Data: BODY_TEXT
-                    }
-                }
-            }
-        }
-    }
-
-    const getSellerEmailContent = (orderId) => {
-        return {
-            Source: "Little Cute Shop <littlecuteshop2024@gmail.com>",
-            Destination: {
-                ToAddresses: ["xiaokeairong@gmail.com"]
-            },
-            Message: {
-                Subject: {
-                    Data: `New Order Placed by ${userInfo.name} - Order Number ${orderId}`
-                },
-                Body: {
-                    Html: {
-                        Data: `User email: ${userInfo.email}`
-                    }
-                }
-            }
-        }
-    }
-
     const handleAddOrder = () => {
         setIsAddingOrder(true)
         addOrder(order, userInfo).then((orderId) => {
             setIsAddingOrder(false)
-            ses.sendEmail(getBuyerEmailContent(orderId), (error, data) => {
-                if (error) {
-                    console.log(error)
-                }
-            })
-            ses.sendEmail(getSellerEmailContent(orderId), (error, data) => {
-                if (error) {
-                    console.log(error)
-                }
+            fetch('https://l500jd4ys7.execute-api.us-east-1.amazonaws.com/sendemail/neworder', {
+                method: 'POST',
+                body: JSON.stringify({
+                    userName: userInfo.name,
+                    userEmail: userInfo.email,
+                    orderId: orderId,
+                    order: order,
+                    isChinese: isChinese,
+                    token: AWS_API_TOKEN
+                })
+            }).catch((error) => {
+                console.log(error)
             })
             deleteCart().then(() => {
                 notify({})

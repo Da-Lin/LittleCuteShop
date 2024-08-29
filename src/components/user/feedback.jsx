@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Alert, Button, CircularProgress, Divider, Stack, TextField, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/authContext';
-import { ses } from '../../aws/aws';
+import { sesClient } from '../../aws/aws';
+import { SendEmailCommand } from '@aws-sdk/client-ses';
 
 export default function Contact() {
   const [subject, setSubject] = useState('')
@@ -45,15 +46,15 @@ export default function Contact() {
     resetMessage()
 
     setIsSendingEmail(true)
-    ses.sendEmail(getEmailContent())
-      .then(() => {
-        setIsSendingEmail(false)
-        setMessage(t('drawer').submitFeedback.successfulMessage)
-      }).catch((error) => {
-        setIsSendingEmail(false)
-        console.log(error)
-        setErrorMessage(t('drawer').submitFeedback.failuerMessage)
-      });
+    const buyerCommand = new SendEmailCommand(getEmailContent());
+    sesClient.send(buyerCommand).then(() => {
+      setIsSendingEmail(false)
+      setMessage(t('drawer').submitFeedback.successfulMessage)
+    }).catch((error) => {
+      setIsSendingEmail(false)
+      console.log(error)
+      setErrorMessage(t('drawer').submitFeedback.failuerMessage)
+    });
   };
 
   return (

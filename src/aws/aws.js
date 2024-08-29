@@ -1,11 +1,13 @@
-import * as AWS from "@aws-sdk/client-ses";
+import { SESClient } from "@aws-sdk/client-ses"
 
 const SES_USER = import.meta.env.VITE_AWS_SES_LITTLE_CUTE_SHOP_USER
 const SES_PASS = import.meta.env.VITE_AWS_SES_LITTLE_CUTE_SHOP_PASS
 const SES_ID = import.meta.env.VITE_AWS_SES_LITTLE_CUTE_SHOP_ACCESS_KEY_ID
 const SES_SECRET = import.meta.env.VITE_AWS_SES_LITTLE_CUTE_SHOP_SECRET_ACCESS_KEY
 
-export const ses = new AWS.SES({
+export const AWS_API_TOKEN = import.meta.env.VITE_AWS_API_TOKEN
+
+export const sesClient = new SESClient({
     region: "us-east-1",
 
     smtp: {
