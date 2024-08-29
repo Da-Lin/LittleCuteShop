@@ -59,12 +59,13 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
 
         const updatedFlavorCounts = flavorCounts.map((flavorCount, i) => {
             if (i === index) {
-                if (Number(e.target.value) < 0) {
+                if (!isNumber(e.target.value) || Number(e.target.value) < 0) {
                     order['product'][product.productName]['flavors'][flavor] = 0
                     return 0
                 } else {
-                    order['product'][product.productName]['flavors'][flavor] = e.target.value
-                    return e.target.value
+                    const value = e.target.value === '' ? '' : parseInt(e.target.value)
+                    order['product'][product.productName]['flavors'][flavor] = value
+                    return value
                 }
             } else {
                 return flavorCount
