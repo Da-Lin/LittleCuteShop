@@ -69,8 +69,8 @@
             "orderProcess": {
                 "name": "订餐流程",
                 "orderWay": "订餐方式：网上订单或者查看<anchor>{{link}}</anchor>联系客服微信或者邮箱",
-                "pickUpLocationSatuday": "周六自取地点：Nordstrom Parking lot, 8091 Tysons Corner Center, Tysons, VA 22102",
-                "pickUpTimeSatuday": "周六自取时间：下午3点",
+                "pickUpLocationSatuday": "周六自取地点：Safeway doorway, 1688 Anderson Rd, Tysons, VA 22102",
+                "pickUpTimeSatuday": "周六自取时间：下午5点",
                 "pickUpLocationOtherDays": "其他时间自取地点：Poké It Up, 4401 Fairfax Dr UNIT 103, Arlington, VA 22203",
                 "pickUpTimeOtherDays": "其他时间自取时间：早上11点-下午8点 "
             }

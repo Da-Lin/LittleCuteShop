@@ -21,6 +21,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
     const product = userCart[productId]
     const [price, setPrice] = useState(0)
     const [flavorCounts, setFlavorCounts] = useState(product.flavors.map(_ => 1));
+    const [needs, setNeeds] = useState('');
     const [flavorCountErrorMessage, setFlavorCountErrorMessage] = useState("")
 
     useEffect(() => {
@@ -73,6 +74,12 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
         })
         setFlavorCounts(updatedFlavorCounts)
         validateTotalAmount(updatedFlavorCounts)
+    };
+
+    const handleNeedsChange = (e) => {
+        const needs = e.target.value
+        order['product'][product.productName]['needs'] = needs
+        setNeeds(needs)
     };
 
     const validateTotalAmount = (updatedFlavorCounts) => {
@@ -140,6 +147,16 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                             />
                         )}
                     </Box>
+                    <TextField
+                        size="small"
+                        multiline
+                        fullWidth
+                        value={needs}
+                        id="outlined-number"
+                        placeholder={'Additional Needs?'}
+                        onChange={handleNeedsChange}
+                        sx={{ mt: 1 }}
+                    />
                     <IconButton aria-label="remove" onClick={removeFromCart}>
                         <DeleteIcon />
                     </IconButton>

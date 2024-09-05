@@ -190,6 +190,7 @@ export function OrderInfo({ productName, products }) {
     const { t } = useTranslation()
 
     let productId = ""
+    let needs = ""
     let amounts = []
     let flavors = {}
     Object.keys(products).forEach((key) => {
@@ -199,6 +200,8 @@ export function OrderInfo({ productName, products }) {
             productId = products[key]
         } else if (key === 'flavors') {
             flavors = products[key]
+        } else if (key === "needs") {
+            needs = products[key]
         }
     })
 
@@ -221,6 +224,10 @@ export function OrderInfo({ productName, products }) {
                     flavors[flavor] && Number(flavors[flavor]) !== 0 && <Typography key={flavor} mr={1}>{t(flavor)}: {flavors[flavor]}</Typography>
                 )}
             </Box>
+            {needs.length !== 0 && <Box>
+                <Typography >Addional needs:</Typography>
+                <Typography variant='body1' style={{whiteSpace: 'pre-line'}}>{needs}</Typography>
+            </Box>}
         </Box>
     )
 }
