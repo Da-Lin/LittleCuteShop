@@ -29,6 +29,7 @@
         "cancelOrderConfirmation": "确认取消订单？",
         "waitForConfirmation": "等待订单确认",
         "confirmed": "已确认",
+        "complete": "已完成",
         "cancelled": "已取消",
         "waitOrderStatusExplanation": "等待订单确认: 请等待我们确认订单",
         "confirmedOrderStatusExplanation": "已确认: 你的订单已经确认！请在自取时间自取订单"

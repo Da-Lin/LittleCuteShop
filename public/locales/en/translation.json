@@ -29,6 +29,7 @@
         "cancelOrderConfirmation": "Are you sure you want to cancel this order?",
         "waitForConfirmation": "Wait for confirmation",
         "confirmed": "Confirmed",
+        "complete": "Complete",
         "cancelled": "Cancelled",
         "waitOrderStatusExplanation": "Wait for confirmation: please wait for us to confirm your order",
         "confirmedOrderStatusExplanation": "Confirmed: your order is confirmed. Please pick up your order on your pick up date"
