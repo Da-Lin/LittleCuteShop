@@ -34,13 +34,13 @@ export default function OrderCard({ orders, lastOrderRef }) {
                             <Typography variant="body1" color="primary">{t('order').cart.totalPrice}: <Typography variant="body2" color='black' sx={{ display: 'inline' }}>${order.totalPrice}</Typography></Typography>
                             <Typography variant="body1" color="primary">{t('order').cart.pickUpDate}: <Typography variant="body2" color='black' sx={{ display: 'inline' }}>{order.pickUpDate && dayjs(order.pickUpDate.toDate()).format('YYYY-MM-DD')}</Typography></Typography>
                             <Typography variant="body1" color="primary">{t('order.orderStatus')}<OrderStatusPopover />:
-                                {order.status === "confirmed" || order.status === "complete"?
+                                {order.status === "confirmed" || order.status === "complete" ?
                                     <Typography variant="body2" color="green" sx={{ display: 'inline' }}> {t('order.' + order.status)}</Typography>
                                     : <Typography variant="body2" color="red" sx={{ display: 'inline' }}> {t('order.' + order.status)}</Typography>}
                             </Typography>
                         </CardContent>
                         <CardActions ref={index === orders.length - 1 ? lastOrderRef : undefined}>
-                            {order.status !== "confirmed" && <Tooltip title={t('order').cancelOrder}>
+                            {canCancelOrder(order) && <Tooltip title={t('order').cancelOrder}>
                                 <IconButton onClick={() => handleOpenDialog(order.documentId)}>
                                     <CancelIcon />
                                 </IconButton>
@@ -52,6 +52,8 @@ export default function OrderCard({ orders, lastOrderRef }) {
         </Grid>
     )
 }
+
+const canCancelOrder = (order) => order.status === 'waitForConfirmation'
 
 function CancelDialog({ openDialog, setOpenDialog, documentId, orders }) {
 
