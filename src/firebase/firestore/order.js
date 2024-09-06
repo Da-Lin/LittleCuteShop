@@ -31,10 +31,19 @@ export const incrementOrderId = async () => {
     })
 }
 
-export const getUserOrders = async (lastVisibleOrder) => {
+export const getUserOrders = async (lastVisibleOrder, isCancelledOrder) => {
     const orders = []
-    const q = lastVisibleOrder ? query(ordersRef, where("userId", "==", auth.currentUser.uid), where("status", "!=", cancelledOrderStatus), orderBy('orderId', 'desc'), startAfter(lastVisibleOrder), limit(PAGE_SIZE))
-        : query(ordersRef, where("userId", "==", auth.currentUser.uid), where("status", "!=", cancelledOrderStatus), orderBy('orderId', 'desc'), limit(PAGE_SIZE))
+    let q = query(ordersRef, where("userId", "==", auth.currentUser.uid), orderBy('orderId', 'desc'), limit(PAGE_SIZE))
+    
+    if (isCancelledOrder) {
+        q = query(q, where("status", "==", CANCELLED_ORDER_STATUS))
+    } else {
+        q = query(q, where("status", "!=", CANCELLED_ORDER_STATUS))
+    }
+
+    if (lastVisibleOrder) {
+        q = query(q, startAfter(lastVisibleOrder))
+    }
     const querySnapshot = await getDocs(q);
     const isLastPage = querySnapshot.docs.length < PAGE_SIZE
     const newLastVisibleOrder = querySnapshot.docs[querySnapshot.docs.length - 1];
@@ -52,8 +61,8 @@ const PAGE_SIZE = 5
 export const cancelOrder = (documentId) => {
     const docRef = doc(db, `orders`, documentId)
     return updateDoc(docRef, {
-        status: cancelledOrderStatus
+        status: CANCELLED_ORDER_STATUS
     });
 }
 
-const cancelledOrderStatus = 'cancelled'
+const CANCELLED_ORDER_STATUS = 'cancelled'

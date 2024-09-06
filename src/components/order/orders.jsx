@@ -1,10 +1,10 @@
-import { Grid, LinearProgress, Typography } from '@mui/material'
+import { Grid2, LinearProgress, Typography } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { getUserOrders } from '../../firebase/firestore/order'
 import OrderCard from './orderCard'
 import { useTranslation } from 'react-i18next'
 
-export default function Orders() {
+export default function Orders({ isCancelledOrder }) {
 
     const { t } = useTranslation()
 
@@ -20,7 +20,7 @@ export default function Orders() {
         observer.current = new IntersectionObserver(entries => {
             if (!isLastPage.current && entries[0].isIntersecting) {
                 setIsLoading(true)
-                getUserOrders(lastVisibleOrder.current).then(([os, lastOrder, lastPage]) => {
+                getUserOrders(lastVisibleOrder.current, isCancelledOrder).then(([os, lastOrder, lastPage]) => {
                     orders.push(...os)
                     setIsLoading(false)
                     lastVisibleOrder.current = lastOrder
@@ -32,12 +32,12 @@ export default function Orders() {
             }
         })
         if (node) observer.current.observe(node)
-    }, [isLoading, orders])
+    }, [isCancelledOrder, isLoading, orders])
 
     useEffect(() => {
         setIsLoading(true)
         async function getAndSetOrders() {
-            await getUserOrders().then(([os, lastOrder]) => {
+            await getUserOrders(null, isCancelledOrder).then(([os, lastOrder]) => {
                 setIsLoading(false)
                 setOrders(os)
                 lastVisibleOrder.current = lastOrder
@@ -47,15 +47,13 @@ export default function Orders() {
             })
         }
         getAndSetOrders()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
-        <Grid container justifyContent="center" direction="column" alignItems="center">
-            <Grid item xs={1}  >
-                <Typography m={2} variant="h4" >{t('order.yourOrders')}</Typography>
-            </Grid>
+        <Grid2 container direction="column" alignItems="center">
             <OrderCard orders={orders} lastOrderRef={lastOrderRef} />
             {isLoading && <LinearProgress />}
-        </Grid>
+        </Grid2>
     )
 }

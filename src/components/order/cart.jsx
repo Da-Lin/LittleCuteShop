@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, LinearProgress, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, LinearProgress, TextField, Typography } from '@mui/material';
 import CartProductCard from './cartProductCard';
 import { useState } from 'react';
 import { useOrder } from '../../contexts/orderContext';
@@ -14,6 +14,7 @@ import { useAuth } from '../../contexts/authContext';
 import { addOrder } from '../../firebase/firestore/order';
 import { deleteCart } from '../../firebase/firestore/cart';
 import { AWS_API_TOKEN } from '../../aws/aws';
+import { WidthFull } from '@mui/icons-material';
 
 export default function Cart() {
     const { userCart, subscibe } = useOrder()
@@ -215,9 +216,9 @@ export function OrderInfo({ productName, products }) {
                     color: "red",
                     textDecoration: "underline #000000"
                 }
-            }} component='span' color="primary" variant="h6" onClick={() => navigate(`/product?id=${productId}`)}>{productName}: </Typography>
+            }} color="primary" variant="h6" onClick={() => navigate(`/product?id=${productId}`)}>{productName} </Typography>
             {amounts.map((box) =>
-                <Typography key={box}>Box in {box}: {products[box]}</Typography>
+                Number(products[box]) !== 0 && <Typography variant="subtitle" color="text.secondary" key={box}>Box in {box}: {products[box]}</Typography>
             )}
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 {flavors && Object.keys(flavors).map(flavor =>
@@ -225,8 +226,8 @@ export function OrderInfo({ productName, products }) {
                 )}
             </Box>
             {needs.length !== 0 && <Box>
-                <Typography >Addional needs:</Typography>
-                <Typography variant='body1' style={{whiteSpace: 'pre-line'}}>{needs}</Typography>
+                <Typography variant='body1' color="primary">{t("order.additonalNeeds")}:</Typography>
+                <Typography variant='body2' style={{ whiteSpace: 'pre-line' }}>{needs}</Typography>
             </Box>}
         </Box>
     )

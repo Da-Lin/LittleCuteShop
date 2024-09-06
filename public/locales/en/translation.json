@@ -11,9 +11,12 @@
     "confirm": "Confirm",
     "orders": "Orders",
     "order": {
+        "orders": "Orders",
+        "cancelledOrders": "Cancelled Orders",
         "yourOrders": "Your Orders",
         "orderNumber": "Order Number",
         "orderStatus": "Order Status",
+        "additonalNeeds": "Additonal Needs",
         "cart": {
             "flavorCountMismatchError": "Flavor count does not match total count",
             "pickUpDateError": "Please select a date that is 2 days from today",

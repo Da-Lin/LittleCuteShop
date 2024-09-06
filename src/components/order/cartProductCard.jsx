@@ -153,7 +153,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                         fullWidth
                         value={needs}
                         id="outlined-number"
-                        placeholder={'Additional Needs?'}
+                        placeholder={t("order.additonalNeeds") + '?'}
                         onChange={handleNeedsChange}
                         sx={{ mt: 1 }}
                     />

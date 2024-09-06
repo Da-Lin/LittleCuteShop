@@ -11,9 +11,12 @@
     "confirm": "确认",
     "orders": "订单",
     "order": {
+        "orders": "订单",
+        "cancelledOrders": "取消的订单",
         "yourOrders": "你的订单",
         "orderNumber": "订单号码",
         "orderStatus": "订单状态",
+        "additonalNeeds": "其他需求",
         "cart": {
             "flavorCountMismatchError": "口味总数和产品总数不匹配",
             "pickUpDateError": "请选择两天后的日期",
