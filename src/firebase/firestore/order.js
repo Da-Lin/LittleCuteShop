@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, increment, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, increment, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 const ordersRef = collection(db, "orders");
@@ -31,19 +31,23 @@ export const incrementOrderId = async () => {
     })
 }
 
-export const getUserOrders = async () => {
+export const getUserOrders = async (lastVisibleOrder) => {
     const orders = []
-    const q = query(ordersRef, where("userId", "==", auth.currentUser.uid), where("status", "!=", cancelledOrderStatus))
+    const q = lastVisibleOrder ? query(ordersRef, where("userId", "==", auth.currentUser.uid), where("status", "!=", cancelledOrderStatus), orderBy('orderId', 'desc'), startAfter(lastVisibleOrder), limit(PAGE_SIZE))
+        : query(ordersRef, where("userId", "==", auth.currentUser.uid), where("status", "!=", cancelledOrderStatus), orderBy('orderId', 'desc'), limit(PAGE_SIZE))
     const querySnapshot = await getDocs(q);
+    const isLastPage = querySnapshot.docs.length < PAGE_SIZE
+    const newLastVisibleOrder = querySnapshot.docs[querySnapshot.docs.length - 1];
     querySnapshot.forEach((doc) => {
         const order = doc.data()
         order.documentId = doc.id
         orders.push(order)
     });
-    orders.sort((a, b) => b.orderId - a.orderId)
     console.log(orders)
-    return orders
+    return [orders, newLastVisibleOrder, isLastPage]
 }
+
+const PAGE_SIZE = 5
 
 export const cancelOrder = (documentId) => {
     const docRef = doc(db, `orders`, documentId)

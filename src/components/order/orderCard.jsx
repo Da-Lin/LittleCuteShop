@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import CancelIcon from '@mui/icons-material/Cancel';
 import { cancelOrder } from '../../firebase/firestore/order'
 
-export default function OrderCard({ orders }) {
+export default function OrderCard({ orders, lastOrderRef }) {
 
     const { t } = useTranslation()
 
@@ -21,8 +21,8 @@ export default function OrderCard({ orders }) {
     return (
         <Grid item xs={1} >
             <CancelDialog openDialog={openDialog} setOpenDialog={setOpenDialog} documentId={documentId} orders={orders} />
-            {orders.map((order) =>
-                <Card key={order.orderId} sx={{ display: 'flex', mt: 2, width: 600 }}>
+            {orders.map((order, index) =>
+                <Card key={order.orderId} sx={{ display: 'flex', mt: 2, width: 600 }} >
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <CardContent sx={{ flex: '1 0 auto' }}>
                             <Typography variant="body2">
@@ -34,16 +34,16 @@ export default function OrderCard({ orders }) {
                             <Typography variant="h6" color="primary">{t('order').cart.totalPrice}:</Typography>
                             <Typography >${order.totalPrice}</Typography>
                             <Typography variant="h6" color="primary">{t('order').cart.pickUpDate}: </Typography>
-                            <Typography >{dayjs(order.pickUpDate.toDate()).format('YYYY-MM-DD')}</Typography>
+                            <Typography >{order.pickUpDate && dayjs(order.pickUpDate.toDate()).format('YYYY-MM-DD')}</Typography>
                             <Typography variant="h6" color="primary">{t('order.orderStatus')}:<OrderStatusPopover /></Typography>
                             {order.status === "confirmed" ?
                                 <Typography color="green">{t('order.' + order.status)}</Typography>
                                 : <Typography color="red">{t('order.' + order.status)}</Typography>}
 
                         </CardContent>
-                        <CardActions>
+                        <CardActions ref={index === orders.length - 1 ? lastOrderRef : undefined}>
                             {order.status !== "confirmed" && <Tooltip title={t('order').cancelOrder}>
-                                <IconButton aria-label="add to favorites" onClick={() => handleOpenDialog(order.documentId)}>
+                                <IconButton onClick={() => handleOpenDialog(order.documentId)}>
                                     <CancelIcon />
                                 </IconButton>
                             </Tooltip>}
