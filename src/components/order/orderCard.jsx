@@ -1,14 +1,16 @@
 import { Box, Button, Card, CardActions, CardContent, Dialog, DialogActions, DialogTitle, Grid2, IconButton, LinearProgress, Popover, Tooltip, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { OrderInfo } from './cart'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import CancelIcon from '@mui/icons-material/Cancel';
 import { cancelOrder } from '../../firebase/firestore/order'
+import { Link } from 'react-router-dom'
 
 export default function OrderCard({ orders, lastOrderRef }) {
 
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
+    const isChinese = i18n.language === 'zh'
 
     const [openDialog, setOpenDialog] = useState(false);
     const [documentId, setDocumentId] = useState();
@@ -33,6 +35,14 @@ export default function OrderCard({ orders, lastOrderRef }) {
                             )}
                             <Typography variant="body1" color="primary">{t('order').cart.totalPrice}: <Typography component='span' variant="body2" color='black' sx={{ display: 'inline' }}>${order.totalPrice}</Typography></Typography>
                             <Typography variant="body1" color="primary">{t('order').cart.pickUpDate}: <Typography component='span' variant="body2" color='black' sx={{ display: 'inline' }}>{order.pickUpDate && dayjs(order.pickUpDate.toDate()).format('YYYY-MM-DD')}</Typography></Typography>
+                            <Typography variant="body1" color="primary">{t('order').pickUpInfo}: <Typography component='span' variant="body2" color='black' sx={{ display: 'inline' }}>
+                                    {<Trans
+                                        i18nKey={t("order").pickUpInfoDetail}
+                                        values={{ link: isChinese ? "此页面" : "this page" }}
+                                        components={{ anchor: <Link to={"/orderprocess"} /> }}
+                                    />}
+                                </Typography>
+                            </Typography>
                             <Typography component='span' variant="body1" color="primary">{t('order.orderStatus')}<OrderStatusPopover />:
                                 {order.status === "confirmed" || order.status === "complete" ?
                                     <Typography component='span' variant="body2" color="green" sx={{ display: 'inline' }}> {t('order.' + order.status)}</Typography>

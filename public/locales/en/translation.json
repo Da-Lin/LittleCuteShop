@@ -25,6 +25,8 @@
             "placeOrder": "Place order",
             "confirmOrder": "Please confirm the order information below"
         },
+        "pickUpInfo": "Pick Up Info",
+        "pickUpInfoDetail": "Please check out <anchor>{{link}}</anchor>",
         "cancelOrder": "Cancel Order",
         "cancelOrderConfirmation": "Are you sure you want to cancel this order?",
         "waitForConfirmation": "Wait for confirmation",
@@ -76,7 +78,8 @@
                 "pickUpLocationSatuday": "Where to pick up on Saturday: Safeway doorway, 1688 Anderson Rd, Tysons, VA 22102",
                 "pickUpTimeSatuday": "When to pick up on Saturday: 5 pm",
                 "pickUpLocationOtherDays": "Where to pick up on other days: Poké It Up, 4401 Fairfax Dr UNIT 103, Arlington, VA 22203",
-                "pickUpTimeOtherDays": "When to pick up on other days: 11 am to 8 pm"
+                "pickUpTimeOtherDays": "When to pick up on other days: 11 am to 8 pm",
+                "pickUpNote": "Note: pick up time may vary each week"
             }
         }
     },

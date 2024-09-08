@@ -31,6 +31,7 @@ const OrderProcess = () => {
             <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpTimeSatuday}</Typography>
             <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpLocationOtherDays}</Typography>
             <Typography pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpTimeOtherDays}</Typography>
+            <Typography color="secondary" pt={2} width={1000}>{t("appBar").menuList.orderProcess.pickUpNote}</Typography>
         </Grid>
     )
 };

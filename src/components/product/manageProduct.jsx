@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-pascal-case */
 import { useEffect, useMemo, useState } from 'react';
 import {
     MRT_EditActionButtons,

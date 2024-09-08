@@ -25,6 +25,8 @@
             "placeOrder": "下单",
             "confirmOrder": "请确认以下订单信息"
         },
+        "pickUpInfo": "自取信息",
+        "pickUpInfoDetail": "请查看<anchor>{{link}}</anchor>",
         "cancelOrder": "取消订单",
         "cancelOrderConfirmation": "确认取消订单？",
         "waitForConfirmation": "等待订单确认",
@@ -76,7 +78,8 @@
                 "pickUpLocationSatuday": "周六自取地点：Safeway doorway, 1688 Anderson Rd, Tysons, VA 22102",
                 "pickUpTimeSatuday": "周六自取时间：下午5点",
                 "pickUpLocationOtherDays": "其他时间自取地点：Poké It Up, 4401 Fairfax Dr UNIT 103, Arlington, VA 22203",
-                "pickUpTimeOtherDays": "其他时间自取时间：早上11点-下午8点 "
+                "pickUpTimeOtherDays": "其他时间自取时间：早上11点-下午8点",
+                "pickUpNote": "注意: 每周自取时间可能会有小改动"
             }
         }
     },
