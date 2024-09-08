@@ -1,13 +1,25 @@
 import React from "react";
 import Contact from "./contact";
 import About from "./feedback";
-import { useRoutes } from "react-router-dom";
+import { useNavigate, useRoutes } from "react-router-dom";
 import { Box } from "@mui/material";
 
 import UserDrawer from "./drawer";
 import Security from "./security";
+import { useAuth } from "../../contexts/authContext";
+import { useEffect } from "react";
 
 export default function UserDashboard() {
+
+    const { userLoggedIn } = useAuth()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!userLoggedIn) {
+            navigate('/home')
+        }
+    })
+
     const routesArray = [
         {
             path: "about",

@@ -48,7 +48,6 @@ export const updateOrder = async (newOrders) => {
     const errors = []
     const ids = Object.keys(newOrders)
     for (const id of ids) {
-        console.log(id)
         const docRef = doc(db, `orders`, id)
         await updateDoc(docRef, {
             status: newOrders[id].status

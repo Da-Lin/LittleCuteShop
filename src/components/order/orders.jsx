@@ -2,11 +2,10 @@ import { Grid2, LinearProgress, Typography } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { getUserOrders } from '../../firebase/firestore/order'
 import OrderCard from './orderCard'
-import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../contexts/authContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function Orders({ isCancelledOrder }) {
-
-    const { t } = useTranslation()
 
     const [isLoading, setIsLoading] = useState(false)
     const [orders, setOrders] = useState([])
@@ -34,7 +33,14 @@ export default function Orders({ isCancelledOrder }) {
         if (node) observer.current.observe(node)
     }, [isCancelledOrder, isLoading, orders])
 
+    const { userLoggedIn } = useAuth()
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!userLoggedIn) {
+            navigate('/home')
+        }
+        
         setIsLoading(true)
         async function getAndSetOrders() {
             await getUserOrders(null, isCancelledOrder).then(([os, lastOrder]) => {

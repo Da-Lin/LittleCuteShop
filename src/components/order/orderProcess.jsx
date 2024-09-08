@@ -1,12 +1,21 @@
 import { Grid, Typography } from "@mui/material";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
+import { useAuth } from "../../contexts/authContext";
 
 const OrderProcess = () => {
+    const { userLoggedIn } = useAuth()
+    const navigate = useNavigate()
 
     const { t, i18n } = useTranslation()
     const isChinese = i18n.language === 'zh'
+
+    useEffect(() => {
+        if (!userLoggedIn) {
+            navigate('/home')
+        }
+    })
 
     return (
         <Grid container justifyContent="center" direction="column"

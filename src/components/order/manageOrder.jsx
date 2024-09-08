@@ -4,6 +4,8 @@ import { Box, Button, CircularProgress, Typography, } from '@mui/material';
 
 import { getManageableOrders, MANAGEABLE_ORDER_STATUSES, updateOrder } from '../../firebase/firestore/order';
 import { isNumber } from '../util/util';
+import { useAuth } from '../../contexts/authContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function ManageOrder() {
   // const [validationErrors, setValidationErrors] = useState({});
@@ -14,7 +16,14 @@ export default function ManageOrder() {
   const [isLoadingOrder, setIsLoadingOrder] = useState(false);
   const [isLoadingOrderError, setIsLoadingOrderError] = useState(false);
 
+  const { userInfo } = useAuth()
+  const navigate = useNavigate()
+
   useEffect(() => {
+    if (!userInfo.isAdmin) {
+      navigate('/home')
+    }
+
     async function getAndSetOrders() {
       setIsLoadingOrder(true)
       await getManageableOrders().then((os) => {

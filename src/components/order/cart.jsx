@@ -14,7 +14,6 @@ import { useAuth } from '../../contexts/authContext';
 import { addOrder } from '../../firebase/firestore/order';
 import { deleteCart } from '../../firebase/firestore/cart';
 import { AWS_API_TOKEN } from '../../aws/aws';
-import { WidthFull } from '@mui/icons-material';
 
 export default function Cart() {
     const { userCart, subscibe } = useOrder()
@@ -50,7 +49,14 @@ export default function Cart() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pickUpDateError]);
 
+    const { userLoggedIn } = useAuth()
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!userLoggedIn) {
+            navigate('/home')
+        }
+
         let totalPrice = 0
         Object.keys(cart).forEach(productId => {
             const product = cart[productId]

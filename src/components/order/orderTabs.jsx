@@ -7,8 +7,11 @@ import TabPanel from '@mui/lab/TabPanel';
 import Orders from './orders';
 import { Grid2, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/authContext';
+import { useEffect } from 'react';
 
-export default function LabTabs() {
+export default function OrderTabs() {
     const [value, setValue] = React.useState('1');
 
     const { t } = useTranslation()
@@ -16,6 +19,15 @@ export default function LabTabs() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const { userLoggedIn } = useAuth()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!userLoggedIn) {
+            navigate('/home')
+        }
+    })
 
     return (
         <Grid2 container justifyContent="center" direction="column" alignItems="center">
