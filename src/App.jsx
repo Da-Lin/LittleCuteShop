@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Orders from "./components/order/orders";
 import OrderTabs from "./components/order/orderTabs";
+import ManageOrder from "./components/order/manageOrder";
 
 const THEME = responsiveFontSizes(createTheme({
   typography: {
@@ -72,6 +73,10 @@ function App() {
     {
       path: "/manageproducts",
       element: <ManageProduct />,
+    },
+    {
+      path: "/manageorders",
+      element: <ManageOrder />,
     },
     {
       path: "/products",

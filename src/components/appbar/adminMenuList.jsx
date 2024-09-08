@@ -12,7 +12,7 @@ export default function AdminMenuList() {
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
 
-    const menus = [{ name: '管理产品', link: 'manageprodcuts' }]
+    const menus = [{ name: '管理产品', link: 'manageprodcuts' }, { name: '管理订单', link: 'manageorders' }]
 
     const handleClickListItem = (event) => {
         setAnchorEl(event.currentTarget);

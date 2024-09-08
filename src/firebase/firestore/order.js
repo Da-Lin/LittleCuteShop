@@ -31,10 +31,36 @@ export const incrementOrderId = async () => {
     })
 }
 
+export const getManageableOrders = async () => {
+    const orders = []
+    const q = query(ordersRef, where("status", "!=", CANCELLED_ORDER_STATUS), orderBy('orderId', 'desc'))
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        const order = doc.data()
+        order.documentId = doc.id
+        orders.push(order)
+    });
+    console.log(orders)
+    return orders
+}
+
+export const updateOrder = async (newOrders) => {
+    const errors = []
+    const ids = Object.keys(newOrders)
+    for (const id of ids) {
+        console.log(id)
+        const docRef = doc(db, `orders`, id)
+        await updateDoc(docRef, {
+            status: newOrders[id].status
+        }).catch(err => errors.push(err));
+    }
+    return errors
+}
+
 export const getUserOrders = async (lastVisibleOrder, isCancelledOrder) => {
     const orders = []
     let q = query(ordersRef, where("userId", "==", auth.currentUser.uid), orderBy('orderId', 'desc'), limit(PAGE_SIZE))
-    
+
     if (isCancelledOrder) {
         q = query(q, where("status", "==", CANCELLED_ORDER_STATUS))
     } else {
@@ -66,3 +92,9 @@ export const cancelOrder = (documentId) => {
 }
 
 const CANCELLED_ORDER_STATUS = 'cancelled'
+
+export const MANAGEABLE_ORDER_STATUSES = [
+    'confirmed',
+    'complete',
+    'waitForConfirmation',
+];
