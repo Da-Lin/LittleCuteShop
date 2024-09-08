@@ -1,4 +1,4 @@
-import { Grid2, LinearProgress, Typography } from '@mui/material'
+import { Grid2, LinearProgress } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { getUserOrders } from '../../firebase/firestore/order'
 import OrderCard from './orderCard'
@@ -40,7 +40,7 @@ export default function Orders({ isCancelledOrder }) {
         if (!userLoggedIn) {
             navigate('/home')
         }
-        
+
         setIsLoading(true)
         async function getAndSetOrders() {
             await getUserOrders(null, isCancelledOrder).then(([os, lastOrder]) => {
@@ -53,7 +53,7 @@ export default function Orders({ isCancelledOrder }) {
             })
         }
         getAndSetOrders()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
