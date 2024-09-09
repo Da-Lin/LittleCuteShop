@@ -82,6 +82,7 @@ function Bar() {
                     />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <MenuListXS />
+                        {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
                     </Box>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {userLoggedIn && userInfo.isAdmin && <AdminMenuList />}
