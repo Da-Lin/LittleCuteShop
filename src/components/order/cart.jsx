@@ -224,10 +224,10 @@ export function OrderInfo({ productName, products }) {
                 }
             }} color="primary" variant="h6" onClick={() => navigate(`/product?id=${productId}`)}>{productName} </Typography>
             {amounts.map((box) =>
-                Number(products[box]) !== 0 && <Typography variant="subtitle" color="text.secondary" key={box}>Box in {box}: {products[box]}</Typography>
+                Number(products[box]) !== 0 && <Typography variant="subtitle" color="text.secondary" key={box}>Box in {box}: {products[box]} </Typography>
             )}
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                {flavors && Object.keys(flavors).map(flavor =>
+                {flavors && Object.keys(flavors).sort().map(flavor =>
                     flavors[flavor] && Number(flavors[flavor]) !== 0 && <Typography variant="subtitle" color="text.secondary" key={flavor} mr={1}>{t(flavor)}: {flavors[flavor]}</Typography>
                 )}
             </Box>

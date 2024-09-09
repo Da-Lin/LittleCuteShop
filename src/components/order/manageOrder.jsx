@@ -39,6 +39,10 @@ export default function ManageOrder() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleDateFilter = (rowDate, id, filterValue) => {
+    return new Date(filterValue).setHours(0, 0, 0, 0) === rowDate.toDate().setHours(0, 0, 0, 0)
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -63,16 +67,20 @@ export default function ManageOrder() {
         accessorFn: (row) => row.createdDate.toDate(),
         header: 'Order Date',
         sortingFn: 'datetime',
+        filterVariant: 'date',
         enableEditing: false,
         size: 100,
+        filterFn: (row, id, filterValue) => handleDateFilter(row.original.createdDate, id, filterValue),
         Cell: ({ cell }) => cell.getValue()?.toLocaleDateString(), //render Date as a string
       },
       {
         accessorFn: (row) => row.pickUpDate.toDate(),
         header: 'Pick Up Date',
         sortingFn: 'datetime',
+        filterVariant: 'date',
         enableEditing: false,
         size: 100,
+        filterFn: (row, id, filterValue) => handleDateFilter(row.original.pickUpDate, id, filterValue),
         Cell: ({ cell }) => cell.getValue()?.toLocaleDateString(), //render Date as a string
       },
       {

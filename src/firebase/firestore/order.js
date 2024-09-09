@@ -1,5 +1,6 @@
 import { addDoc, collection, doc, getDoc, getDocs, increment, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import dayjs from "dayjs";
 
 const ordersRef = collection(db, "orders");
 
@@ -34,6 +35,19 @@ export const incrementOrderId = async () => {
 export const getManageableOrders = async () => {
     const orders = []
     const q = query(ordersRef, where("status", "!=", CANCELLED_ORDER_STATUS), orderBy('orderId', 'desc'))
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        const order = doc.data()
+        order.documentId = doc.id
+        orders.push(order)
+    });
+    console.log(orders)
+    return orders
+}
+
+export const getValidOrderedProducts = async () => {
+    const orders = []
+    const q = query(ordersRef, where("status", "not-in", [CANCELLED_ORDER_STATUS, COMPLETE_ORDER_STATUS]), where("pickUpDate", ">=", dayjs().startOf('day').toDate()), orderBy('pickUpDate'))
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
         const order = doc.data()
@@ -91,9 +105,10 @@ export const cancelOrder = (documentId) => {
 }
 
 const CANCELLED_ORDER_STATUS = 'cancelled'
+const COMPLETE_ORDER_STATUS = 'complete'
 
 export const MANAGEABLE_ORDER_STATUSES = [
     'confirmed',
-    'complete',
+    COMPLETE_ORDER_STATUS,
     'waitForConfirmation',
 ];
