@@ -135,7 +135,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                             <TextField
                                 key={flavor}
                                 error={flavorCountErrorMessage !== ''}
-                                id="outlined-number"
+                                id={flavor}
                                 label={t(flavor)}
                                 type="number"
                                 value={flavorCounts[index]}
@@ -152,7 +152,7 @@ export default function CartProductCard({ userCart, productId, totalPrice, setTo
                         multiline
                         fullWidth
                         value={needs}
-                        id="outlined-number"
+                        id={productId}
                         placeholder={t("order.additonalNeeds") + '?'}
                         onChange={handleNeedsChange}
                         sx={{ mt: 1 }}

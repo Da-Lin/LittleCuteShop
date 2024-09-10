@@ -1,6 +1,7 @@
-import { addDoc, collection, doc, getDoc, getDocs, increment, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocFromCache, getDocFromServer, getDocsFromCache, getDocsFromServer, increment, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import dayjs from "dayjs";
+import { getCachedDoc, getCachedDocs } from "./util";
 
 const ordersRef = collection(db, "orders");
 
@@ -19,7 +20,7 @@ export const addOrder = async (order, userInfo) => {
 export const incrementAndGetMaxOrderId = async () => {
     await incrementOrderId()
     const docRef = doc(db, "ids", 'orderIds');
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getCachedDoc(docRef)
     if (docSnap.exists()) {
         return docSnap.data().maxId
     }
@@ -35,7 +36,7 @@ export const incrementOrderId = async () => {
 export const getManageableOrders = async () => {
     const orders = []
     const q = query(ordersRef, where("status", "!=", CANCELLED_ORDER_STATUS), orderBy('orderId', 'desc'))
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getCachedDocs(q)
     querySnapshot.forEach((doc) => {
         const order = doc.data()
         order.documentId = doc.id
@@ -48,7 +49,7 @@ export const getManageableOrders = async () => {
 export const getValidOrderedProducts = async () => {
     const orders = []
     const q = query(ordersRef, where("status", "not-in", [CANCELLED_ORDER_STATUS, COMPLETE_ORDER_STATUS]), where("pickUpDate", ">=", dayjs().startOf('day').toDate()), orderBy('pickUpDate'))
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getCachedDocs(q)
     querySnapshot.forEach((doc) => {
         const order = doc.data()
         order.documentId = doc.id
@@ -83,7 +84,8 @@ export const getUserOrders = async (lastVisibleOrder, isCancelledOrder) => {
     if (lastVisibleOrder) {
         q = query(q, startAfter(lastVisibleOrder))
     }
-    const querySnapshot = await getDocs(q);
+
+    const querySnapshot = await getCachedDocs(q)
     const isLastPage = querySnapshot.docs.length < PAGE_SIZE
     const newLastVisibleOrder = querySnapshot.docs[querySnapshot.docs.length - 1];
     querySnapshot.forEach((doc) => {

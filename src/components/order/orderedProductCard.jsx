@@ -74,7 +74,7 @@ export default function OrderedProductCard({ order }) {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent >
-                    {order.orders.map((order) =>
+                    {order.orders.sort((a, b) => b.orderId - a.orderId).map((order) =>
                         <Box key={order.orderId}>
                             <Typography key={order.orderId} component='span' color='green'>{order.userName}于{dayjs(order.createdDate.toDate()).format('M-D')}下单#{order.orderId}:</Typography>
                             {Object.keys(order['product']).sort().map((productName) =>

@@ -1,6 +1,7 @@
-import { collection, query, getDocs, where, setDoc, addDoc, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, query, where, setDoc, addDoc, doc, deleteDoc, updateDoc, getDocFromCache, getDocFromServer, getDocsFromCache, getDocsFromServer } from "firebase/firestore";
 import { db } from "../firebase";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getCachedDoc, getCachedDocs } from "./util";
 
 const productCategoriesRef = collection(db, "productCategories");
 const productsRef = collection(db, "products");
@@ -8,7 +9,7 @@ const storage = getStorage();
 
 export const getProductCategories = async () => {
     const productCategories = []
-    const querySnapshot = await getDocs(collection(db, "productCategories"));
+    const querySnapshot = await getCachedDocs(productCategoriesRef)
     querySnapshot.forEach((doc) => {
         productCategories.push(doc.id)
     });
@@ -29,7 +30,7 @@ export const deleteProductCategories = async (data) => {
 
 export const productCategoryExist = async (data) => {
     const docRef = doc(db, "productCategories", data);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getCachedDoc(docRef)
     return docSnap && docSnap.exists()
 }
 
@@ -133,7 +134,7 @@ export const deleteProduct = async (data) => {
 
 export const getProduct = async (id) => {
     const docRef = doc(db, "products", id);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getCachedDoc(docRef)
     if (docSnap.exists()) {
         return docSnap.data()
     }
@@ -141,7 +142,7 @@ export const getProduct = async (id) => {
 
 export const getProducts = async () => {
     const products = []
-    const querySnapshot = await getDocs(productsRef);
+    const querySnapshot = await getCachedDocs(productsRef)
     querySnapshot.forEach((doc) => {
         const product = doc.data()
         products.push({
@@ -161,7 +162,7 @@ export const getProducts = async () => {
 export const getCategoryProducts = async (category) => {
     const products = []
     const q = query(productsRef, where("category", "==", category))
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getCachedDocs(q)
     querySnapshot.forEach((doc) => {
         const product = doc.data()
         products.push({
@@ -179,12 +180,12 @@ export const getCategoryProducts = async (category) => {
 
 export const productNameExist = async (data) => {
     const q = query(productsRef, where("name", "==", data.name))
-    const querySnap = await getDocs(q);
+    const querySnap = await getCachedDocs(q)
     return !querySnap.empty
 }
 
 export const productNameExistForUpdate = async (data) => {
     const q = query(productsRef, where("name", "==", data.name), where("id", "!=", data.id))
-    const querySnap = await getDocs(q);
+    const querySnap = await getCachedDocs(q)
     return !querySnap.empty
 }

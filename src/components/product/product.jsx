@@ -42,7 +42,7 @@ export default function Product() {
                     setIsLoadingProduct(false)
                     setProduct(p)
                     setAmount(Object.keys(p.priceMap)[0])
-                })
+                }).catch(error => console.log(error))
                 setIsLoadingProduct(false)
                 if (!product) {
                     navigate('/home')
@@ -147,7 +147,7 @@ export default function Product() {
                                 <Tooltip title={t('product').addToCart}>
                                     <IconButton size="large" style={{ maxWidth: '50px', justifyContent: "flex-start" }} color="primary" onClick={handleAddToCart}><AddShoppingCartIcon /></IconButton>
                                 </Tooltip>
-                                <Stack container justifyContent="center">
+                                <Stack justifyContent="center">
                                     {isAddingCart && <CircularProgress />}
                                     {cartMessage && <Alert>{cartMessage}</Alert>}
                                     {cartErrorMessage && <Alert severity="error">{cartErrorMessage}</Alert>}
