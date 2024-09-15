@@ -1,7 +1,7 @@
-import { collection, query, where, setDoc, addDoc, doc, deleteDoc, updateDoc} from "firebase/firestore";
+import { collection, query, where, setDoc, addDoc, doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { getCachedDoc, getCachedDocs, restLastUpdatedCache } from "./util";
+import { getCachedDocs, restLastUpdatedCache } from "./util";
 
 const productCategoriesRef = collection(db, "productCategories");
 const productsRef = collection(db, "products");
@@ -33,7 +33,7 @@ export const deleteProductCategories = async (data) => {
 
 export const productCategoryExist = async (data) => {
     const docRef = doc(db, "productCategories", data);
-    const docSnap = await getCachedDoc(docRef)
+    const docSnap = await getDoc(docRef)
     return docSnap && docSnap.exists()
 }
 
@@ -141,7 +141,7 @@ export const deleteProduct = async (data) => {
 
 export const getProduct = async (id) => {
     const docRef = doc(db, "products", id);
-    const docSnap = await getCachedDoc(docRef)
+    const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
         return docSnap.data()
     }

@@ -1,6 +1,5 @@
-import { doc, updateDoc, deleteField } from "firebase/firestore";
+import { doc, updateDoc, deleteField, getDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { getCachedDoc } from "./util";
 
 export const addToCart = async (newItem) => {
     let existingCart = await getCart()
@@ -28,7 +27,7 @@ export const deleteCart = async () => {
 export const getCart = async () => {
     if (auth.currentUser) {
         const docRef = doc(db, "users", auth.currentUser.uid);
-        const docSnap = await getCachedDoc(docRef)
+        const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
             console.log(docSnap.data().cart)
             return docSnap.data().cart
