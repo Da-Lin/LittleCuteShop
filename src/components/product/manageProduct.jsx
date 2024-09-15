@@ -229,11 +229,12 @@ const Example = () => {
 
     //CREATE action
     const handleCreateProduct = async ({ values, table }) => {
-        const newValidationErrors = validateProduct(values);
-        if (!!Object.keys(priceMap).length) {
+        if (Object.keys(priceMap).length === 0) {
             setPriceValidationError('请输入产品价格')
             return
         }
+
+        const newValidationErrors = validateProduct(values);
         if (Object.values(newValidationErrors).some((error) => error)) {
             setValidationErrors(newValidationErrors);
             return;

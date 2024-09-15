@@ -1,7 +1,7 @@
-import { collection, query, where, setDoc, addDoc, doc, deleteDoc, updateDoc, getDocFromCache, getDocFromServer, getDocsFromCache, getDocsFromServer } from "firebase/firestore";
+import { collection, query, where, setDoc, addDoc, doc, deleteDoc, updateDoc} from "firebase/firestore";
 import { db } from "../firebase";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { getCachedDoc, getCachedDocs } from "./util";
+import { getCachedDoc, getCachedDocs, restLastUpdatedCache } from "./util";
 
 const productCategoriesRef = collection(db, "productCategories");
 const productsRef = collection(db, "products");
@@ -9,21 +9,24 @@ const storage = getStorage();
 
 export const getProductCategories = async () => {
     const productCategories = []
-    const querySnapshot = await getCachedDocs(productCategoriesRef)
+    const querySnapshot = await getCachedDocs(productCategoriesRef, productCategoriesRef, LAST_UPDATED_CATEGORY_CACHE_KEY)
     querySnapshot.forEach((doc) => {
         productCategories.push(doc.id)
     });
+    console.log(productCategories)
     return productCategories
 }
 
 export const addProductCategories = async (data) => {
     if (!await productCategoryExist(data)) {
+        data.updatedDate = new Date()
         return setDoc(doc(productCategoriesRef, data), {});
     }
 }
 
 export const deleteProductCategories = async (data) => {
     if (await productCategoryExist(data)) {
+        restLastUpdatedCache(LAST_UPDATED_CATEGORY_CACHE_KEY)
         return deleteDoc(doc(productCategoriesRef, data));
     }
 }
@@ -54,7 +57,9 @@ export const addProduct = async (data) => {
             priceMap: data.priceMap,
             category: data.category,
             imgPaths: imgPaths,
-            imgUrls: imgUrls
+            imgUrls: imgUrls,
+            createdDate: new Date(),
+            updatedDate: new Date()
         });
         return updateDoc(docRef, {
             id: docRef.id
@@ -108,7 +113,8 @@ export const updateProduct = async (data) => {
         priceMap: data.priceMap,
         category: data.category,
         imgPaths: imgPaths,
-        imgUrls: imgUrls
+        imgUrls: imgUrls,
+        updatedDate: new Date()
     });
 }
 
@@ -129,6 +135,7 @@ export const deleteProduct = async (data) => {
         await deleteObject(storageRef)
     }
 
+    restLastUpdatedCache(LAST_UPDATED_PRODUCT_CACHE_KEY)
     return await deleteDoc(doc(db, `products`, data.id));
 }
 
@@ -142,7 +149,7 @@ export const getProduct = async (id) => {
 
 export const getProducts = async () => {
     const products = []
-    const querySnapshot = await getCachedDocs(productsRef)
+    const querySnapshot = await getCachedDocs(productsRef, productsRef, LAST_UPDATED_PRODUCT_CACHE_KEY)
     querySnapshot.forEach((doc) => {
         const product = doc.data()
         products.push({
@@ -156,13 +163,14 @@ export const getProducts = async () => {
             priceMap: product.priceMap
         })
     });
+    console.log(products)
     return products
 }
 
 export const getCategoryProducts = async (category) => {
     const products = []
     const q = query(productsRef, where("category", "==", category))
-    const querySnapshot = await getCachedDocs(q)
+    const querySnapshot = await getCachedDocs(q, productsRef, LAST_UPDATED_PRODUCT_CACHE_KEY)
     querySnapshot.forEach((doc) => {
         const product = doc.data()
         products.push({
@@ -175,17 +183,21 @@ export const getCategoryProducts = async (category) => {
             imgUrls: product.imgUrls
         })
     });
+    console.log(products)
     return products
 }
 
 export const productNameExist = async (data) => {
     const q = query(productsRef, where("name", "==", data.name))
-    const querySnap = await getCachedDocs(q)
-    return !querySnap.empty
+    const querySnap = await getCachedDocs(q, productsRef, LAST_UPDATED_PRODUCT_CACHE_KEY)
+    return querySnap.length !== 0
 }
 
 export const productNameExistForUpdate = async (data) => {
     const q = query(productsRef, where("name", "==", data.name), where("id", "!=", data.id))
-    const querySnap = await getCachedDocs(q)
-    return !querySnap.empty
+    const querySnap = await getCachedDocs(q, productsRef, LAST_UPDATED_PRODUCT_CACHE_KEY)
+    return !querySnap.length !== 0
 }
+
+const LAST_UPDATED_CATEGORY_CACHE_KEY = 'lastUpdatedCategoryDate'
+const LAST_UPDATED_PRODUCT_CACHE_KEY = 'lastUpdatedProductDate'

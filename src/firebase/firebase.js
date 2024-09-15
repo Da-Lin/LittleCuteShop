@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { CACHE_SIZE_UNLIMITED, disableNetwork, getFirestore, initializeFirestore, persistentLocalCache } from "firebase/firestore";
+import { CACHE_SIZE_UNLIMITED, getFirestore, initializeFirestore, persistentLocalCache } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
