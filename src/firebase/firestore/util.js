@@ -1,6 +1,6 @@
 import { getDocsFromCache, getDocsFromServer, orderBy, query, where } from "firebase/firestore";
 
-export const getCachedDocs = async (q, docRef, lastUpdatedCacheKey) => {
+export const getCachedDocs = async (q, docRef, lastUpdatedCacheKey, userId) => {
     const lastUpdatedTime = localStorage.getItem(lastUpdatedCacheKey + 'Time')
     let lastUpdatedDate = new Date(Number(localStorage.getItem(lastUpdatedCacheKey)))
     if (!lastUpdatedDate || new Date() - lastUpdatedTime > CACHE_TTL) {
@@ -13,13 +13,18 @@ export const getCachedDocs = async (q, docRef, lastUpdatedCacheKey) => {
         const serverSnapshot = await getDocsFromServer(q)
         if (serverSnapshot && !serverSnapshot.empty) {
             const sortedDocs = [...serverSnapshot.docs].sort((a, b) => b.data().updatedDate - a.data().updatedDate)
-            localStorage.setItem(lastUpdatedCacheKey, Number(sortedDocs.docs[0].data().updatedDate.toDate()))
+            localStorage.setItem(lastUpdatedCacheKey, Number(sortedDocs[0].data().updatedDate.toDate()))
             localStorage.setItem(lastUpdatedCacheKey + 'Time', Number(new Date()))
         }
         return serverSnapshot.docs;
     }
 
-    const lastUpdatedQuery = query(docRef, where("updatedDate", ">", lastUpdatedDate), orderBy('updatedDate', 'desc'))
+    let lastUpdatedQuery = query(docRef, where("updatedDate", ">", lastUpdatedDate), orderBy('updatedDate', 'desc'))
+    //Only getting docs associated with the user
+    if(userId) {
+        lastUpdatedQuery = query(lastUpdatedQuery, where("userId", "==", userId))
+    }
+
     const newSanpshot = await getDocsFromServer(lastUpdatedQuery)
     if (!newSanpshot.empty) {
         console.log('found new data for ' + lastUpdatedCacheKey)

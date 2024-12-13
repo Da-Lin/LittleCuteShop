@@ -87,7 +87,7 @@ export const getUserOrders = async (lastVisibleOrder, isCancelledOrder) => {
         q = query(q, startAfter(lastVisibleOrder))
     }
 
-    const querySnapshot = await getCachedDocs(q, ordersRef, LAST_UPDATED_ORDER_CACHE_KEY)
+    const querySnapshot = await getCachedDocs(q, ordersRef, LAST_UPDATED_ORDER_CACHE_KEY, auth.currentUser.uid)
     const isLastPage = querySnapshot.length < PAGE_SIZE
     const newLastVisibleOrder = querySnapshot[querySnapshot.length - 1];
     querySnapshot.forEach((doc) => {
