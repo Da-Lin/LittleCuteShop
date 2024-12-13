@@ -107,7 +107,7 @@ export default function Products() {
                     }}
                     onClick={e => navigate(`/product?id=${product.id}`)}
                 >
-                    <ImageSrc style={{ backgroundImage: product.imgUrls ? `url(${product.imgUrls[0]})` : null }} />
+                    <ImageSrc style={{ backgroundImage: product.imgUrls ? `url("${product.imgUrls[0]})` : null }} />
                     <ImageBackdrop className="MuiImageBackdrop-root" />
                     <Image>
                         <Typography
