@@ -21,7 +21,7 @@ export default function Cart() {
     subscibe(setCart)
     const [totalPrice, setTotalPrice] = useState(0)
 
-    const [pickUpDate, setPickUpDate] = useState(dayjs().add(2, 'day'));
+    const [pickUpDate, setPickUpDate] = useState(dayjs());
     const [pickUpDateError, setPickUpDateError] = useState('');
     const [hasError, setHasError] = useState(false)
 
