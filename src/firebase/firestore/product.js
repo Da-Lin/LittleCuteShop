@@ -196,7 +196,7 @@ export const productNameExist = async (data) => {
 export const productNameExistForUpdate = async (data) => {
     const q = query(productsRef, where("name", "==", data.name), where("id", "!=", data.id))
     const querySnap = await getCachedDocs(q, productsRef, LAST_UPDATED_PRODUCT_CACHE_KEY)
-    return !querySnap.length !== 0
+    return querySnap.length !== 0
 }
 
 const LAST_UPDATED_CATEGORY_CACHE_KEY = 'lastUpdatedCategoryDate'
